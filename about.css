@@ -371,7 +371,7 @@
       עכשיו הוא רקע קבוע בגובה המסך (sticky) שנשאר מאחורי הטקסט והכרטיסים לכל אורך הגלילה, והווילה רואים למטה */
 @media (max-width: 900px) {
   html:not(#_) .a5 { display: block; overflow: clip; }
-  html:not(#_) .a5__bg { position: sticky; top: 0; inset: auto; height: 100lvh; margin-bottom: -100lvh; }
+  html:not(#_) .a5__bg { position: sticky; inset: 0 auto auto; height: 100lvh; margin-bottom: -100lvh; }
   html:not(#_) .a5__bg img { object-position: 15% 50%; }
   html:not(#_) .a5__bg::after { content: ""; position: absolute; inset: 0; background: linear-gradient(to bottom, rgb(9 7 37 / .6), rgb(9 7 37 / .28) 38%, rgb(9 7 37 / .3) 70%, rgb(9 7 37 / .62)); }
   html:not(#_) .a5__shade { background: linear-gradient(to bottom, rgb(9 7 37 / 0) calc(100% - 160px), var(--navy)); }
