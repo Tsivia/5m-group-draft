@@ -653,8 +653,8 @@ html { overflow-x: clip; }
    הכול מיושר לימין, לקצה הימני של הבלוק המקורי (577), כך שהקומפוזיציה נשארת כמו קודם */
 .hero__brand {
   --stat-size: calc(152 * var(--u));
-  left: calc(160 * var(--u));                       /* שוליים מעט צרים מהמקור (206), כדי שיהיה מקום יפה לחלון */
-  top: calc(413 * var(--u) + var(--hero-shift));    /* מרכז הבלוק בגובה מרכז החלון */
+  left: calc(112 * var(--u));                       /* שוליים שווים משני הצדדים (112) */
+  top: calc(470 * var(--u) + var(--hero-shift));    /* ב-JS (hero-extras.js): ה-5% בדיוק מול הכותרת שמימין */
   width: max-content;
   display: flex;
   flex-direction: column;
@@ -695,7 +695,7 @@ html { overflow-x: clip; }
 .hero__motto {
   display: grid;
   grid-template-columns: auto auto;   /* מימין המספרים, משמאל התיאורים */
-  align-items: last baseline;
+  align-items: center;               /* התיאור באמצע הגובה של המספר */
   column-gap: calc(20 * var(--u));
   justify-content: start;
   margin: 0;
@@ -706,19 +706,19 @@ html { overflow-x: clip; }
 .hero__stat-t { justify-self: start; }
 .hero__stat-n { font-family: var(--font-display); font-weight: 400; font-size: var(--stat-size); line-height: .89; color: var(--white); }
 .hero__stat--few .hero__stat-n { color: var(--orange); }
-.hero__pct { font-size: .4em; margin-right: .06em; }   /* האחוז קטן מאוד (40% מהספרות), על הקו התחתון של הספרות */
+.hero__pct { font-size: .32em; margin-right: .06em; }   /* האחוז קטן מאוד (40% מהספרות), על הקו התחתון של הספרות */
 .hero__stat-t { font-size: max(16px, calc(25 * var(--u))); font-weight: 300; line-height: 1.25; color: rgb(245 245 245 / .85); text-align: right; }
 .hero__stat-t b { font-weight: 700; color: var(--white); }
 .hero__stat--few .hero__stat-t b { color: var(--orange); }
 
 @media (min-width: 1101px) and (max-aspect-ratio: 17/10) {
-  .hero__brand { --stat-size: calc(140 * var(--u)); left: calc(140 * var(--u)); }
-  .hero .hero__intro { right: calc(120 * var(--u)); }
+  .hero__brand { --stat-size: calc(140 * var(--u)); left: calc(76 * var(--u)); }
+  .hero .hero__intro { right: calc(76 * var(--u)); }
 }
 
 /* בלוק הטקסט: הסבר + CTA */
 .hero__intro {
-  right: calc(168 * var(--u));   /* שוליים מעט צרים מהמקור (216) */
+  right: calc(112 * var(--u));   /* קרוב יותר לקצה, כדי שהשורות לא יעלו על החלון */
   /* התחתית של הכפתור על הקו שבו הרגליים של המשפחה נגמרות */
   bottom: calc(100% - var(--feet-y, calc(866 * var(--u) + var(--hero-shift))));
   width: max(490px, calc(490 * var(--u)));   /* 3 שורות */
@@ -971,7 +971,7 @@ html.has-loader.is-landed .site-header__logo { opacity: 1; }
     transition: opacity .35s var(--ease-out), translate .35s var(--ease-out), visibility 0s .35s;
   }
   .site-nav__list li { border-bottom: 1px solid rgb(245 245 245 / .12); }
-  .site-nav__list a { display: block; padding-block: 16px; }
+  .site-nav__list a { display: block; padding-block: 16px; color: var(--paper); }
   .site-nav__list a::after { display: none; }
   .menu-open .site-nav__list {
     opacity: 1;
@@ -1109,9 +1109,12 @@ html.has-loader.is-landed .site-header__logo { opacity: 1; }
   position: relative; z-index: 1; width: var(--W); height: calc(var(--th) + 240 * var(--u)); direction: ltr; }
 /* המשולש */
 .sum2__tri { position: absolute; left: 0; top: 0; width: var(--tw); height: var(--th); }
-.sum2__ghost, .sum2__img { position: absolute; inset: 0; clip-path: polygon(0 0, 0 100%, 100% 100%); }
-.sum2__ghost { background: linear-gradient(165deg, rgb(16 14 54 / .08), rgb(241 90 59 / .05)); }
-.sum2__img img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: 30% 70%; }
+/* ארבע רצועות נפרדות של המשולש (k = 0 הקודקוד עד 3 הבסיס). כל אחת חותכת את אותה תמונה לרצועה שלה.
+   --g הוא חצי הרווח בין רצועות (באחוזים מהגובה; בצלע זה אותו אחוז גם ברוחב, כי היתר עובר מפינה לפינה). בסוף הוא נסגר ל-0 והן מתאחדות */
+.sum2__tri { --g: 0%; }
+.sum2__band { --a: calc(var(--k) * 25%); --b: calc((var(--k) + 1) * 25%); --t: calc(var(--a) + var(--gt) * var(--g)); --e: calc(var(--b) - var(--gb) * var(--g));
+  position: absolute; inset: 0; clip-path: polygon(0 var(--t), var(--t) var(--t), var(--e) var(--e), 0 var(--e)); background: linear-gradient(165deg, rgb(16 14 54 / .08), rgb(241 90 59 / .05)); }
+.sum2__band img { position: absolute; inset: 0; display: block; width: 100%; height: 100%; object-fit: cover; object-position: 30% 70%; }
 /* הכותרת: ברצועה של הקודקוד, גדולה וכולה בכתום */
 .sum2 .sum2__title { position: absolute; top: 0; right: 0; height: var(--rh); display: flex; align-items: center; margin: 0; direction: rtl; font-size: calc(120 * var(--u)); line-height: 1; color: var(--orange); white-space: nowrap; }
 /* קווי הדף: קו לכל שורה, מהצלע של המשולש (בגובה הזה) עד הקצה הימני, ונקודה כתומה במקום שבו הוא יוצא מהצלע */
@@ -1119,14 +1122,13 @@ html.has-loader.is-landed .site-header__logo { opacity: 1; }
 .sum2__rules i::before { content: ""; position: absolute; left: 0; top: 50%; width: calc(11 * var(--u)); aspect-ratio: 1; border-radius: 50%; background: var(--orange); translate: -50% -50%; }
 /* השורות */
 .sum2__rows { position: absolute; inset: 0; margin: 0; padding: 0; list-style: none; direction: rtl; }
-.sum2__row { position: absolute; right: 0; top: calc(var(--rh) * var(--k)); height: var(--rh); display: flex; flex-direction: column; justify-content: center; align-items: flex-start; gap: calc(12 * var(--u)); }
+/* כל שורה יושבת על הקו שמתחתיה (לא באמצע הרצועה), כך שהקו נקרא כקו התחתון שלה */
+.sum2__row { position: absolute; right: 0; top: calc(var(--rh) * var(--k)); height: var(--rh); display: flex; flex-direction: column; justify-content: flex-end; align-items: flex-start; gap: calc(10 * var(--u)); padding-bottom: calc(24 * var(--u)); box-sizing: border-box; }
 .sum2__tag { display: flex; align-items: baseline; gap: calc(12 * var(--u)); font-family: var(--font-text); font-weight: 400; font-size: calc(21 * var(--u)); line-height: 1; letter-spacing: .02em; color: rgb(16 14 54 / .62); }
 .sum2__tag b { font-family: var(--font-display); font-weight: 400; font-size: calc(30 * var(--u)); color: var(--orange); font-variant-numeric: tabular-nums; }
 /* השורות בטאלנט (לבקשת צביה), במשקל ובגודל שקרובים לכותרות */
-.sum2__w { font-family: "Talent FS", var(--font-text); font-weight: 600; font-size: calc(52 * var(--u)); line-height: 1.1; color: var(--ink); white-space: nowrap; }
+.sum2__w { font-family: "Talent FS", var(--font-text); font-weight: 600; font-size: calc(44 * var(--u)); line-height: 1.1; color: var(--ink); white-space: nowrap; }
 /* השורה התחתונה: קו כתום אחד שממשיך את הבסיס של המשולש */
-.sum2__total { position: absolute; left: 0; right: 0; top: calc(var(--th) - 1px); height: 3px; }
-.sum2__total i { position: absolute; inset: 0; display: block; background: var(--orange); transform-origin: left center; }
 /* התוצאה: שורה אחת גדולה בכתום, ממורכזת לאמצע, במרחק נדיב מתחת לקו. ה-= וה-א/ע בכחול */
 /* ממורכזת בגובה בין הקו הכתום לתחתית המסך: הרווח מעליה ומתחתיה שווה.
    הגריד ממורכז במסך שמתחת להדר, אז המרחק מהקו לתחתית הוא (H - hh + גובה הגריד) / 2 - th */
@@ -1140,13 +1142,12 @@ html.has-loader.is-landed .site-header__logo { opacity: 1; }
 @media (max-width: 900px) {
   .sum2__stage { height: auto; min-height: 0; padding: calc(var(--hh) + 32px) 20px 64px; display: block; }
   .sum2__grid { width: auto; height: auto; direction: rtl; display: flex; flex-direction: column; }
-  .sum2 .sum2__title, .sum2__tri, .sum2__rows, .sum2__row, .sum2__total, .sum2__res { position: relative; inset: auto; top: auto; right: auto; left: auto; }
+  .sum2 .sum2__title, .sum2__tri, .sum2__rows, .sum2__row, .sum2__res { position: relative; inset: auto; top: auto; right: auto; left: auto; }
   .sum2 .sum2__title { order: -1; height: auto; margin-bottom: 20px; font-size: 52px; white-space: normal; }
   .sum2__tri { width: min(86vw, 420px); height: auto; aspect-ratio: 4 / 3; margin: 0 auto 0 0; }
   .sum2__rules { display: none; }
   .sum2__row { height: auto; padding: 14px 0; gap: 6px; border-top: 1px solid rgb(16 14 54 / .16); }
   .sum2__tag { font-size: 14px; } .sum2__tag b { font-size: 18px; } .sum2__w { font-size: 30px; white-space: normal; }
-  .sum2__total { margin-top: 2px; }
   .sum2__res { margin-top: 22px; font-size: 38px; white-space: normal; text-wrap: balance; }
 }
 
@@ -1161,7 +1162,8 @@ html.has-loader.is-landed .site-header__logo { opacity: 1; }
 .who__track { display: flex; width: max-content; animation: whoRun 90s linear infinite; will-change: transform; }
 .who__track span { flex: none; padding-inline-end: .3em; white-space: nowrap; font-family: var(--font-display); font-size: calc(300 * var(--u)); line-height: .95; color: rgb(16 14 54 / .055); }
 @keyframes whoRun { from { transform: translateX(0); } to { transform: translateX(50%); } }
-.who__photo { order: -1; position: relative; z-index: 1; width: 100%; margin: 0 0 calc(-1 * var(--over)); align-self: end; }
+/* התחתית של התמונה מיושרת לתחתית של הכפתור (לבקשת צביה): בלי לשקוע מתחת לטקסט */
+.who__photo { order: -1; position: relative; z-index: 1; width: 100%; margin: 0; align-self: end; }
 /* קישוט עדין: מסגרת דקה בכתום, מוזזת מאחורי התמונה (עוברת מעל האותיות הענקיות, מתחת לרפי) */
 /* הקצה העליון של המסגרת מיושר לראש הכותרת (sections.js מודד ושם ב-ft--) */
 .who__photo::before { content: ""; position: absolute; inset: var(--ft, calc(-34 * var(--u))) calc(34 * var(--u)) calc(34 * var(--u)) calc(-34 * var(--u)); z-index: -1; border: 2.5px solid rgb(241 90 59 / .5); pointer-events: none; }
@@ -1221,16 +1223,14 @@ html.has-loader.is-landed .site-header__logo { opacity: 1; }
 .stat__v { display: flex; flex-direction: row; align-items: baseline; gap: calc(12 * var(--u)); margin-top: calc(8 * var(--u)); font-family: var(--font-display); font-weight: 400; font-size: calc(118 * var(--u)); line-height: 1; }
 .stat__u { font-family: var(--font-text); font-size: calc(30 * var(--u)); line-height: 1; color: var(--orange); }
 .stat__c { margin-top: calc(16 * var(--u)); font-family: var(--font-text); font-weight: 400; font-size: calc(20 * var(--u)); line-height: 1.5; color: rgb(16 14 54 / .8); }
-/* ההערה שמגיבה לסימון: פס בהיר חתוך באלכסון משמאל (כמו המשולש של הלוגו), מספר כתום וטקסט. הגובה שמור מראש, כדי ששום דבר לא יקפוץ */
+/* ההערה שמגיבה לסימון: כיתוב בלבד, בלי רקע ובלי תווית (לבקשת צביה, 17.11). מספר כתום וטקסט. הגובה שמור מראש, כדי ששום דבר לא יקפוץ */
 .match__note { display: flex; justify-content: center; height: calc(64 * var(--u)); margin: calc(34 * var(--u)) 0 0; }
-.match__note-in { --s: calc(26 * var(--u)); display: inline-flex; align-items: center; gap: calc(18 * var(--u)); padding: 0 calc(34 * var(--u)) 0 calc(34 * var(--u) + var(--s));
-  background: var(--paper-hi); border-right: 3px solid var(--orange); clip-path: polygon(0 0, 100% 0, 100% 100%, var(--s) 100%);
-  filter: drop-shadow(0 calc(10 * var(--u)) calc(24 * var(--u)) rgb(16 14 54 / .06)); opacity: 0; visibility: hidden; translate: 0 calc(14 * var(--u)); transition: opacity .5s ease, translate .6s cubic-bezier(.16, 1, .3, 1), visibility 0s .5s, background-color .5s ease; }
-.match__note.is-on .match__note-in { opacity: 1; visibility: visible; translate: 0 0; transition: opacity .5s ease, translate .6s cubic-bezier(.16, 1, .3, 1), visibility 0s, background-color .5s ease; }
+.match__note-in { display: inline-flex; align-items: center; gap: calc(14 * var(--u)); padding: 0;
+  opacity: 0; visibility: hidden; translate: 0 calc(14 * var(--u)); transition: opacity .5s ease, translate .6s cubic-bezier(.16, 1, .3, 1), visibility 0s .5s; }
+.match__note.is-on .match__note-in { opacity: 1; visibility: visible; translate: 0 0; transition: opacity .5s ease, translate .6s cubic-bezier(.16, 1, .3, 1), visibility 0s; }
 .match__note-n { font-family: var(--font-display); font-weight: 400; font-size: calc(34 * var(--u)); line-height: 1; color: var(--orange); font-variant-numeric: tabular-nums; direction: ltr; unicode-bidi: isolate; }
 .match__note-t { font-family: "Talent FS", var(--font-text); font-weight: 500; font-size: calc(22 * var(--u)); line-height: 1.2; color: var(--ink); white-space: nowrap; }
-.match.is-fit .match__note-in { background: var(--ink); }
-.match.is-fit .match__note-t { color: #fff; }
+.match.is-fit .match__note-t { color: var(--orange); }
 .match__go { display: flex; align-items: center; justify-content: center; flex-wrap: wrap; gap: calc(18 * var(--u)) calc(34 * var(--u)); margin-top: calc(44 * var(--u)); }
 .match__score { display: flex; align-items: baseline; gap: calc(10 * var(--u)); margin: 0; font-family: var(--font-text); font-weight: 400; font-size: calc(21 * var(--u)); color: rgb(16 14 54 / .6); }
 .match__meter { display: inline-flex; gap: calc(6 * var(--u)); margin-inline-end: calc(8 * var(--u)); align-self: center; }
@@ -1573,7 +1573,7 @@ html.has-loader.is-landed .site-header__logo { opacity: 1; }
   .stat__k { font-size: 14px; margin-top: 10px; } .stat__v { font-size: 64px; } .stat__u { font-size: 15px; } .stat__c { font-size: 14px; margin-top: 8px; }
   .match__go { margin-top: 26px; } .match__meter i { width: 11px; height: 11px; } .match__giant span { font-size: 300px; } .match__score { font-size: 14px; } .match__sn { font-size: 32px; }
   .match__cta { width: 100%; white-space: normal; }
-  .match__note { height: 56px; margin-top: 20px; } .match__note-in { --s: 16px; gap: 10px; padding: 0 16px 0 calc(16px + var(--s)); }
+  .match__note { height: 56px; margin-top: 20px; } .match__note-in { gap: 10px; padding: 0; }
   .match__note-n { font-size: 22px; } .match__note-t { font-size: 14px; white-space: normal; }
 
   .road2 { margin-top: 50svh; }
@@ -1632,7 +1632,7 @@ html.has-loader.is-landed .site-header__logo { opacity: 1; }
   .foot { padding: var(--pad) 20px 0; }
   .foot__cta { flex-direction: column; align-items: flex-start; gap: 26px; }
   .foot__text { font-size: 23px; }
-  .foot__cta .btn { width: 100%; white-space: normal; }
+  .foot__cta .btn { width: 100%; padding-inline: 16px; font-size: 17px; }
   .foot__grid { grid-template-columns: 1fr; gap: 34px; margin-top: 50px; padding: 28px 22px; }
   .foot__bar { display: flex; flex-direction: column; align-items: flex-start; gap: 12px; } .foot__links, .foot__legal, .foot__credit { justify-self: auto; } .foot__links { gap: 16px; } .foot__links a, .foot__credit { font-size: 15px; }
   .foot__sky { height: 60%; }
@@ -1668,3 +1668,12 @@ html[data-hero-text="dark"] .site-header:not(.is-solid):not(.is-light) .site-hea
 
 /* 5M International: התמונה נחתכה מתוך מסגרת החלון (בלי הקווים בקצוות), ומוצגת מלמעלה כדי שהמטוס ייראה שלם */
 .trk__img img[src*="trk-intl"] { object-position: 50% 10%; }
+
+/* ---------- תוספות להירו (hero-extras.js): הספירה של 95/5 והציפורים ---------- */
+.hero__num { display: inline-block; text-align: right; }
+.hero-birds { position: absolute; left: 0; top: 0; overflow: hidden; pointer-events: none; z-index: 1; transition: opacity .6s; mix-blend-mode: multiply; }   /* הרקע הלבן של הצילום נעלם, הציפור נשארת */
+.hero-birds__sky { position: absolute; inset: 0; }
+.hero-bird { position: absolute; left: 0; top: 0; will-change: transform; }
+.hero-bird i { position: absolute; inset: 0; background: center / contain no-repeat; opacity: 0; transition: opacity .1s linear; }
+.hero-bird i.on { opacity: 1; }
+

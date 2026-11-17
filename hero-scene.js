@@ -32,7 +32,8 @@
     parBg: num(ds.parBg, 7), parFam: num(ds.parFam, 11), lift: num(ds.lift, .55), edge: ds.edge || '#200816', scrim: (ds.scrim || '.42,.38').split(',').map(Number),
     x: num(ds.photoX, 0), pane: (ds.pane || '.432,.224,.571,.57').split(',').map(Number), vig: num(ds.vig, 0), edgeW: num(ds.edgeW, .035),
     rise: (ds.sunRise || '.507,.33').split(',').map(Number), riseTime: num(ds.riseTime, 14), feet: num(ds.feet, .97), sky: num(ds.skyGrade, .85),
-    parView: num(ds.parView, 8), feetLine: num(ds.feetLine, .809) };   // parView: כמה הנוף שבחלון זז נגד העכבר (תלת-מימד). feetLine: קו הרגליים בצילום
+    parView: num(ds.parView, 8), feetLine: num(ds.feetLine, .809),
+    floor: (ds.floor || '.789,.8174,.8373,.985').split(',').map(Number), depthK: num(ds.depthK, 2.2) };   // floor: האדן, הרגליים בצילום, הרגליים במקום החדש, סוף הצללים   // parView: כמה הנוף שבחלון זז נגד העכבר (תלת-מימד). feetLine: קו הרגליים בצילום
   // הזריחה מתחילה רק כשמסך הטעינה נפתח (כדי שלא תעבור מאחוריו)
   let riseT0 = 0;
   const REF_W = 1920, REF_H = 1080;                  // במה וירטואלית (הפריים בפיגמה)
@@ -398,7 +399,9 @@
     uniform sampler2D uBgTex, uFamTex, uPlateTex, uMaskTex, uSunTex;
     uniform float uRoom, uHasPlate, uDisc, uSpill, uHasMask, uSunOn, uWave;
     uniform vec2 uView, uImgPx;
-    uniform vec3 uCursor;      // בגלילה: החדר נעלם ונשאר רק הנוף (החלונית האמצעית, משוכפלת במראה לצדדים ולמטה)
+    uniform vec3 uCursor;
+    uniform vec4 uFloor, uFx;   // uFx.z: העננים נעים
+    uniform float uDepthK;      // בגלילה: החדר נעלם ונשאר רק הנוף (החלונית האמצעית, משוכפלת במראה לצדדים ולמטה)
     uniform vec2 uRes, uPan, uMouse, uPar, uScrim;
     uniform float uUnit, uZoom, uTime, uIntro, uDim, uFamAlpha, uLift, uHorizon, uRise, uVig, uEdgeW, uSunVis, uFeet, uSky;
     uniform vec4 uRect, uFamRect, uGlass, uPane;
@@ -454,16 +457,28 @@
     void main(){
       vec2 px = vec2(gl_FragCoord.x, uRes.y - gl_FragCoord.y);
       vec2 stage = (px - uRes * .5 - uPan) / (uUnit * uZoom);
-      // החדר: זז מעט עם העכבר (עומק עדין)
-      vec2 uv = (stage - uRect.xy + uMouse * uPar.x) / uRect.zw;
-      vec3 col = texture2D(uBgTex, clamp(uv, .0005, .9995)).rgb;
+      // החדר: זז עם העכבר לפי עומק. קיר החלון זז מעט, והקירות, התקרה והרצפה שקרובים אלינו זזים יותר
+      vec2 uv0 = (stage - uRect.xy) / uRect.zw;
+      float dn = clamp(max(max((uGlass.x - uv0.x) / uGlass.x, (uv0.x - uGlass.z) / (1.0 - uGlass.z)), max((uv0.y - uFloor.x) / (1.0 - uFloor.x), (uGlass.y - uv0.y) / uGlass.y)), 0.0, 1.0);
+      vec2 uv = uv0 + uMouse * uPar.x * (1.0 + uDepthK * dn) / uRect.zw;
+      // הרצפה שלפני החלון נמתחת: המשפחה (שכבה משלה) עומדת רחוק יותר מהחלון, והצללים שלה זזים איתה
+      vec2 ruv = uv;
+      if (uv.y > uFloor.x && uv.y < uFloor.w) {
+        float yy = uv.y < uFloor.z ? uFloor.x + (uv.y - uFloor.x) * (uFloor.y - uFloor.x) / (uFloor.z - uFloor.x)
+                                   : uFloor.y + (uv.y - uFloor.z) * (uFloor.w - uFloor.y) / (uFloor.w - uFloor.z);
+        float wx = smoothstep(uGlass.x - .08, uGlass.x - .01, uv.x) * (1.0 - smoothstep(uGlass.z + .01, uGlass.z + .08, uv.x));
+        ruv.y = mix(uv.y, yy, wx);
+      }
+      vec3 col = texture2D(uBgTex, clamp(ruv, .0005, .9995)).rgb;
       float fam = famAt(uv);
       {
         // הזכוכית עצמה (מבפנים למסגרת)
         vec4 vr = vec4(uGlass.x + .0006, uGlass.y + .0018, uGlass.z - .0016, uGlass.w - .003);
         float paneM = smoothstep(vr.x, vr.x + .0012, uv.x) * (1.0 - smoothstep(vr.z - .0012, vr.z, uv.x)) * smoothstep(vr.y, vr.y + .0012, uv.y) * (1.0 - smoothstep(vr.w - .0012, vr.w, uv.y));
         if (paneM > 0.0) {
-          vec2 pv = mirrorIn(uv + uView, vr);                                 // הנוף רחוק: זז אחרת מהחדר (תלת-מימד)
+          // הנוף רחוק: זז אחרת מהחדר (תלת-מימד). ליד המסגרת התזוזה נחלשת בהדרגה, כך שאין תפר
+          float ef = smoothstep(vr.x, vr.x + .035, uv.x) * smoothstep(vr.z, vr.z - .035, uv.x) * smoothstep(vr.y, vr.y + .05, uv.y) * smoothstep(vr.w, vr.w - .03, uv.y);
+          vec2 pv = mirrorIn(uv + uView * ef, vr);
           float lite = 1.0;
           float dsea = (pv.y - uHorizon) / max(.001, vr.w - uHorizon);
           if (dsea > 0.0 && uWave > 0.0) {
@@ -478,7 +493,13 @@
             pv = mirrorIn(pv, vr);
             lite = 1.0 + (sin(ph) * .5 + rip * .6) * .09 * dsea * uWave;   // רכסי הגלים תופסים קצת יותר אור
           }
-          vec3 bgv = texture2D(uBgTex, pv).rgb;
+          vec2 pvs = pv;
+          if (uFx.z > .001 && pv.y < uHorizon) {
+            float hgt = clamp((uHorizon - pv.y) / max(.001, uHorizon - vr.y), 0.0, 1.0);
+            pvs.x += (sin(uTime * .045) * .03 + sin(uTime * .11 + 1.7) * .006) * hgt * hgt * uFx.z * ef;
+            pvs = mirrorIn(pvs, vr);
+          }
+          vec3 bgv = texture2D(uBgTex, pvs).rgb;
           if (uHasPlate > .5) bgv = mix(bgv, texture2D(uPlateTex, pv).rgb, famAt(pv));   // מאחורי האנשים: רקע נקי (השמיים והים ממשיכים בגוון של הצילום)
           bgv = bgv * lite + sunAt(pv);
           col = mix(col, bgv, paneM * (1.0 - fam * uFamAlpha));                 // המשפחה מלפנים (ונמוגה בגלילה)
@@ -587,8 +608,8 @@
       // הילה חמה ורכה מתחת לעכבר (אור שנשפך על החדר)
       {
         vec2 dc = (px - uCursor.xy) / uRes.y;
-        float g = (exp(-dot(dc, dc) / .014) * .2 + exp(-dot(dc, dc) / .08) * .07) * uCursor.z * (1.0 - uRoom);
-        col = 1.0 - (1.0 - col) * (1.0 - vec3(1.0, .74, .62) * g);
+        float g = (exp(-dot(dc, dc) / .06) * .22 + exp(-dot(dc, dc) / .3) * .09) * uCursor.z * (1.0 - uRoom);
+        col = 1.0 - (1.0 - col) * (1.0 - clamp(vec3(.62, .78, 1.0) * g, 0.0, 1.0));
       }
       col = mix(col, uNavy, uIntro);
       col = mix(col, uNavy, uDim);
@@ -675,7 +696,7 @@
       texture(sunImg || bg, 4);
       ['uBgTex', 'uFamTex', 'uRoom', 'uRes', 'uPan', 'uMouse', 'uPar', 'uScrim', 'uUnit', 'uZoom', 'uTime', 'uIntro', 'uDim', 'uFamAlpha', 'uLift', 'uHorizon',
        'uRect', 'uFamRect', 'uGlass', 'uSun', 'uEdge', 'uNavy', 'uPane', 'uRise', 'uVig', 'uEdgeW', 'uSunVis', 'uFeet', 'uSky', 'uPlateTex', 'uHasPlate', 'uDisc', 'uSpill',
-       'uMaskTex', 'uSunTex', 'uHasMask', 'uSunOn', 'uWave', 'uView', 'uImgPx', 'uCursor'].forEach(n => (uni[n] = gl.getUniformLocation(prog, n)));
+       'uMaskTex', 'uSunTex', 'uHasMask', 'uSunOn', 'uWave', 'uView', 'uImgPx', 'uCursor', 'uFloor', 'uDepthK', 'uFx'].forEach(n => (uni[n] = gl.getUniformLocation(prog, n)));
       gl.uniform1i(uni.uBgTex, 0);
       gl.uniform1i(uni.uFamTex, 1);
       gl.uniform1i(uni.uPlateTex, 2);
@@ -766,6 +787,11 @@
 
   /* המלבן של הזכוכית במסך (פיקסלים של העמוד), לפי הזום הנוכחי. ממנו נפתחת המסכה של הסקשן הבא (sides.js) */
   let lastZoom = 1;
+  window.heroGlassLive = () => {
+    const r = window.heroGlassRect(); if (!r || !PHOTO) return r;
+    const z = unit * lastZoom, v = PH.parView + PH.parBg;
+    return { x: r.x - mouse.ex * PH.parBg * z, y: r.y - mouse.ey * .6 * PH.parBg * z, w: r.w, h: r.h, vx: mouse.ex * v * z, vy: mouse.ey * .6 * .7 * v * z };
+  };
   window.heroGlassRect = () => {
     if (!glReady) return null;
     const [rx, ry, rw, rh] = sceneRect(), z = unit * lastZoom, hr = host.getBoundingClientRect();
@@ -817,7 +843,11 @@
     gl.uniform1f(uni.uHorizon, PH.horizon);
     // תלת-מימד: החדר (קרוב) זז נגד העכבר, והנוף שבחלון (רחוק) זז איתו. בלי עכבר: נשימה איטית
     gl.uniform2f(uni.uMouse, mouse.ex, mouse.ey * .6);
-    gl.uniform2f(uni.uPar, PH.parBg, PH.parFam);
+    // המשפחה עומדת לפני החלון: זזה כמו הרצפה שמתחת לרגליים שלה (יותר מהחלון, פחות מהקירות הקרובים)
+    gl.uniform2f(uni.uPar, PH.parBg, PH.parBg * (1 + PH.depthK * (PH.floor[2] - PH.floor[0]) / (1 - PH.floor[0])));
+    gl.uniform4f(uni.uFloor, ...PH.floor);
+    gl.uniform4f(uni.uFx, 0, 0, 1, 0);   // העננים נעים
+    gl.uniform1f(uni.uDepthK, PH.depthK);
     { const R = sceneRect(), v = PH.parView + PH.parBg; gl.uniform2f(uni.uView, -mouse.ex * v / R[2], -mouse.ey * .6 * v * .7 / R[3]); }
     // ההילה עוקבת אחרי הסמן באיחור רך, ונעלמת כשהעכבר יוצא
     halo.x += (mouse.cx * glCanvas.width - halo.x) * .14;
@@ -929,7 +959,7 @@
   function update(dt) {
     const k = Math.min(dt / 16.67, 3);
     const t = (performance.now() - t0) / 1000;
-    const idleX = Math.sin(t * .23) * .3, idleY = Math.sin(t * .17 + 1.3) * .16;
+    const idleX = Math.sin(t * .23) * .5, idleY = Math.sin(t * .17 + 1.3) * .28;
     const tx = mouse.active ? mouse.x : idleX, ty = mouse.active ? mouse.y : idleY;
     mouse.ex += (tx - mouse.ex) * .045 * k;
     mouse.ey += (ty - mouse.ey) * .045 * k;
@@ -966,6 +996,7 @@
     const R = sceneRect(), z = SCROLL_FX ? 1.045 : 1, pan = SCROLL_FX ? ZOOM_AT_Y * H * (1 - z) : 0;
     const y = (R[1] + PH.feetLine * R[3]) * unit * z + H / 2 + pan;
     heroEl.style.setProperty('--feet-y', y.toFixed(1) + 'px');
+    heroEl.style.setProperty('--glass-top', ((R[1] + PH.glass[1] * R[3]) * unit * z + H / 2 + pan).toFixed(1) + 'px');
   }
   const heroEl = story.querySelector('.hero');
   function resize() {

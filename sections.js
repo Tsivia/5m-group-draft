@@ -11,6 +11,48 @@
   const mobile = () => innerWidth <= 900;
   const lerp = (a, b, t) => a + (b - a) * t;
   const clamp = (v, a = 0, b = 1) => Math.min(b, Math.max(a, v));
+  /* גלילה בשלבים (משולש הזהב, שורה תחתונה): גלילה אחת = שלב אחד, במעבר רך (התחלה וסיום עדינים).
+     תנועה חדשה מזוהה גם כשמשטח המגע עוד "מתגלגל" (האינרציה רק נחלשת, תנועה חדשה מתחזקת), כך שלא מרגישים תקיעות.
+     גלילה שמגיעה באמצע מעבר לא הולכת לאיבוד: היא נשמרת ומתבצעת מיד כשהמעבר נגמר.
+     count: מספר העצירות. prevY/nextY: לאן גולשים מעל העצירה הראשונה / אחרי האחרונה (null = הגלילה הרגילה ממשיכה) */
+  const STEP_DUR = .85;
+  let stepLock = 0;   // עד מתי מעבר כלשהו רץ: בזמן הזה שום גלילה לא דולפת לגלילה הרגילה (גם במעבר בין שני אזורים)
+  const stepEase = t => t < .5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+  const stepper = (st, count, prevY, nextY) => {
+    const stops = () => Array.from({ length: count }, (_, k) => st.start + (st.end - st.start) * k / (count - 1));
+    const curY = () => window.lenis ? window.lenis.scroll : scrollY;
+    const inZone = () => { const y = curY(); return y >= st.start - 4 && y <= st.end + 4; };
+    const nearest = () => { const y = curY(), S = stops(); let k = 0; S.forEach((v, i) => { if (Math.abs(v - y) < Math.abs(S[k] - y)) k = i; }); return k; };
+    let busy = false, queued = 0, lastT = 0, lastAbs = 0, lastStep = 0, ty = null, guard = 0;
+    const glide = y => {
+      busy = true; clearTimeout(guard); stepLock = performance.now() + STEP_DUR * 1000 + 120;
+      const done = () => { if (!busy) return; busy = false; clearTimeout(guard); if (queued) { const d = queued; queued = 0; stepTo(d); } };
+      window.lenis ? window.lenis.scrollTo(y, { duration: STEP_DUR, easing: stepEase, force: true, onComplete: done }) : scrollTo(0, y);
+      guard = setTimeout(done, STEP_DUR * 1000 + 200);
+    };
+    const stepTo = dir => {
+      const n = nearest() + dir;
+      if (n < 0) { const y = prevY && prevY(); if (y != null) glide(y); return; }
+      if (n > count - 1) { const y = nextY && nextY(); if (y != null) glide(y); return; }
+      lastStep = performance.now(); glide(stops()[n]);
+    };
+    addEventListener('wheel', e => {
+      if (e.ctrlKey) return;
+      if (!inZone()) { if (performance.now() < stepLock) { e.preventDefault(); e.stopImmediatePropagation(); } return; }
+      const dir = Math.sign(e.deltaY); if (!dir) return;
+      if (dir < 0 && !prevY && curY() <= st.start + 4) return;      // מעל השלב הראשון: הגלילה הרגילה חוזרת
+      e.preventDefault(); e.stopImmediatePropagation();
+      const now = performance.now(), gap = now - lastT, abs = Math.abs(e.deltaY);
+      const fresh = gap > 140 || abs > lastAbs * 1.4 + 4;           // תנועה חדשה: אחרי שקט קצר, או כשהגלילה מתחזקת שוב
+      lastT = now; lastAbs = abs;
+      if (!fresh) return;
+      if (busy) { if (now - lastStep > 300) queued = dir; return; }
+      stepTo(dir);
+    }, { capture: true, passive: false });
+    addEventListener('touchstart', e => { ty = inZone() ? e.touches[0].clientY : null; }, { passive: true });
+    addEventListener('touchmove', e => { if (ty !== null) e.preventDefault(); }, { passive: false });
+    addEventListener('touchend', e => { if (ty === null) return; const dy = ty - e.changedTouches[0].clientY; ty = null; if (Math.abs(dy) > 30) { const d = dy > 0 ? 1 : -1; busy ? (queued = d) : stepTo(d); } }, { passive: true });
+  };
   const pad = n => String(n).padStart(2, '0');
   const scrollToY = y => window.lenis ? window.lenis.scrollTo(y, { duration: 1.4 }) : scrollTo({ top: y, behavior: reduce ? 'auto' : 'smooth' });
 
@@ -281,33 +323,10 @@
         gsap.delayedCall(.9, () => { if (on < 0) show(0); });
       } });
       st = ScrollTrigger.create({ trigger: gt, start: 'top top', end: () => '+=' + Math.round(innerHeight * (mobile() ? 1.7 : 1.8)), pin: true, invalidateOnRefresh: true,
-        onUpdate: s => { const p = s.progress; bars.forEach((b, k) => { b.style.transform = 'scaleX(' + clamp(p * 3 - k).toFixed(3) + ')'; }); if (on >= 0 || p > 0) show(p < .345 ? 0 : p < .68 ? 1 : 2); } });
-      // גלילה אחת = שלב אחד: כל תנועת גלילה (גלגלת, משטח מגע או אצבע) ממלאת מקטע אחד שלם למטה.
-      // אחרי השלישי, עוד גלילה אחת עוברת לאזור הבא. האינרציה של משטח המגע לא מדלגת שלבים: מחכים לשקט קצר בין תנועות
-      const stops = () => [0, 1, 2, 3].map(k => st.start + (st.end - st.start) * k / 3);
-      const curY = () => window.lenis ? window.lenis.scroll : scrollY;
-      const inZone = () => { const y = curY(); return y >= st.start - 4 && y <= st.end + 4; };
-      const nearest = () => { const y = curY(), S = stops(); let k = 0; S.forEach((v, i) => { if (Math.abs(v - y) < Math.abs(S[k] - y)) k = i; }); return k; };
-      let busy = false, lastWheel = 0, ty = null;
-      const glide = y => { busy = true; window.lenis ? window.lenis.scrollTo(y, { duration: .5, easing: t => 1 - Math.pow(1 - t, 3), force: true, onComplete: () => { busy = false; } }) : scrollTo(0, y); setTimeout(() => { busy = false; }, 600); };
-      const stepTo = dir => {
-        const n = nearest() + dir;
-        if (n < 0) { glide(st.start - innerHeight); return; }
-        if (n > 3) { const nx = ScrollTrigger.getAll().find(s => s.pin && s.trigger === $('.sum2')); glide(nx ? nx.start + 2 : st.end + innerHeight); return; }
-        glide(stops()[n]);
-      };
-      addEventListener('wheel', e => {
-        if (e.ctrlKey || !inZone()) return;
-        const dir = Math.sign(e.deltaY); if (!dir) return;
-        if (dir < 0 && curY() <= st.start + 4) return;            // למעלה מהשלב הראשון: הגלילה הרגילה חוזרת למרוץ העכברים
-        e.preventDefault(); e.stopImmediatePropagation();
-        const now = performance.now(), gap = now - lastWheel; lastWheel = now;
-        if (busy || gap < 110) return;                              // אותה תנועה: שלב אחד בלבד
-        stepTo(dir);
-      }, { capture: true, passive: false });
-      addEventListener('touchstart', e => { ty = inZone() ? e.touches[0].clientY : null; }, { passive: true });
-      addEventListener('touchmove', e => { if (ty !== null) e.preventDefault(); }, { passive: false });
-      addEventListener('touchend', e => { if (ty === null) return; const dy = ty - e.changedTouches[0].clientY; ty = null; if (Math.abs(dy) > 30 && !busy) stepTo(dy > 0 ? 1 : -1); }, { passive: true });
+        onUpdate: s => { const p = s.progress; bars.forEach((b, k) => { b.style.transform = 'scaleX(' + clamp(p * 2 + 1 - k).toFixed(3) + ')'; }); if (on >= 0 || p > 0) show(p < .25 ? 0 : p < .75 ? 1 : 2); } });
+      // גלילה אחת = שלב אחד. כשמגיעים לאזור כבר רואים את שלב 1, ולכן הגלילה הראשונה עוברת לשלב 2.
+      // אחרי השלישי, עוד גלילה אחת עוברת ל"שורה תחתונה"
+      stepper(st, 3, null, () => { const nx = ScrollTrigger.getAll().find(s => s.pin && s.trigger === $('.sum2')); return nx ? nx.start + 2 : st.end + innerHeight; });
     }
   }
 
@@ -315,56 +334,39 @@
   //                   רצועה של התמונה נמלאת במשולש, הקו שלה נמתח מהצלע, והשורה עולה. בסוף הקו הכתום נמתח והתוצאה עולה מתחתיו =================
   const sum2 = $('.sum2');
   if (sum2) {
-    const img = $('.sum2__img img', sum2), rules = $$('.sum2__rules i', sum2), rows = $$('.sum2__row', sum2),
-      total = $('.sum2__total i', sum2), res = $('.sum2__res', sum2), stage = $('.sum2__stage', sum2);
+    const tri = $('.sum2__tri', sum2), bands = $$('.sum2__band img', sum2), rules = $$('.sum2__rules i', sum2), rows = $$('.sum2__row', sum2),
+      res = $('.sum2__res', sum2), stage = $('.sum2__stage', sum2);
     if (!reduce) {
-      // בהתחלה רואים רק את הקודקוד (הרצועה שליד הכותרת)
-      gsap.set(img, { clipPath: 'inset(0% 0% 75% 0%)' });
-      gsap.set([...rules, total], { scaleX: 0 });
+      // בהתחלה רואים רק את הקודקוד (הרצועה שליד הכותרת). הרצועות נפרדות ברווח, ומתאחדות רק בסוף
+      const GAP = { g: 1.5 }, putGap = () => tri.style.setProperty('--g', GAP.g.toFixed(3) + '%'); putGap();
+      gsap.set(bands.slice(1), { autoAlpha: 0, y: -16 * U() });
+      gsap.set(rules, { scaleX: 0 });
       gsap.set(rows, { autoAlpha: 0, y: 34 * U() });
       gsap.set(res, { autoAlpha: 0, y: 30 * U() });
       gsap.set(stage, { '--sun': 0 });
       // ציר זמן של 4 יחידות: בכל יחידה שלמה שלב אחד גמור (0 = הכותרת והקודקוד, 4 = הכול)
       const tl = gsap.timeline({ defaults: { ease: 'power3.out' } });
+      // כל שלב: הרצועה שלו נכנסת (צורה נפרדת), השורה עולה, והקו הדק שמתחתיה נמתח מהנקודה שעל הצלע
       rows.forEach((r, k) => {
-        tl.to(rules[k], { scaleX: 1, duration: .7, ease: 'power2.inOut' }, k + .05)
-          .to(img, { clipPath: 'inset(0% 0% ' + (50 - k * 25) + '% 0%)', duration: .75, ease: 'power2.inOut' }, k + .1)
-          .to(r, { autoAlpha: 1, y: 0, duration: .6 }, k + .35);
+        tl.to(bands[k + 1], { autoAlpha: 1, y: 0, duration: .7, ease: 'power2.out' }, k + .05)
+          .to(r, { autoAlpha: 1, y: 0, duration: .6 }, k + .2)
+          .to(rules[k], { scaleX: 1, duration: .75, ease: 'power2.inOut' }, k + .3);
       });
-      tl.to(total, { scaleX: 1, duration: .8, ease: 'power2.inOut' }, 3.05)
-        .to(stage, { '--sun': 1, duration: .8, ease: 'power1.inOut' }, 3.2)
+      // בסוף: הרווחים נסגרים ושלוש הצורות מתאחדות למשולש אחד, ואז התוצאה
+      tl.to(GAP, { g: 0, duration: .8, ease: 'power2.inOut', onUpdate: putGap }, 3.05)
+        .to(stage, { '--sun': 1, duration: .8, ease: 'power1.inOut' }, 3.1)
         .to(res, { autoAlpha: 1, y: 0, duration: .65 }, 3.35)
         .to({}, { duration: .1 }, 3.9);
       if (!mobile()) {
         const st = ScrollTrigger.create({ trigger: sum2, start: 'top top', end: () => '+=' + Math.round(innerHeight * 2), pin: true, scrub: .2, animation: tl, invalidateOnRefresh: true });
-        // גלילה אחת = שלב אחד (בדיוק כמו במשולש הזהב). מעל השלב הראשון חוזרים למשולש הזהב, אחרי האחרון ממשיכים ל"מי אנחנו"
-        const stops = () => [0, 1, 2, 3, 4].map(k => st.start + (st.end - st.start) * k / 4);
-        const curY = () => window.lenis ? window.lenis.scroll : scrollY;
-        const inZone = () => { const y = curY(); return y >= st.start - 4 && y <= st.end + 4; };
-        const nearest = () => { const y = curY(), S = stops(); let k = 0; S.forEach((v, i) => { if (Math.abs(v - y) < Math.abs(S[k] - y)) k = i; }); return k; };
-        let busy = false, lastWheel = 0, ty = null;
-        const glide = y => { busy = true; window.lenis ? window.lenis.scrollTo(y, { duration: .5, easing: t => 1 - Math.pow(1 - t, 3), force: true, onComplete: () => { busy = false; } }) : scrollTo(0, y); setTimeout(() => { busy = false; }, 600); };
+        // גלילה אחת = שלב אחד (כמו במשולש הזהב). מעל השלב הראשון חוזרים לשלב האחרון של משולש הזהב,
+        // ואחרי האחרון גלילה אחת מעלה את כל האזור של רפי למסך (ממורכז מתחת להדר), ומשם הגלילה רגילה
         const pinOf = sel => ScrollTrigger.getAll().find(s => s.pin && s.trigger === $(sel));
-        const stepTo = dir => {
-          const n = nearest() + dir;
-          if (n < 0) { const g = pinOf('.gt'); glide(g ? g.end : st.start - innerHeight); return; }
-          // אחרי השלב האחרון: גלילה אחת מעלה את כל האזור של רפי למסך (ממורכז מתחת להדר), ומשם הגלילה רגילה, בלי עצירה
-          if (n > 4) { const w = $('.who'); if (!w) { glide(st.end + innerHeight); return; }
-            const r = w.getBoundingClientRect(), top = curY() + r.top, hh = $('.site-header')?.offsetHeight || 0, room = innerHeight - hh;
-            glide(Math.round(r.height < room ? top - hh - (room - r.height) / 2 : top - hh)); return; }
-          glide(stops()[n]);
-        };
-        addEventListener('wheel', e => {
-          if (e.ctrlKey || !inZone()) return;
-          const dir = Math.sign(e.deltaY); if (!dir) return;
-          e.preventDefault(); e.stopImmediatePropagation();
-          const now = performance.now(), gap = now - lastWheel; lastWheel = now;
-          if (busy || gap < 110) return;
-          stepTo(dir);
-        }, { capture: true, passive: false });
-        addEventListener('touchstart', e => { ty = inZone() ? e.touches[0].clientY : null; }, { passive: true });
-        addEventListener('touchmove', e => { if (ty !== null) e.preventDefault(); }, { passive: false });
-        addEventListener('touchend', e => { if (ty === null) return; const dy = ty - e.changedTouches[0].clientY; ty = null; if (Math.abs(dy) > 30 && !busy) stepTo(dy > 0 ? 1 : -1); }, { passive: true });
+        stepper(st, 5, () => { const g = pinOf('.gt'); return g ? g.end : st.start - innerHeight; }, () => {
+          const w = $('.who'); if (!w) return st.end + innerHeight;
+          const y = window.lenis ? window.lenis.scroll : scrollY, r = w.getBoundingClientRect(), hh = $('.site-header')?.offsetHeight || 0, room = innerHeight - hh;
+          return Math.round(r.height < room ? y + r.top - hh - (room - r.height) / 2 : y + r.top - hh);
+        });
       } else {
         // במובייל: בלי עצירה. השלבים נכנסים ברצף כשהאזור מגיע למסך
         tl.pause(); ScrollTrigger.create({ trigger: sum2, start: 'top 65%', once: true, onEnter: () => tl.timeScale(1.6).play() });
@@ -412,7 +414,7 @@
       const c = document.createElement('canvas').getContext('2d'); c.font = cs.fontWeight + ' ' + fs + 'px ' + cs.fontFamily;
       const m = c.measureText(gtxt.textContent);
       const half = (lh - (m.fontBoundingBoxAscent + m.fontBoundingBoxDescent)) / 2;
-      const capTop = half + m.fontBoundingBoxAscent - m.actualBoundingBoxAscent;
+      const capTop = half + m.fontBoundingBoxAscent - c.measureText('מ').actualBoundingBoxAscent;   // לפי גובה גוף האות (מ), לא לפי ה-ל שבולטת מעל
       who.style.setProperty('--over', Math.max(0, Math.round(m.actualBoundingBoxAscent - wbtn.offsetHeight)) + 'px');
       giant.style.top = Math.round(wtext.offsetTop + wbtn.offsetTop - capTop) + 'px'; giant.classList.add('is-placed');
       // המסגרת הכתומה מאחורי רפי: הקצה העליון שלה בגובה של ראש האותיות בכותרת

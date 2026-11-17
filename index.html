@@ -7,8 +7,8 @@
   <meta name="description" content="5M Group הוא Family Office בוטיק למשפחות שמרוויחות יפה ופועלות להגיע לעצמאות כלכלית. ממשכורת לתיק נכסים מניב וצומח.">
   <link rel="preload" href="fonts/Cooperative-Regular.woff2" as="font" type="font/woff2" crossorigin>
   <!-- התמונות של ההירו נטענות כבר מההתחלה, ולא רק אחרי שהקוד רץ -->
-  <link rel="preload" href="assets/hero-c-nosun.jpg" as="image" fetchpriority="high">
-  <link rel="preload" href="assets/hero-c-clean.jpg" as="image">
+  <link rel="preload" href="assets/hero-c-room.jpg" as="image" fetchpriority="high">
+  <link rel="preload" href="assets/hero-c-family.png" as="image">
   <script>
     /* מסך הטעינה: נשאר רק עד שהתמונה של ההירו מוכנה, ולא פחות מזמן הציור של הלוגו (כשנייה וחצי). לא מעכב שום קובץ.
        בזמן הזה הגלילה עצורה. ביציאה: הלוגו עולה למקום שלו בהדר, המסך נפתח מלמטה למעלה, וההירו נכנס */
@@ -83,8 +83,9 @@
       <ul class="site-nav__list" id="site-menu">
         <li><a href="#top" aria-current="page">בית</a></li>
         <li><a href="about.html">מי אנחנו</a></li>
-        <li><a href="tracks.html">מי אתם</a></li>
+        <li><a href="tracks.html">מסלולים</a></li>
         <li><a href="#knowledge">מרכז הידע הפיננסי</a></li>
+        <li><a href="contact.html">צור קשר</a></li>
       </ul>
     </nav>
 
@@ -96,9 +97,9 @@
   <main id="top">
     <!-- סיפור אחד רציף: הרקע נשאר במקום (sticky) והמצלמה נוסעת פנימה בגלילה, מההירו לסקשן הבא -->
     <div class="story" data-story>
-      <div class="hero__bg" aria-hidden="true" data-hero-scene data-mode="photo" data-photo-w=".93" data-photo-top=".035" data-photo-x="-.033" data-spill=".2" data-photo-fit="1" data-photo-fit-k="2.3" data-photo-fit-x="-.394" data-edge="#0C1430" data-edge-w=".02" data-vig="0" data-scrim=".24,.32" data-lift="0" data-sky-grade="0" data-no-disc="1"
-     data-image="assets/hero-c-nosun.jpg" data-plate="assets/hero-c-clean.jpg" data-mask="assets/hero-c-mask.png" data-sun-img="assets/hero-c-sun.png" data-family="assets/px.png" data-family-rect="0,0,.01,.01"
-     data-glass=".3363,.2167,.6734,.7778" data-pane=".341,.222,.669,.772" data-horizon=".652" data-sun=".5138,.5855,.022" data-sun-rise=".652,.5" data-rise-time="5" data-par-bg="9" data-par-view="8" data-feet-line=".809">
+      <div class="hero__bg" aria-hidden="true" data-hero-scene data-mode="photo" data-photo-w=".93" data-photo-top=".0535" data-photo-x="-.033" data-spill=".2" data-photo-fit="1" data-photo-fit-k="2.3" data-photo-fit-x="-.394" data-edge="#0C1430" data-edge-w=".02" data-vig="0" data-scrim=".24,.32" data-lift="0" data-sky-grade="0" data-no-disc="1"
+     data-image="assets/hero-c-room.jpg" data-plate="assets/hero-c-room.jpg" data-sun-img="assets/hero-c-sun.png" data-family="assets/hero-c-family.png" data-family-rect=".4206,.4458,.1688,.39377" data-feet="9"
+     data-glass=".3363,.2167,.6734,.7778" data-pane=".341,.222,.669,.772" data-horizon=".652" data-sun=".5138,.5855,.022" data-sun-rise=".652,.5" data-rise-time="5" data-par-bg="12" data-par-view="12" data-feet-line=".8373" data-floor=".795,.8174,.8373,.985" data-depth-k="2.2">
         <canvas class="hero__gl"></canvas>
         <div class="hero__fade"></div>
       </div>
@@ -110,8 +111,8 @@
           <span class="visually-hidden">ממשכורת לתיק נכסים</span>
         </h1>
         <p class="hero__motto">
-          <span class="hero__stat"><bdi class="hero__stat-n">95<span class="hero__pct">%</span></bdi><span class="hero__stat-t">מהאוכלוסייה<br><b>חושבים מה עושים</b></span></span>
-          <span class="hero__stat hero__stat--few"><bdi class="hero__stat-n">5<span class="hero__pct">%</span></bdi><span class="hero__stat-t">מהאוכלוסייה <b>עושים</b><br><b>את מה שהם חושבים</b></span></span>
+          <span class="hero__stat"><bdi class="hero__stat-n"><span class="hero__num">95</span><span class="hero__pct">%</span></bdi><span class="hero__stat-t">מהאוכלוסייה<br><b>חושבים מה עושים</b></span></span>
+          <span class="hero__stat hero__stat--few"><bdi class="hero__stat-n"><span class="hero__num">5</span><span class="hero__pct">%</span></bdi><span class="hero__stat-t">מהאוכלוסייה <b>עושים</b><br><b>את מה שהם חושבים</b></span></span>
         </p>
       </div>
 
@@ -264,21 +265,21 @@
       <div class="sum2__stage">
         <div class="sum2__grid">
           <!-- משולש פיתגורס (3:4:5) בזווית של הלוגו: ישרה למטה משמאל. ארבע רצועות: הקודקוד ליד הכותרת, ואז רצועה לכל שורה.
-               התמונה ממלאת אותו רצועה אחרי רצועה, מהקודקוד הצר ועד הבסיס הרחב -->
+               כל רצועה היא צורה נפרדת (אותה תמונה, חתוכה לרצועה שלה), עם רווח ביניהן. בסוף הרווחים נסגרים והן מתאחדות למשולש אחד -->
           <div class="sum2__tri" aria-hidden="true">
-            <div class="sum2__ghost"></div>
-            <div class="sum2__img"><img src="assets/sum-tri.jpg" alt="" loading="lazy" decoding="async" width="1700" height="1196"></div>
+            <div class="sum2__band" style="--k:0;--gt:0;--gb:1"><img src="assets/sum-tri.jpg" alt="" loading="lazy" decoding="async" width="1700" height="1196"></div>
+            <div class="sum2__band" style="--k:1;--gt:1;--gb:1"><img src="assets/sum-tri.jpg" alt="" loading="lazy" decoding="async" width="1700" height="1196"></div>
+            <div class="sum2__band" style="--k:2;--gt:1;--gb:1"><img src="assets/sum-tri.jpg" alt="" loading="lazy" decoding="async" width="1700" height="1196"></div>
+            <div class="sum2__band" style="--k:3;--gt:1;--gb:0"><img src="assets/sum-tri.jpg" alt="" loading="lazy" decoding="async" width="1700" height="1196"></div>
           </div>
           <h2 class="sec__title sum2__title" id="sum2-title">שורה תחתונה?</h2>
           <!-- קווי דף החשבון: כל קו יוצא מהצלע של המשולש (נקודה כתומה) ורץ עד סוף השורה שלו -->
-          <div class="sum2__rules" aria-hidden="true"><i style="--k:1"></i><i style="--k:2"></i><i style="--k:3"></i></div>
+          <div class="sum2__rules" aria-hidden="true"><i style="--k:2"></i><i style="--k:3"></i><i style="--k:4"></i></div>
           <ol class="sum2__rows">
             <li class="sum2__row" style="--k:1"><span class="sum2__tag"><b>01</b>כלכלת המשפחה</span><span class="sum2__w">תזרים מנוהל ויעיל</span></li>
             <li class="sum2__row" style="--k:2"><span class="sum2__tag"><b>02</b>נכסים פיננסיים</span><span class="sum2__w">חיסכון מושקע בשוטף</span></li>
             <li class="sum2__row" style="--k:3"><span class="sum2__tag"><b>03</b>תיק נכסים נדלנ״י</span><span class="sum2__w">תיק נכסים מניב וצומח</span></li>
           </ol>
-          <!-- השורה התחתונה: הבסיס של המשולש ממשיך לקו כתום אחד, כמו קו הסיכום בדף חשבון -->
-          <div class="sum2__total" aria-hidden="true"><i></i></div>
           <p class="sum2__res"><span class="sum2__eq" aria-hidden="true">=</span> עתיד כלכלי רגוע <span class="visually-hidden">ואושר (ועושר)</span><span class="sum2__aw" aria-hidden="true">ו<span class="aosh"><i>א</i><i>ע</i></span>ושר</span> משפחתי שהולך וגדל</p>
         </div>
       </div>
@@ -441,7 +442,7 @@
         </div>
         <nav class="foot__nav" aria-label="ניווט בתחתית העמוד">
           <p class="foot__h">ניווט</p>
-          <a href="#top"><i class="hz" aria-hidden="true"></i>בית</a><a href="about.html"><i class="hz" aria-hidden="true"></i>מי אנחנו</a><a href="tracks.html"><i class="hz" aria-hidden="true"></i>מי אתם</a><a href="#knowledge"><i class="hz" aria-hidden="true"></i>מרכז הידע הפיננסי</a><a href="#contact"><i class="hz" aria-hidden="true"></i>דברו איתנו</a>
+          <a href="#top"><i class="hz" aria-hidden="true"></i>בית</a><a href="about.html"><i class="hz" aria-hidden="true"></i>מי אנחנו</a><a href="tracks.html"><i class="hz" aria-hidden="true"></i>מסלולים</a><a href="#knowledge"><i class="hz" aria-hidden="true"></i>מרכז הידע הפיננסי</a><a href="contact.html"><i class="hz" aria-hidden="true"></i>דברו איתנו</a>
         </nav>
         <div class="foot__contact">
           <p class="foot__h">דברו איתנו</p>
@@ -483,7 +484,7 @@
        ההכנה שלהם (ההירו, התלת-ממד, מאות האנימציות) עוצרת את הדפדפן לרגע, ואם היא קורית באמצע, הלוגו נתקע -->
   <script>
     (function () {
-      var src = ["hero-scene.js","https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js","https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js","https://cdn.jsdelivr.net/npm/lenis@1.1.13/dist/lenis.min.js","https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js","https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/SVGLoader.js","sides.js","sections.js"];
+      var src = ["hero-scene.js","hero-extras.js","https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js","https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js","https://cdn.jsdelivr.net/npm/lenis@1.1.13/dist/lenis.min.js","https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js","https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/SVGLoader.js","sides.js","sections.js"];
       var load = function () { src.forEach(function (u) { var s = document.createElement('script'); s.src = u; s.async = false; document.body.appendChild(s); }); };
       var wait = document.documentElement.classList.contains('is-loading') && !matchMedia('(prefers-reduced-motion: reduce)').matches;
       wait ? setTimeout(load, Math.max(0, 1150 - performance.now())) : load();

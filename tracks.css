@@ -1,0 +1,255 @@
+/* =====================================================================
+   5M GROUP · עמוד המסלולים ("מי אתם")
+   נשען על styles.css: הטוקנים, הפונטים, ההדר, הכפתור, כרטיסי תנאי הסף, ההודעה של תנאי הסף והפוטר.
+   אותה שפה של דף הבית:
+   - נייבי, כתום, ונייר כמעט לבן עם נגיעת אפרסק (--paper). בלי גרעין בשום מקום.
+   - Cooperative לכותרות ולמספרים, Futurism לטקסט.
+   - תמונות "שחר" עם אותה משפחה.
+   - כרטיסים ישרים ונקיים, בלי חיתוכים ובלי משולשים קטנים (לבקשת צביה, 17.11).
+   - קודם כל האזורים הבהירים ברצף, ורק בסוף הבלוק הכהה ("התחילו בקטן" והפוטר), בלי קפיצות כהה-בהיר.
+   ===================================================================== */
+
+.tracks { background: var(--navy); }
+.tracks main { overflow-x: clip; }
+
+/* ---------- 1. פתיחה: שלושה משפטים, כל אחד עם תמונה עגולה ----------
+   על הנייר עם אור החלון (כמו "מזדהים"), כדי שיהיה אחיד עם שאר האתר. בלי קופסאות: שלושה טורים עם קו דק ביניהם,
+   כך שזה שונה לגמרי מכרטיסי המסלולים שמתחת. התמונה העגולה עם הקו הכתום לקוחה מההמלצות בדף הבית */
+.th { position: relative; isolation: isolate; overflow: hidden; display: flex; flex-direction: column; justify-content: center; min-height: 100svh;
+  padding: calc(var(--hh) + 40 * var(--u)) calc(216 * var(--u)) calc(40 * var(--u)); background: var(--paper); color: var(--ink); box-shadow: 0 1px 0 var(--paper); }
+.th .light { inset: 0 -4%; -webkit-mask-image: linear-gradient(to bottom, #000 0%, #000 70%, transparent 100%); mask-image: linear-gradient(to bottom, #000 0%, #000 70%, transparent 100%); }
+.th__head { text-align: center; }
+.th__eyebrow { margin-bottom: calc(10 * var(--u)); }
+.th__title { margin: 0; font-family: var(--font-display); font-weight: 400; font-size: calc(110 * var(--u)); line-height: .95; letter-spacing: -.005em; text-wrap: balance; }
+.th__title em { font-style: normal; color: var(--orange); }
+.th__ask { margin: calc(18 * var(--u)) 0 0; font-family: var(--font-text); font-weight: 400; font-size: calc(34 * var(--u)); line-height: 1.3; }
+.th__hint { display: inline-flex; align-items: center; gap: calc(10 * var(--u)); margin: calc(10 * var(--u)) 0 0; font-family: var(--font-text); font-weight: 400; font-size: calc(20 * var(--u)); color: var(--orange); }
+.th__hint::after { content: ""; width: calc(9 * var(--u)); height: calc(9 * var(--u)); min-width: 7px; min-height: 7px; margin-top: -.3em; border: solid currentColor; border-width: 0 1.5px 1.5px 0; transform: rotate(45deg); animation: hintBob 1.8s ease-in-out infinite; }
+@keyframes hintBob { 50% { translate: 0 4px; } }
+
+.opts { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); margin: calc(46 * var(--u)) calc(-90 * var(--u)) 0; padding: 0; list-style: none; }
+.opt { display: flex; }
+.opt + .opt { border-right: 1px solid rgb(16 14 54 / .1); }
+.opt__a { position: relative; flex: 1; display: flex; flex-direction: column; align-items: center; padding: calc(10 * var(--u)) calc(40 * var(--u)) calc(14 * var(--u)); color: var(--ink); text-align: center; cursor: pointer; }
+.opt__face { position: relative; display: block; width: calc(190 * var(--u)); aspect-ratio: 1; border-radius: 50%; overflow: hidden; background: #DCD8E6;
+  outline: 1.5px solid var(--orange); outline-offset: calc(8 * var(--u)); transition: outline-offset .6s cubic-bezier(.16, 1, .3, 1); }
+.opt__face img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 50% 72%; transition: transform 1.4s cubic-bezier(.16, 1, .3, 1); }
+.opt:nth-child(2) .opt__face img { object-position: 54% 70%; }
+.opt:nth-child(3) .opt__face img { object-position: 46% 50%; }
+.opt__q { flex: 1; margin-top: calc(30 * var(--u)); font-family: var(--font-text); font-weight: 400; font-size: calc(24 * var(--u)); line-height: 1.55; text-wrap: balance; }
+.opt__foot { display: flex; align-items: center; gap: calc(14 * var(--u)); margin-top: calc(22 * var(--u)); }
+.opt__chk { position: relative; flex: none; width: calc(34 * var(--u)); height: calc(34 * var(--u)); min-width: 24px; min-height: 24px; border: 1.5px solid rgb(16 14 54 / .28); transition: background-color .35s ease, border-color .35s ease; }
+.opt__chk svg { position: absolute; inset: 14%; width: 72%; height: 72%; fill: none; stroke: #fff; stroke-width: 3; stroke-linecap: square; stroke-dasharray: 30; stroke-dashoffset: 30; transition: stroke-dashoffset .45s ease .1s; }
+.opt__pick { font-family: var(--font-display); font-size: calc(32 * var(--u)); line-height: 1; transition: color .35s ease; }
+.opt__trk { margin-top: calc(12 * var(--u)); font-family: var(--font-text); font-weight: 400; font-size: calc(17 * var(--u)); color: var(--ink-3); }
+.opt__a:hover .opt__face { outline-offset: calc(14 * var(--u)); }
+.opt__a:hover .opt__face img { transform: scale(1.08); }
+.opt__a:hover .opt__chk { border-color: var(--orange); }
+.opt__a:hover .opt__pick { color: var(--orange); }
+.opt__a:focus-visible { outline: 2px solid var(--orange); outline-offset: 4px; }
+/* נבחר: הריבוע מתמלא בכתום עם וי, כמו כרטיס תנאי סף מסומן בדף הבית */
+.opt.is-picked .opt__chk { background: var(--orange); border-color: var(--orange); }
+.opt.is-picked .opt__chk svg { stroke-dashoffset: 0; }
+.opt.is-picked .opt__pick { color: var(--orange); }
+/* כרטיס המסלול שנבחר מואר לרגע כשמגיעים אליו */
+.plan.is-flash .plan__in { box-shadow: inset 0 0 0 2px var(--orange); transition: box-shadow .4s ease; }
+
+/* ---------- 2. שלושת המסלולים: שלושה כרטיסים נפרדים, זה לצד זה ----------
+   הכרטיסים חולקים את אותן שורות (subgrid), כך שכל חלק מיושר לאותו גובה בשלושתם, והכפתורים בשורה אחת */
+.tp { position: relative; z-index: 1; isolation: isolate; background: var(--paper); color: var(--ink); padding: var(--pad) calc(216 * var(--u)); box-shadow: 0 1px 0 var(--paper); }
+.tp__head { display: flex; justify-content: center; text-align: center; }
+.tp__title { max-width: calc(1150 * var(--u)); text-wrap: balance; }
+.tp__list { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); grid-template-rows: repeat(7, auto); column-gap: calc(30 * var(--u)); margin: var(--gap-head) 0 0; padding: 0; list-style: none; }
+.plan { position: relative; grid-row: span 7; display: grid; grid-template-rows: subgrid; filter: drop-shadow(0 calc(22 * var(--u)) calc(34 * var(--u)) rgb(16 14 54 / .09));
+  transition: translate .7s cubic-bezier(.16, 1, .3, 1), filter .7s ease; }
+.plan__in { position: relative; grid-row: 1 / -1; display: grid; grid-template-rows: subgrid; row-gap: 0; overflow: hidden; background: var(--paper-hi); }
+/* התמונה: נמסה בתחתית אל הכרטיס, כך שאין לה קו חיתוך */
+.plan__img { position: relative; height: calc(320 * var(--u)); margin: 0; overflow: hidden;
+  -webkit-mask-image: linear-gradient(to bottom, #000 62%, transparent); mask-image: linear-gradient(to bottom, #000 62%, transparent); }
+.plan__img img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 62%; transform: scale(1.03); transform-origin: 50% 70%; transition: transform 1.6s cubic-bezier(.16, 1, .3, 1); }
+#top5 .plan__img img { object-position: 50% 55%; }
+#international .plan__img img { object-position: 50% 30%; }
+.plan__head { position: relative; margin-top: calc(-40 * var(--u)); padding: 0 calc(38 * var(--u)); }
+.plan__n { margin: 0; font-family: var(--font-text); font-weight: 400; font-size: var(--fs-label); color: var(--orange); }
+.plan__name { margin: calc(8 * var(--u)) 0 0; font-family: var(--font-display); font-weight: 400; font-size: calc(54 * var(--u)); line-height: 1; white-space: nowrap; }
+.plan__tag { margin: calc(12 * var(--u)) 0 0; font-family: var(--font-text); font-weight: 400; font-size: calc(22 * var(--u)); line-height: 1.4; color: var(--orange); text-wrap: pretty; }
+.plan__d { margin: 0; padding: calc(12 * var(--u)) calc(38 * var(--u)) 0; font-family: var(--font-text); font-weight: 400; font-size: calc(19 * var(--u)); line-height: 1.6; color: var(--ink-2); text-wrap: pretty; }
+.plan__inc { align-self: end; margin: 0; padding: calc(26 * var(--u)) calc(38 * var(--u)) calc(12 * var(--u)); font-family: var(--font-text); font-weight: 400; font-size: calc(19 * var(--u)); line-height: 1.5; color: var(--ink-2); }
+.plan__inc b { font-weight: 700; color: var(--ink); }
+.plan__inc em { font-style: normal; font-weight: 700; color: var(--orange); }
+.plan__ik { display: block; font-weight: 700; color: var(--ink); }
+.plan__link { font-weight: 700; color: var(--ink); background: linear-gradient(var(--orange), var(--orange)) 0 100% / 100% 1px no-repeat; transition: color .3s ease; }
+.plan__link:hover { color: var(--orange); }
+
+/* התחומים: שורות טקסט שקטות. לחיצה פותחת את הפירוט במקום */
+.plan__acc { padding: 0 calc(38 * var(--u)); }
+.row { border-top: 1px solid rgb(16 14 54 / .1); }
+.row:last-child { border-bottom: 1px solid rgb(16 14 54 / .1); }
+.row__h { position: relative; display: flex; align-items: center; justify-content: space-between; gap: calc(16 * var(--u)); padding: calc(17 * var(--u)) 0; list-style: none; cursor: pointer;
+  font-family: var(--font-text); font-weight: 400; font-size: calc(21 * var(--u)); color: var(--ink); transition: color .3s ease; }
+.row__h::-webkit-details-marker { display: none; }
+.row__h:hover { color: var(--orange); }
+.row__h:focus-visible { outline: 2px solid var(--orange); outline-offset: 2px; }
+.row__x { position: relative; flex: none; width: calc(14 * var(--u)); height: calc(14 * var(--u)); min-width: 10px; min-height: 10px; }
+.row__x::before, .row__x::after { content: ""; position: absolute; left: 0; right: 0; top: 50%; height: 1.5px; margin-top: -.75px; background: currentColor; transition: transform .4s cubic-bezier(.16, 1, .3, 1); }
+.row__x::after { transform: rotate(90deg); }
+.row[open] .row__x::after { transform: rotate(0deg); }
+.row[open] .row__h { color: var(--orange); }
+.row__list { margin: 0; padding: 0 0 calc(18 * var(--u)); list-style: none; }
+.row__list li { position: relative; padding: calc(5 * var(--u)) calc(22 * var(--u)) calc(5 * var(--u)) 0; font-family: var(--font-text); font-weight: 400; font-size: calc(18 * var(--u)); line-height: 1.5; color: var(--ink-2); }
+/* וי כתום דק, בלי מסגרת */
+.row__list li::before { content: ""; position: absolute; right: calc(3 * var(--u)); top: calc(5 * var(--u) + .42em); width: calc(5 * var(--u)); height: calc(9 * var(--u)); min-width: 4px; min-height: 7px; border: solid var(--orange); border-width: 0 1.5px 1.5px 0; transform: rotate(45deg); }
+.row__en { display: block; font-size: .82em; line-height: 1.4; color: var(--ink-3); text-align: right; unicode-bidi: isolate; }
+.row[open] .row__list { animation: rowIn .5s cubic-bezier(.16, 1, .3, 1); }
+@keyframes rowIn { from { opacity: 0; transform: translateY(-6px); } }
+.plan__go { align-self: end; padding: calc(30 * var(--u)) calc(38 * var(--u)) calc(40 * var(--u)); }
+.plan__go .btn { width: 100%; }
+@media (hover: hover) and (min-width: 901px) {
+  .plan:hover { translate: 0 calc(-8 * var(--u)); filter: drop-shadow(0 calc(34 * var(--u)) calc(44 * var(--u)) rgb(16 14 54 / .15)); }
+  .plan:hover .plan__img img { transform: scale(1.08); }
+}
+
+/* ---------- אור של בוקר: צל רך של חלון ועלים על הקיר, לאזורים הבהירים ----------
+   במקום לבן על לבן: הרקע הוא קיר שהשמש של הבוקר נופלת עליו. נע לאט מאוד, כמו שמש שזזה (multiply על הנייר) */
+.light { position: absolute; inset: 0 -4%; z-index: -1; pointer-events: none; background: url("assets/light-window.jpg") center / cover no-repeat; mix-blend-mode: multiply; opacity: .5;
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0%, #000 22%, #000 78%, transparent 100%); mask-image: linear-gradient(to bottom, transparent 0%, #000 22%, #000 78%, transparent 100%);
+  animation: lightDrift 38s ease-in-out infinite alternate; }
+@keyframes lightDrift { from { transform: translate3d(0, 0, 0) scale(1.02); } to { transform: translate3d(-2.5%, 1.5%, 0) scale(1.06); } }
+@media (prefers-reduced-motion: reduce) { .light { animation: none; } }
+
+/* ---------- 3. מה המשפחות מספרות: בדיוק כמו ההמלצות בדף הבית ----------
+   הסגנונות עצמם (voices, vthumb) באים מ-styles.css. כאן רק: המסך המלא, העלייה על המסלולים, ומשפט גדול וקריא יותר */
+.tv { z-index: 2; isolation: isolate; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100svh; margin-top: 30svh;
+  padding: calc(var(--hh) + 50 * var(--u)) calc(216 * var(--u)) calc(60 * var(--u)); box-shadow: 0 -30px 60px rgb(9 7 37 / .25); }
+.tv__title { font-size: var(--fs-h2-long); }
+.tv__stage { margin-top: calc(44 * var(--u)); }
+.tv__face { width: calc(124 * var(--u)); outline-offset: calc(8 * var(--u)); }
+.tv__quote p { font-weight: 400; font-size: calc(32 * var(--u)); line-height: 1.55; text-wrap: balance; }
+.tv__film { --tw: calc(92 * var(--u)); margin-top: calc(40 * var(--u)); }
+
+/* ---------- 4. מזדהים? (הכרטיסים וההודעה מדף הבית) ---------- */
+.light--2 { background-image: url("assets/light-window-2.jpg"); transform-origin: 30% 50%; animation-duration: 46s; }
+.tc { position: relative; z-index: 1; isolation: isolate; overflow: hidden; background: var(--paper); color: var(--ink); padding: var(--pad) calc(216 * var(--u)); text-align: center; box-shadow: 0 1px 0 var(--paper); }
+.tc__title { margin: 0; font-family: var(--font-display); font-weight: 400; font-size: calc(150 * var(--u)); line-height: .95; }
+.tc__lead { margin: calc(18 * var(--u)) 0 0; font-family: var(--font-text); font-weight: 400; font-size: calc(32 * var(--u)); line-height: 1.4; color: inherit; opacity: .82; }
+.tc__lead b { font-weight: 700; color: inherit; }
+.tc__stats { margin-top: calc(50 * var(--u)); }
+.stat__or { margin-top: calc(6 * var(--u)); font-family: var(--font-text); font-weight: 400; font-size: calc(22 * var(--u)); color: var(--orange); }
+/* מצב 3/3 של ההודעה: הטקסט בכתום, כמו בדף הבית */
+.tc.is-fit .match__note-t { color: var(--orange); }
+.tc__go { display: flex; align-items: center; justify-content: center; margin-top: calc(26 * var(--u)); }
+
+/* ---------- 6. התחילו בקטן: כחול כהה, עולה על הסגירה בגלילה אחת ----------
+   אותו מבנה של "לכל אורך הדרך" בדף הבית (road2): המזח על כל המסך, צל כחול, והטקסט במרכז */
+.ts { position: relative; z-index: 3; margin-top: 60svh; background: var(--navy); color: var(--paper); box-shadow: 0 4px 0 var(--navy), 0 -30px 60px rgb(9 7 37 / .25); }
+.ts__stage { position: relative; height: 100svh; overflow: hidden; }
+.ts__win { position: absolute; inset: 0 0 8px; will-change: clip-path; }
+.ts__win video { display: block; width: 100%; height: 100%; object-fit: cover; object-position: 50% 50%; }
+.ts__shade { position: absolute; inset: 0; background: radial-gradient(60% 55% at 50% 55%, rgb(9 7 37 / .72), rgb(9 7 37 / .38) 75%), linear-gradient(to bottom, rgb(9 7 37 / .85), rgb(9 7 37 / .25) 34%, rgb(9 7 37 / .5) 66%, var(--navy) 96%); }
+.ts__content { position: absolute; inset: 0; z-index: 2; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: var(--hh) calc(216 * var(--u)) 0; text-align: center; }
+.ts__title { margin: 0; font-size: var(--fs-h2); text-wrap: balance; text-shadow: 0 2px 24px rgb(9 7 37 / .5); }
+/* "1 פגישה אחת": כמו "עד 50 משפחות בשנה בלבד" בדף הבית */
+.ts__stat { display: flex; align-items: baseline; justify-content: center; gap: calc(20 * var(--u)); margin: calc(40 * var(--u)) 0 0; font-family: var(--font-text); }
+.ts__stat-n { font-family: var(--font-display); font-weight: 400; font-size: calc(130 * var(--u)); line-height: .9; color: var(--orange); text-shadow: 0 4px 30px rgb(9 7 37 / .45); }
+.ts__stat-l { font-weight: 400; font-size: calc(34 * var(--u)); text-shadow: 0 2px 14px rgb(9 7 37 / .6); }
+.ts__t { margin: calc(36 * var(--u)) 0 0; font-family: var(--font-display); font-weight: 400; font-size: calc(54 * var(--u)); line-height: 1; text-shadow: 0 2px 20px rgb(9 7 37 / .5); }
+.ts__lead { max-width: calc(900 * var(--u)); margin: calc(12 * var(--u)) 0 0; font-family: var(--font-text); font-weight: 300; font-size: calc(27 * var(--u)); line-height: 1.32; text-wrap: balance; text-shadow: 0 2px 18px rgb(9 7 37 / .6); }
+/* ארבעת הדברים שמקבלים: לוח זכוכית אחד בארבעה טורים, כמו הלוח באנגלית בדף הבית */
+.ts__list { box-sizing: border-box; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); width: min(100%, calc(1240 * var(--u))); margin: calc(40 * var(--u)) 0 0; padding: 0; list-style: none; text-align: right;
+  background: var(--glass-bg); border: 1px solid var(--glass-line); box-shadow: var(--glass-hi); -webkit-backdrop-filter: blur(10px) saturate(130%); backdrop-filter: blur(10px) saturate(130%); }
+.ts__list li { display: flex; flex-direction: column; gap: calc(10 * var(--u)); padding: calc(24 * var(--u)) calc(28 * var(--u)); font-family: var(--font-text); font-weight: 400; font-size: calc(22 * var(--u)); line-height: 1.4; }
+.ts__list li + li { border-right: 1px solid var(--glass-line); }
+.ts__n { font-family: var(--font-display); font-size: calc(26 * var(--u)); line-height: 1; color: var(--orange); }
+.ts__cta { margin-top: calc(40 * var(--u)); }
+
+
+/* ---------- 5. סגירה: המשפחה על הגבעה של דף הבית, והבלון ברוח ---------- */
+.tf { position: relative; z-index: 1; isolation: isolate; overflow: hidden; display: flex; align-items: flex-start; justify-content: center; min-height: 100svh;
+  padding: calc(var(--hh) + 110 * var(--u)) calc(216 * var(--u)) calc(380 * var(--u)); background: var(--paper); color: var(--ink); box-shadow: 0 1px 0 var(--paper); }
+.tf__land { position: absolute; left: 50%; bottom: 0; z-index: -1; width: max(100%, calc(1880 * var(--u))); aspect-ratio: 3; translate: -50% 0; pointer-events: none;
+  -webkit-mask-image: linear-gradient(to bottom, transparent, #000 24%, #000 72%, transparent 97%); mask-image: linear-gradient(to bottom, transparent, #000 24%, #000 72%, transparent 97%); }
+.tf__fam, .tf__bal { position: absolute; inset: 0; display: block; width: 100%; height: 100%; }
+.tf__bal { overflow: visible; }
+.tf__string { fill: none; stroke: #fffaf4; stroke-width: 2.6; stroke-linecap: round; opacity: .92; }
+.tf__in { display: flex; flex-direction: column; align-items: center; text-align: center; }
+.tf__title { margin: 0 0 calc(44 * var(--u)); font-family: var(--font-display); font-weight: 400; line-height: 1; }
+.tf__a { display: block; font-size: calc(92 * var(--u)); }
+.tf__title .lw { transition: none; }
+.tf__b { display: block; margin-top: calc(10 * var(--u)); font-size: calc(150 * var(--u)); line-height: .95; color: var(--orange); }
+
+/* על רקע בהיר: אייקון התפריט במובייל בנייבי (ברירת המחדל לבנה) */
+.site-header.is-light .site-nav__toggle { color: var(--navy-brand); }
+
+/* =====================================================================
+   מובייל: אפיון מחדש
+   ===================================================================== */
+@media (max-width: 900px) {
+  .th { min-height: 0; padding: calc(var(--hh) + 28px) 16px 40px; }
+  .th__title { font-size: min(12.4vw, 54px); line-height: 1; }
+  .th__ask { font-size: 18px; margin-top: 12px; }
+  .th__hint { font-size: 15px; margin-top: 8px; }
+  .opts { grid-template-columns: 1fr; margin: 18px 0 0; }
+  .opt + .opt { border-right: 0; border-top: 1px solid rgb(16 14 54 / .1); }
+  .opt__a { display: grid; grid-template-columns: 84px 1fr; grid-template-areas: "face q" "face foot" "face trk"; column-gap: 18px; align-items: start; padding: 20px 2px; text-align: right; }
+  .opt__face { grid-area: face; width: 76px; outline-offset: 4px; margin: 4px; }
+  .opt__q { grid-area: q; margin: 0; font-size: 16px; text-wrap: pretty; }
+  .opt__foot { grid-area: foot; margin-top: 12px; gap: 10px; }
+  .opt__chk { width: 24px; height: 24px; }
+  .opt__pick { font-size: 21px; }
+  .opt__trk { grid-area: trk; margin-top: 6px; font-size: 12.5px; }
+
+  .tp { padding: 80px 20px; }
+  .tp__list { grid-template-columns: 1fr; grid-template-rows: none; row-gap: 24px; margin-top: 30px; }
+  .plan { grid-row: auto; grid-template-rows: none; display: block; }
+  .plan__in { display: flex; flex-direction: column; }
+  .plan__img { height: 230px; }
+  .plan__head { margin-top: -24px; padding: 0 20px; }
+  .plan__n { font-size: 13px; }
+  .plan__name { font-size: 34px; white-space: normal; }
+  .plan__tag { font-size: 16px; }
+  .plan__d, .plan__inc { font-size: 15px; padding-inline: 20px; }
+  .plan__inc { padding-top: 18px; }
+  .plan__acc { padding: 0 20px; }
+  .row__h { font-size: 16px; padding: 14px 0; }
+  .row__list li { font-size: 14px; padding-right: 16px; }
+  .plan__go { padding: 22px 20px 26px; }
+  .plan__go, .plan__inc { align-self: stretch; }
+
+  .tv { min-height: 0; margin-top: 0; padding: 90px 20px 70px; box-shadow: none; }
+  .tv__title { font-size: 30px; }
+  .tv__stage { margin-top: 26px; }
+  .tv__face { width: 76px; }
+  .tv__quote p { font-size: 18px; text-wrap: pretty; }
+  .tv__film { --tw: 52px; justify-content: center; margin-top: 26px; }
+
+  .tc { padding: 80px 20px; }
+  .tc__title { font-size: 68px; }
+  .tc__lead { font-size: 18px; }
+  .tc__stats { margin-top: 28px; }
+  .stat__or { font-size: 15px; }
+
+  .ts { margin-top: 0; }
+  .ts__content { justify-content: center; padding: calc(var(--hh) + 10px) 20px 0; }
+  .ts__title { font-size: 32px; }
+  .ts__stat { margin-top: 14px; gap: 10px; }
+  .ts__stat-n { font-size: 60px; } .ts__stat-l { font-size: 18px; }
+  .ts__t { font-size: 24px; margin-top: 12px; }
+  .ts__lead { font-size: 15px; margin-top: 8px; max-width: none; }
+  .ts__list { grid-template-columns: 1fr 1fr; margin-top: 18px; }
+  .ts__list li { padding: 12px 12px; font-size: 13.5px; gap: 6px; }
+  .ts__list li + li { border-right: 0; }
+  .ts__list li:nth-child(even) { border-right: 1px solid var(--glass-line); }
+  .ts__list li:nth-child(n+3) { border-top: 1px solid var(--glass-line); }
+  .ts__n { font-size: 15px; }
+  .ts__cta { margin-top: 18px; }
+
+  .tf { min-height: 0; padding: 120px 20px 54vw; }
+  .tf__a { font-size: 34px; }
+  .tf__b { font-size: 52px; }
+  .tf__land { width: 190vw; bottom: -2vw; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .opt__face, .opt__face img, .plan, .plan__img img { transition: none; }
+  .th__hint::after { animation: none; }
+}
