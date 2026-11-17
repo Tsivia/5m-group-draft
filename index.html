@@ -1,0 +1,493 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>5M Group · ממשכורת לתיק נכסים</title>
+  <meta name="description" content="5M Group הוא Family Office בוטיק למשפחות שמרוויחות יפה ופועלות להגיע לעצמאות כלכלית. ממשכורת לתיק נכסים מניב וצומח.">
+  <link rel="preload" href="fonts/Cooperative-Regular.woff2" as="font" type="font/woff2" crossorigin>
+  <!-- התמונות של ההירו נטענות כבר מההתחלה, ולא רק אחרי שהקוד רץ -->
+  <link rel="preload" href="assets/hero-c-nosun.jpg" as="image" fetchpriority="high">
+  <link rel="preload" href="assets/hero-c-clean.jpg" as="image">
+  <script>
+    /* מסך הטעינה: נשאר רק עד שהתמונה של ההירו מוכנה, ולא פחות מזמן הציור של הלוגו (כשנייה וחצי). לא מעכב שום קובץ.
+       בזמן הזה הגלילה עצורה. ביציאה: הלוגו עולה למקום שלו בהדר, המסך נפתח מלמטה למעלה, וההירו נכנס */
+    (function () {
+      var d = document.documentElement, calm = matchMedia('(prefers-reduced-motion: reduce)').matches;
+      d.classList.add('has-loader', 'is-loading');
+      var MIN = calm ? 250 : 1500, MAX = 8000, t0 = performance.now(), hero = false, fonts = false, prism = false, gone = false;
+      var keys = { ' ': 1, ArrowDown: 1, ArrowUp: 1, PageDown: 1, PageUp: 1, Home: 1, End: 1 };
+      var block = function (e) { if (gone || (e.type === 'keydown' && !keys[e.key])) return; e.preventDefault(); e.stopPropagation(); };
+      ['wheel', 'touchmove', 'keydown'].forEach(function (t) { addEventListener(t, block, { capture: true, passive: false }); });
+      function go() {
+        if (gone) return; gone = true;
+        var l = document.querySelector('.loader'), mark = l && l.querySelector('.loader__mark'), hl = document.querySelector('.site-header__logo img');
+        d.classList.remove('is-loading');
+        if (!l) { d.classList.add('is-landed'); return; }
+        if (calm || !mark || !hl) { d.classList.add('is-landed'); l.classList.add('is-fading'); setTimeout(function () { l.remove(); }, 600); return; }
+        // הסימן בתוך התמונה של הלוגו בהדר (1267 פיקסלים לרוחב): מתחיל ב-267 משמאל וב-76 מלמעלה, ורוחבו 734
+        // הקו משלים את עצמו מהמקום שבו הוא נמצא עד הסוף (מימין לשמאל), ורק אז הלוגו עולה להדר
+        var bar = l.querySelector('.loader__bar b');
+        if (bar) { var now = getComputedStyle(bar).transform; bar.style.animation = 'none'; bar.style.transform = now; bar.getBoundingClientRect(); bar.style.transition = 'transform .32s cubic-bezier(.4, 0, .2, 1)'; bar.style.transform = 'scaleX(1)'; }
+        setTimeout(function () {
+          var a = mark.getBoundingClientRect(), b = hl.getBoundingClientRect(), k = b.width / 1267;
+          mark.style.transform = 'translate(' + (b.left + 267 * k - a.left) + 'px,' + (b.top + 76 * k - a.top) + 'px) scale(' + (734 * k / a.width) + ')';
+          l.classList.add('is-out');
+          setTimeout(function () { d.classList.add('is-landed'); }, 950);
+          setTimeout(function () { l.remove(); }, 1200);
+        }, bar ? 340 : 0);
+      }
+      function check() { if (gone || !hero || !fonts || !prism) return; var w = MIN - (performance.now() - t0); w > 0 ? setTimeout(go, w) : go(); }
+      addEventListener('hero-ready', function () { hero = true; check(); });
+      // גם המנסרה התלת-ממדית מוכנה לפני שהמסך נפתח (ההכנה שלה עוצרת את הדפדפן לרגע). לכל היותר 4 שניות
+      addEventListener('prism-ready', function () { prism = true; check(); });
+      setTimeout(function () { prism = true; check(); }, 4000);
+      (document.fonts ? document.fonts.ready : Promise.resolve()).then(function () { fonts = true; check(); });
+      setTimeout(function () { hero = fonts = true; check(); }, MAX);
+    })();
+  </script>
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="stylesheet" href="styles.css">
+  <link rel="preload" href="hero-scene.js" as="script">
+  <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" as="script">
+  <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js" as="script">
+  <link rel="preload" href="https://cdn.jsdelivr.net/npm/lenis@1.1.13/dist/lenis.min.js" as="script">
+  <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js" as="script">
+  <link rel="preload" href="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/SVGLoader.js" as="script">
+  <link rel="preload" href="sides.js" as="script">
+  <link rel="preload" href="sections.js" as="script">
+</head>
+<body>
+
+  <!-- מסך טעינה: הלוגו נבנה מחלקים. 5M עולה מתוך פס, GROUP אחריו, והמשולש הכתום צומח מהפינה שלו. פס דק מתמלא בזמן הטעינה,
+       ואז הלוגו עולה למקום שלו בהדר והמסך מחליק למעלה אל התמונה. רק תנועה ושקיפות: רץ חלק גם כשהדפדפן עסוק בטעינה -->
+  <div class="loader" aria-hidden="true">
+    <div class="loader__veil"></div>
+    <div class="loader__mark">
+      <span class="lp lp--5m"><svg viewBox="103.18 29.19 284.02 198.6" preserveAspectRatio="none"><path d="M212.207 29.5706L217.748 29.3075C217.402 34.8641 217.303 52.8778 217.908 58.0707C197.288 57.4576 176.356 58.0734 155.722 57.8551C151.675 57.8125 135.626 58.281 132.659 57.6927C132.75 67.4283 133.153 84.117 132.198 93.3867C137.074 90.696 140.597 88.9354 146.121 87.6424C160.377 84.3062 176.677 85.8673 189.311 93.4478C202.696 101.409 212.35 114.383 216.132 129.491C218.225 137.946 218.202 172.822 216.511 181.741C215.271 188.279 213.015 194.376 209.545 200.064C201.504 213.419 188.391 222.944 173.204 226.46C169.342 227.393 165.303 227.676 161.34 227.742C134.308 228.195 111.57 209.939 105.219 183.841C104.14 178.959 103.988 175.622 104.444 170.703C112.324 171.448 123.989 170.672 132.118 170.87C133.094 178.247 134.353 184.022 139.633 189.714C150.419 201.341 167.411 202.537 179.324 191.796C191.047 181.227 188.491 168.236 188.813 154.009C188.84 142.789 189.605 132.673 181.477 123.891C163.778 104.769 133.431 116.256 132.596 142.659L104.283 142.669C103.525 120.431 103.971 96.5582 103.969 74.1516L103.968 49.463C103.967 42.8117 103.834 36.1842 104.56 29.5669C109.429 29.8126 115.75 29.6348 120.754 29.6388L151.156 29.6602C170.715 29.671 192.845 30.1848 212.207 29.5706Z"/><path d="M357.053 29.5108C364.594 29.7145 380.057 30.0691 387.06 29.1878L387.077 155.587V201.319C387.077 204.346 387.526 222.878 386.608 224.076L385.743 224.027C376.818 224.243 367.497 224.165 358.539 224.217C358.126 213.004 358.298 201.325 358.298 190.075L358.301 135.922L358.268 104.441C358.261 98.1223 357.991 89.7767 358.839 83.6887C356.449 87.295 353.602 92.6117 351.39 96.464L337.126 121.361L324.199 143.562C321.654 147.946 318.49 153.171 316.372 157.704C314.849 154.273 311.58 148.796 309.633 145.287L298.16 124.452L262.104 59.0972C259.931 55.1815 246.834 32.1943 246.521 29.3592C252.859 30.0863 261.802 29.3352 268.347 29.609C270.074 29.5995 274.973 29.5755 276.062 30.8714C278.183 33.3937 279.93 36.4166 281.528 39.2754C285.308 46.0356 289.166 52.7576 293.057 59.4525C298.407 68.5106 303.691 77.6073 308.909 86.742C310.965 90.312 315.123 97.0353 316.441 100.452C317.428 97.0386 323.135 87.6563 325.165 84.1454L340.609 57.4701L350.865 39.6538C352.506 36.8022 355.138 31.9106 357.053 29.5108Z"/></svg></span>
+      <span class="lp lp--grp"><svg viewBox="103.18 246.5 284.02 74" preserveAspectRatio="none"><path d="M134.768 247.098C137.204 246.631 147.624 246.889 150.648 246.936C150.604 250.406 150.629 253.876 150.723 257.345C143.556 256.907 134.609 257.027 128.148 260.272C122.154 263.246 117.595 268.488 115.48 274.835C110.43 290.323 119.452 305.722 135.45 308.929C136.549 309.149 138.461 309.648 139.39 309.169C139.936 307.381 139.154 297.045 139.505 293.846C136.632 294.142 132.538 294.079 129.567 294.117C129.278 290.392 129.386 286.357 129.498 282.621C132.972 283.468 140.908 283.243 144.885 283.252C146.759 283.153 148.74 282.935 150.617 282.762C150.465 294.174 150.329 308.366 150.756 319.663C137.544 319.588 129.136 321.122 117.724 312.566C101.565 300.451 98.3742 276.901 110.68 260.905C116.53 253.256 125.211 248.28 134.768 247.098Z"/><path d="M163.584 246.749C171.437 247.163 181.561 245.971 188.968 247.711C199.804 250.257 206.707 262.859 203.238 273.451C200.607 281.483 196.136 284.549 189.039 288.376C194.347 295.217 199.105 303.08 203.981 310.253C206.089 313.353 208.487 317.433 210.882 320.226C206.759 320.346 203.099 320.269 198.976 320.152C196.498 317.514 194.758 314.854 192.709 311.88C186.688 301.985 178.598 290.07 172.048 280.474C173.164 286.67 172.806 292.204 172.805 298.478C172.754 305.54 172.848 312.602 173.087 319.66C169.327 319.67 165.567 319.658 161.807 319.622C161.574 312.735 160.907 249.241 161.925 247.542C162.302 246.913 162.924 246.917 163.584 246.749ZM172.499 278.029C178.864 277.829 185.606 279.304 190.148 275.072C193.935 269.824 194.621 263.991 188.954 259.391C184.75 255.979 177.682 257.901 172.659 257.25C172.823 261.953 173.081 273.526 172.499 278.029Z"/><path d="M241.526 247.075C261.573 243.908 280.38 257.626 283.487 277.683C286.594 297.74 272.819 316.506 252.754 319.553C232.772 322.587 214.102 308.883 211.008 288.911C207.915 268.939 221.563 250.228 241.526 247.075ZM247.148 309.172C261.422 309.218 273.028 297.679 273.064 283.406C273.101 269.132 261.554 257.534 247.28 257.507C233.021 257.481 221.436 269.013 221.4 283.273C221.363 297.533 232.888 309.125 247.148 309.172Z"/><path d="M324.248 301.703C323.561 297.023 323.552 248.654 324.995 247.098C327.091 246.541 332.986 246.908 335.472 246.989C335.357 250.755 335.294 254.522 335.281 258.288C335.106 272.246 335.568 286.287 335.106 300.228C334.488 318.761 310.026 326.706 298.193 312.699C295.897 309.98 294.334 306.719 293.653 303.226C292.905 299.453 292.976 281.787 293.129 277.168C293.403 268.915 292.649 255.523 293.297 247.611C293.948 246.763 293.909 247.014 295.283 246.773C298.148 246.872 301.014 246.937 303.88 246.967L303.853 281.098C303.85 287.426 303.704 293.751 304.085 300.067C304.456 306.206 309.01 308.453 314.308 309.846C319.744 307.937 321.608 307.003 324.248 301.703Z"/><path d="M346.74 246.757C359.225 247.293 375.252 243.697 383.398 255.438C392.422 268.447 384.521 286.614 368.751 288.575C366.374 288.871 357.135 288.36 356.144 289.05L356.154 289.986C356.514 299.205 355.616 310.707 356.702 319.66C352.941 319.675 349.181 319.663 345.42 319.621C344.598 300.53 345.146 267.906 345.37 247.643C345.374 247.149 346.232 246.955 346.74 246.757ZM355.86 277.948C362.547 277.782 368.685 279.406 373.43 275.005C377.088 269.669 378.069 263.628 371.977 259.174C367.698 256.044 361.09 257.909 356.105 257.183C356.336 261.545 356.511 273.924 355.86 277.948Z"/></svg></span>
+      <span class="lp lp--tri"><svg viewBox="240.2 63.85 82.9 160.85" preserveAspectRatio="none"><path d="M240.376 63.854C240.467 63.8913 240.559 63.9237 240.646 63.966C241.84 64.5388 255.946 92.6211 258.007 96.658L305.799 190.261L318.064 214.106C319.058 216.046 322.593 222.55 323.059 224.237C317.146 224.551 308.82 224.263 302.667 224.257L262.675 224.236C255.95 224.235 246.788 224 240.3 224.616L240.287 125.223C240.285 104.916 240.071 84.1319 240.376 63.854Z"/></svg></span>
+      <img class="loader__slogan" src="assets/logo-slogan-w.png" alt="" width="900" height="98">
+      <i class="loader__bar"><b></b></i>
+    </div>
+  </div>
+
+  <header class="site-header">
+    <a class="site-header__cta" href="https://wa.me/972532263339" target="_blank" rel="noopener" aria-label="לשיחה בוואטסאפ (נפתח בחלון חדש)"><i class="hz" aria-hidden="true"></i>לשיחה בוואטסאפ<span class="arr">&gt;&gt;</span></a>
+
+    <nav class="site-nav" aria-label="ניווט ראשי">
+      <button class="site-nav__toggle" type="button" aria-expanded="false" aria-controls="site-menu">
+        <span class="visually-hidden">פתיחת תפריט</span>
+        <span class="site-nav__bars" aria-hidden="true"></span>
+      </button>
+      <ul class="site-nav__list" id="site-menu">
+        <li><a href="#top" aria-current="page">בית</a></li>
+        <li><a href="about.html">מי אנחנו</a></li>
+        <li><a href="tracks.html">מי אתם</a></li>
+        <li><a href="#knowledge">מרכז הידע הפיננסי</a></li>
+      </ul>
+    </nav>
+
+    <a class="site-header__logo" href="#top" aria-label="5M Group, לדף הבית">
+      <img src="assets/logo.png" alt="5M Group" width="91" height="75">
+    </a>
+  </header>
+
+  <main id="top">
+    <!-- סיפור אחד רציף: הרקע נשאר במקום (sticky) והמצלמה נוסעת פנימה בגלילה, מההירו לסקשן הבא -->
+    <div class="story" data-story>
+      <div class="hero__bg" aria-hidden="true" data-hero-scene data-mode="photo" data-photo-w=".93" data-photo-top=".035" data-photo-x="-.033" data-spill=".2" data-photo-fit="1" data-photo-fit-k="2.3" data-photo-fit-x="-.394" data-edge="#0C1430" data-edge-w=".02" data-vig="0" data-scrim=".24,.32" data-lift="0" data-sky-grade="0" data-no-disc="1"
+     data-image="assets/hero-c-nosun.jpg" data-plate="assets/hero-c-clean.jpg" data-mask="assets/hero-c-mask.png" data-sun-img="assets/hero-c-sun.png" data-family="assets/px.png" data-family-rect="0,0,.01,.01"
+     data-glass=".3363,.2167,.6734,.7778" data-pane=".341,.222,.669,.772" data-horizon=".652" data-sun=".5138,.5855,.022" data-sun-rise=".652,.5" data-rise-time="5" data-par-bg="9" data-par-view="8" data-feet-line=".809">
+        <canvas class="hero__gl"></canvas>
+        <div class="hero__fade"></div>
+      </div>
+
+    <section class="hero" aria-labelledby="hero-title">
+      <div class="hero__brand">
+        <h1 class="hero__title" id="hero-title">
+          <span class="visually-hidden" lang="en">5M GROUP: </span>
+          <span class="visually-hidden">ממשכורת לתיק נכסים</span>
+        </h1>
+        <p class="hero__motto">
+          <span class="hero__stat"><bdi class="hero__stat-n">95<span class="hero__pct">%</span></bdi><span class="hero__stat-t">מהאוכלוסייה<br><b>חושבים מה עושים</b></span></span>
+          <span class="hero__stat hero__stat--few"><bdi class="hero__stat-n">5<span class="hero__pct">%</span></bdi><span class="hero__stat-t">מהאוכלוסייה <b>עושים</b><br><b>את מה שהם חושבים</b></span></span>
+        </p>
+      </div>
+
+      <div class="hero__intro">
+        <p class="hero__lead"><bdi lang="en">5M Group</bdi> הוא <em>בית</em> למשפחות משקיעות<br> שבונות ביטחון כלכלי באמצעות הון ונכסים.</p>
+        <p class="hero__body">כאן תהפכו את המשכורות והחסכונות שלכם לתיק נכסים מניב וצומח,<br> ותקבלו רוגע, בהירות ועתיד בטוח,<br> בעזרת אסטרטגיה כלכלית מותאמת אישית וניהול <span class="nowrap">פיננסי-משפחתי</span> מקיף.</p>
+        <a class="btn" href="#simulator"><i class="hz" aria-hidden="true"></i>לסימולטור השקעות<span class="arr">&gt;&gt;</span></a>
+      </div>
+
+      <a class="hero__scroll" href="#next" aria-label="גלילה לתוכן הבא"></a>
+    </section>
+
+      <!-- מרווח גלילה: הרקע נשאר במקום, התמונה גדלה ונעלמת לכחול, ורק אז מגיע הסקשן הבא -->
+      <div class="story__runway" id="next" aria-hidden="true"></div>
+    </div>
+    <!-- מצד אחד / ומצד שני: סקשן אחד מוצמד. הטקסט בצד ימין כמו בפיגמה, הוויזואל בצד שמאל (sides.js) -->
+    <section class="sides" id="for-you" data-sides aria-label="מי אתם">
+      <!-- מצלמה: שכבה בגודל המסך. בכניסה היא נחשפת דרך החלון של ההירו (מסכה שנפתחת) ומתקרבת (sides.js) -->
+      <div class="sides__cam">
+        <div class="sides__scene">
+          <canvas class="sides__bg" aria-hidden="true"></canvas>
+          <canvas class="sides__dots" aria-hidden="true"></canvas>
+          <div class="sides__glow" aria-hidden="true"></div>
+          <div class="sides__white" aria-hidden="true"></div>
+          <img class="sides__maze" src="assets/maze-hero-off.webp" alt="" aria-hidden="true" decoding="async">
+          <img class="sides__maze sides__maze--lit" src="assets/maze-hero.webp" data-room=".4004,.3418,.1092,.1799" data-seat=".5348,.2788 .5006,.5231 .3967,.4167" data-seat-depth=".0924" alt="" aria-hidden="true" decoding="async">
+          <svg class="sides__tri" viewBox="0 0 212 415" preserveAspectRatio="none" aria-hidden="true"><polygon points="0,0 0,415 212,415"/></svg>
+          <div class="sides__visual" aria-hidden="true"><img class="sides__house" src="assets/house-hero.webp" data-win="1796.5,125 1796.5,564 2042,596" data-win-size="2752,1536" alt="" decoding="async"><img class="sides__house sides__house--off" src="assets/house-hero-off.webp" alt="" decoding="async"><svg class="sides__afterglow" viewBox="0 0 1 1" preserveAspectRatio="none" aria-hidden="true"><defs><linearGradient id="ag-g" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="#ffb27a"/><stop offset=".55" stop-color="#f07a45"/><stop offset="1" stop-color="#b9452a"/></linearGradient></defs><polygon points=".6528,.0814 .6528,.3672 .7420,.3880" fill="url(#ag-g)"/></svg></div>
+        </div>
+        <div class="sides__inner">
+          <div class="sides__state sides__state--a">
+            <h2 class="sides__title"><span>מצד אחד</span><span class="sides__title-2">אתם סיפור הצלחה.</span></h2>
+            <!-- פיגמה 16:38: פסקה אחת זורמת, שתי הדגשות -->
+            <p class="sides__para"><span class="sides__pt">יש לכם <b>משרות טובות</b> או <b>עסקים מצליחים</b>, אתם מרוויחים כמה עשרות אלפים בחודש, חוסכים, כנראה שיש לכם דירת מגורים, אולי גם כמה מאות אלפים שהצטברו לכם בצד, יתכן ואפילו פתחתם חשבון בבורסה וראיתם תשואה נחמדה.</span></p>
+          </div>
+          <div class="sides__state sides__state--b">
+            <h2 class="sides__title"><span>ומצד שני</span><span class="sides__title-2">אתם נשארים במקום.</span></h2>
+            <!-- בלוק אחד כמו ב"מצד אחד", בלי אייקונים -->
+            <p class="sides__para"><span class="sides__pt">ההון העצמי שלכם <b>לא גדל מספיק מהר</b>, אין לכם תכנית, אתם לא בטוחים בהחלטות הפיננסיות שלכם, אתם מתייעצים עם הרבה חברים ואנשי מקצוע, אבל אף אחד מהם לא באמת לוקח את הכל בחשבון ועושה לכם סדר, ומרוב בלבול אתם מעדיפים פשוט לא לעשות כלום.</span></p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- מרוץ העכברים: אחד על אחד מהפיגמה. המשולש מהמבוך נכנס למקום שלו בלוגו (sides.js) -->
+    <section class="rat" id="rat-race" data-rat aria-labelledby="rat-title">
+      <div class="rat__stage">
+        <div class="rat__city" aria-hidden="true"><img class="rat__fam" src="assets/fam-hill.jpg" alt="" decoding="async" width="3072" height="1024"><svg class="rat__bal" viewBox="0 0 3072 1024" preserveAspectRatio="none"><path class="rat__string" d="M1902 690 L1978 499"/><image class="rat__balloon" href="assets/fam-balloon.png" x="1938" y="392" width="108" height="120"/></svg></div>
+        <h2 class="rat__title" id="rat-title"><span class="rat__line">אז איך יוצאים</span> <span class="rat__line"><em>ממרוץ העכברים</em> הפיננסי הזה?</span></h2>
+        <div class="rat__logo-wrap">
+        <!-- הלוגו המעודכן (המקורי מהלקוחות): האותיות כתמונה חדה, והמשולש כצורה וקטורית (כדי שהמשולש מהמבוך ינחת עליו בדיוק) -->
+        <img class="rat__slogan" src="assets/logo-slogan.png" alt="ממשכורת לתיק נכסים" width="900" height="98" decoding="async">
+        <svg class="rat__logo" viewBox="0 0 883 609.4" overflow="visible" aria-hidden="true">
+          <g class="rat__logo-n"><image href="assets/logo-letters.png" x="0" y="0" width="883" height="905"/></g>
+          <g class="rat__logo-t"><polygon points="427,107 427,606 683,606" fill="#F15A3B"/></g>
+        </div>
+        <!-- פיגמה 64:38: פסקה אחת, Futurism 40, מיושרת לימין מתחת לכותרת -->
+        <p class="rat__text">נעים מאד,<br>אתם חלק ממעמד הביניים בישראל, ואנחנו כאן כדי להצמיח עבורכם את ההון המשפחתי,<br>ולהשיג לכם את העצמאות, הביטחון והחופש שתמיד רציתם.</p>
+      </div>
+    </section>
+
+    <!-- ===================== 1. משולש הזהב (בהיר): עולה מעל מרוץ העכברים בגלילה אחת =====================
+         הפסל במרכז. מימין השלב הפעיל: מספר גדול, השם, ההסבר והכפתור. משמאל: מה כולל השלב, בתוויות.
+         למטה שלושה מקטעים שמתמלאים בגלילה (כמו בהמלצות), כך שברור שהגלילה מחליפה שלב (sections.js) -->
+    <section class="gt" id="method" data-theme="light" aria-labelledby="gt-title">
+      <div class="gt__stage">
+        <header class="gt__head">
+          <p class="eyebrow" data-lines>מה הסוד שיזניק אתכם קדימה?</p>
+          <h2 class="sec__title" id="gt-title" data-title><em>משולש הזהב</em> של <bdi lang="en">5M GROUP</bdi></h2>
+        </header>
+        <div class="gt__body">
+          <div class="gt__now">
+            <div class="gt__steps">
+              <article class="gts" data-step="0">
+                <p class="gts__no"><span>שלב</span><b>01</b></p>
+                <h3 class="gts__name">כלכלת המשפחה</h3>
+                <p class="gts__lead">ננתח את התזרים המשפחתי ונייצר לכם עודף חודשי קבוע שישמש מנוע לצמיחה ומינוף, בלי לפגוע ברמת החיים.</p>
+                <button class="btn btn--sm" type="button" data-open="0"><i class="hz" aria-hidden="true"></i>לפרטים נוספים<span class="arr">&gt;&gt;</span></button>
+              </article>
+              <article class="gts" data-step="1">
+                <p class="gts__no"><span>שלב</span><b>02</b></p>
+                <h3 class="gts__name">נכסים פיננסיים</h3>
+                <p class="gts__lead"><b>הכסף שלכם עובד בכל מקרה, השאלה היא אם הוא עובד בשבילכם.</b> יצירת קרנות חיסכון, קופות גמל, קרנות השתלמות, מקסום תשואות, חיתוך דמי ניהול בפנסיה, ותכנון מס המייצר תיק נכסים פיננסיים.</p>
+                <button class="btn btn--sm" type="button" data-open="1"><i class="hz" aria-hidden="true"></i>לפרטים נוספים<span class="arr">&gt;&gt;</span></button>
+              </article>
+              <article class="gts" data-step="2">
+                <p class="gts__no"><span>שלב</span><b>03</b></p>
+                <h3 class="gts__name">תיק נכסים נדלנ״י</h3>
+                <p class="gts__lead">נבנה אסטרטגיית השקעות ומפת דרכים לנכסי הנדל״ן הבאים ונוציא אתכם עם לפחות נכס נדלנ"י אחד נוסף תוך חצי שנה.</p>
+                <button class="btn btn--sm" type="button" data-open="2"><i class="hz" aria-hidden="true"></i>לפרטים נוספים<span class="arr">&gt;&gt;</span></button>
+              </article>
+            </div>
+          </div>
+          <div class="gt__fig">
+            <div class="gt__sculpt">
+              <i class="gt__glow" aria-hidden="true"></i>
+              <i class="gt__floor" aria-hidden="true"></i>
+              <img class="gt__piece gt__piece--1" src="assets/gt-tri-1.webp" alt="" decoding="async"><img class="gt__fill gt__fill--1" src="assets/gt-tri-1.webp" alt="" decoding="async">
+              <img class="gt__piece gt__piece--2" src="assets/gt-tri-2.webp" alt="" decoding="async"><img class="gt__fill gt__fill--2" src="assets/gt-tri-2.webp" alt="" decoding="async">
+              <img class="gt__piece gt__piece--3" src="assets/gt-tri-3.webp" alt="" decoding="async"><img class="gt__fill gt__fill--3" src="assets/gt-tri-3.webp" alt="" decoding="async">
+              <button class="gt__hit gt__hit--3" type="button" data-go="2" aria-label="שלב 3: תיק נכסים נדלנ״י"></button>
+              <button class="gt__hit gt__hit--2" type="button" data-go="1" aria-label="שלב 2: נכסים פיננסיים"></button>
+              <button class="gt__hit gt__hit--1" type="button" data-go="0" aria-label="שלב 1: כלכלת המשפחה"></button>
+            </div>
+          </div>
+          <div class="gt__inc">
+            <p class="gt__inc-h">מה כולל השלב</p>
+            <div class="gt__sets">
+              <ul class="gts__tags" data-step="0" aria-label="מה כולל: כלכלת המשפחה"><li>מיפוי הכנסות והוצאות</li><li>מחזור משכנתאות</li><li>הפחתת ריביות</li><li>איתור הוצאות מיותרות</li><li>אפליקציית ניהול מתקדמת</li></ul>
+              <ul class="gts__tags" data-step="1" aria-label="מה כולל: נכסים פיננסיים"><li>מיפוי חסכונות</li><li>שיפור דמי ניהול</li><li>התאמת מסלולים</li><li>בדיקת ביטוחים</li><li>איחוד או פיצול קופות</li><li>בחירת מכשירי השקעה</li></ul>
+              <ul class="gts__tags" data-step="2" aria-label="מה כולל: תיק נכסים נדלנ״י"><li>תכנית השקעות מלאה</li><li>תכנון מימון מפורט</li><li>התאמה אישית למשפחה</li><li>טיפול מלא בכל היבטי עסקה</li><li>איתור הזדמנויות</li><li>אסטרטגיות מתעדכנות</li></ul>
+            </div>
+          </div>
+        </div>
+        <ol class="gt__rail" aria-label="שלושת השלבים">
+          <li><button class="gt__seg" type="button" data-go="0"><i class="gt__bar" aria-hidden="true"><b></b></i><span class="gt__sn">01</span><span class="gt__st">כלכלת המשפחה</span></button></li>
+          <li><button class="gt__seg" type="button" data-go="1"><i class="gt__bar" aria-hidden="true"><b></b></i><span class="gt__sn">02</span><span class="gt__st">נכסים פיננסיים</span></button></li>
+          <li><button class="gt__seg" type="button" data-go="2"><i class="gt__bar" aria-hidden="true"><b></b></i><span class="gt__sn">03</span><span class="gt__st">תיק נכסים נדלנ״י</span></button></li>
+        </ol>
+        <div class="gt__scrim" aria-hidden="true"></div>
+        <!-- ההסבר המלא: נפתח מלמטה, כמו מגירה. הפסל נשאר במקום -->
+        <div class="gt__win" data-lenis-prevent>
+          <button class="gt__x" type="button" aria-label="סגירת ההסבר">✕</button>
+          <article class="gt__panel" data-panel="0" hidden>
+            <h4 class="gt__pt">כלכלת המשפחה</h4>
+            <p>אנחנו לא מאמינים בלהפוך אתכם למחושבים בכל שקל או למנוע מכם ליהנות מהחיים כמו שאתם אוהבים. העבודה שלנו מתחילה בהצבת מראה מולכם, כדי שנוכל לדון בהתנהלות הכלכלית שלכם בשקיפות ובכנות מוחלטת.</p>
+            <p>נעבור ביסודיות על העו"ש, האשראי, התלושים ודוחו"ת המס שלכם, ונבחן ביסודיות של כל שקל שנכנס או יוצא - משכורות, משכנתאות, הלוואות, התחייבויות, הוצאות שוטפות, חריגות וצפויות מראש - הכל יכנס לתחשיב ויעבור שיפור וייעול משמעותי כדי לייצר לכם עודף משמעותי קבוע בכל חודש שילך להשקעה ויעבוד עבורכם.</p>
+          </article>
+          <article class="gt__panel" data-panel="1" hidden>
+            <h4 class="gt__pt">נכסים פיננסיים</h4>
+            <p>זה המקום לייצר את תיק הנכסים הפיננסי שלכם.</p>
+            <p>אצל רוב המשפחות יש מאות אלפים שקלים בפנסיות, קופות גמל וקרנות השתלמות, אבל אף אחד לא טורח לראות שהם יושבים במסלולים לא מתאימים למשפחה, עם דמי ניהול מנופחים ובלי ניצול אפשרויות המינוף, מה שבפועל גורם להפסד של מיליונים בעתיד.</p>
+            <p>אנחנו ב-<bdi lang="en">5M Group</bdi> מסתכלים על כל הכספים הללו כעל חלק מהקופה המשפחתית הכוללת וכתיק נכסים פיננסי שלם.</p>
+            <p>נמפה את הכל לעומק, ננקה עמלות מיותרות, נשפר את דמי הניהול והתשואות, ונתאים את רמת הסיכון לגיל ולשאיפות שלכם, כדי שהכסף שחסכתם יעבוד קשה יותר ויהווה עבורכם כתיק פיננסי.</p>
+          </article>
+          <article class="gt__panel" data-panel="2" hidden>
+            <h4 class="gt__pt">תיק נכסים נדלנ״י</h4>
+            <p>לרכוש דירה להשקעה זה לא 'תיק נכסים'.</p>
+            <p>אנחנו מתכננים עבורכם מפת דרכים מדויקת להשקעות שלכם בשנים הקרובות, בהתאמה מושלמת ליכולות המימון והמינוף שלכם, כולל ניהול וביצוע מלא בכל שלב בתהליך, כולל איתור העסקאות, ניהול משא ומתן ועבודה מול כל אנשי המקצוע הנדרשים עד למסירה.</p>
+            <p>המטרה היא להביא אתכם למצב שבו תיק הנכסים הולך וגודל, מייצר עבורכם הכנסה פסיבית עקבית, ומעביר אתכם ממרוץ עכברים לעצמאות כלכלית אמיתית.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== 2. שורה תחתונה (בהיר): שורה אחרי שורה =====================
+         ברוח משולש הזהב (לבקשת הלקוחות): האזור נעצר, וכל גלילה מכניסה שורה: תזרים, חיסכון, תיק נכסים, ובסוף התוצאה.
+         השורות נשארות אחת מתחת לשנייה, עד שכל המשוואה מול העיניים -->
+    <section class="sum2" id="bottom-line" data-theme="light" aria-labelledby="sum2-title">
+      <div class="sum2__stage">
+        <div class="sum2__grid">
+          <!-- משולש פיתגורס (3:4:5) בזווית של הלוגו: ישרה למטה משמאל. ארבע רצועות: הקודקוד ליד הכותרת, ואז רצועה לכל שורה.
+               התמונה ממלאת אותו רצועה אחרי רצועה, מהקודקוד הצר ועד הבסיס הרחב -->
+          <div class="sum2__tri" aria-hidden="true">
+            <div class="sum2__ghost"></div>
+            <div class="sum2__img"><img src="assets/sum-tri.jpg" alt="" loading="lazy" decoding="async" width="1700" height="1196"></div>
+          </div>
+          <h2 class="sec__title sum2__title" id="sum2-title">שורה תחתונה?</h2>
+          <!-- קווי דף החשבון: כל קו יוצא מהצלע של המשולש (נקודה כתומה) ורץ עד סוף השורה שלו -->
+          <div class="sum2__rules" aria-hidden="true"><i style="--k:1"></i><i style="--k:2"></i><i style="--k:3"></i></div>
+          <ol class="sum2__rows">
+            <li class="sum2__row" style="--k:1"><span class="sum2__tag"><b>01</b>כלכלת המשפחה</span><span class="sum2__w">תזרים מנוהל ויעיל</span></li>
+            <li class="sum2__row" style="--k:2"><span class="sum2__tag"><b>02</b>נכסים פיננסיים</span><span class="sum2__w">חיסכון מושקע בשוטף</span></li>
+            <li class="sum2__row" style="--k:3"><span class="sum2__tag"><b>03</b>תיק נכסים נדלנ״י</span><span class="sum2__w">תיק נכסים מניב וצומח</span></li>
+          </ol>
+          <!-- השורה התחתונה: הבסיס של המשולש ממשיך לקו כתום אחד, כמו קו הסיכום בדף חשבון -->
+          <div class="sum2__total" aria-hidden="true"><i></i></div>
+          <p class="sum2__res"><span class="sum2__eq" aria-hidden="true">=</span> עתיד כלכלי רגוע <span class="visually-hidden">ואושר (ועושר)</span><span class="sum2__aw" aria-hidden="true">ו<span class="aosh"><i>א</i><i>ע</i></span>ושר</span> משפחתי שהולך וגדל</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== 3. מי אנחנו (בהיר): רפי מימין, השם שלו בענק זז כל הזמן מאחוריו ===================== -->
+    <section class="who" id="about" data-theme="light" aria-labelledby="who-title">
+      <canvas class="dotfield" aria-hidden="true"></canvas>
+      <div class="who__giant" aria-hidden="true"><div class="who__track"><span>ממשכורת לתיק נכסים · ממשכורת לתיק נכסים · </span><span>ממשכורת לתיק נכסים · ממשכורת לתיק נכסים · </span></div></div>
+      <figure class="who__photo">
+        <img src="assets/rafi-cut.webp" alt="רפי ויינר, מייסד 5M Group" loading="lazy" decoding="async" width="1000" height="1376">
+        <figcaption class="who__card"><span class="who__card-n">רפי ויינר</span><span class="who__card-r">מייסד <bdi lang="en">5M GROUP</bdi></span></figcaption>
+      </figure>
+      <div class="who__text">
+        <p class="eyebrow" data-lines>מי אנחנו</p>
+        <h2 class="sec__title" id="who-title" data-title>כמה מילים <em>עלינו</em></h2>
+        <p class="who__big" data-lines><bdi lang="en">5M Group</bdi> הוקמה על ידי רפי ויינר, כלכלן, מתכנן הון, ומומחה במימון, שוק ההון ונדל"ן, על מנת לעזור למשפחות לבנות עתיד כלכלי מבוסס ומתוכנן.</p>
+        <p class="who__body" data-lines>לצד רפי פועל צוות מומחים בתחומי הכלכלה, המימון, הנדל"ן, המשפט, המס, שוק ההון ועוד, אשר יחד משלבים ידע וניסיון בהצמחת ההון של מאות משפחות בתכנון פיננסי ובבניית תיקי נכסים מניבים שמבטיחות להן עתיד כלכלי רגוע.</p>
+        <a class="btn" href="#about" data-fade><i class="hz" aria-hidden="true"></i>הכירו את הצוות שלנו<span class="arr">&gt;&gt;</span></a>
+      </div>
+    </section>
+
+    <!-- ===================== 4. למי זה מתאים (בהיר): 95% שהופך ל-5% על רקע נקודות עדין, ושלושה מספרים גדולים ===================== -->
+    <section class="match" id="fit" data-theme="light" aria-labelledby="match-title">
+      <canvas class="dotfield" aria-hidden="true"></canvas>
+      <div class="match__in">
+        <p class="eyebrow match__eyebrow" data-lines>למי זה מתאים?</p>
+        <h2 class="match__state" id="match-title">
+          <span class="match__a"><span class="match__num"><span class="match__nine">9</span>5%</span> מהאוכלוסייה <b>חושבים מה עושים</b></span>
+          <span class="match__b">רק <span class="match__num">5%</span> מהאוכלוסייה <b>עושים את מה שהם חושבים</b></span>
+        </h2>
+        <p class="match__lead" data-lines>הניהול הפיננסי ומסלולי הצמחת ההון שלנו מיועדים לאותם <bdi>5%</bdi> מהאוכלוסייה, אלו שבאמת מוכנים לפעול בשביל העתיד שלהם. בנוסף, עליהם לעמוד בשלושת הפרמטרים הבאים:</p>
+        <ul class="match__stats">
+          <li class="stat"><label class="stat__box"><input class="stat__in" type="checkbox"><span class="stat__top"><span class="stat__n">תנאי 01</span><span class="stat__chk" aria-hidden="true"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5" pathLength="30"/></svg></span></span><span class="stat__k">גיל</span><span class="stat__v"><bdi data-roll>30-50</bdi></span><span class="stat__c">משפחות צעירות עם פוטנציאל צמיחה.</span></label></li>
+          <li class="stat"><label class="stat__box"><input class="stat__in" type="checkbox"><span class="stat__top"><span class="stat__n">תנאי 02</span><span class="stat__chk" aria-hidden="true"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5" pathLength="30"/></svg></span></span><span class="stat__k">הכנסה חודשית</span><span class="stat__v"><bdi data-roll>20,000</bdi><span class="stat__u">ש״ח</span></span><span class="stat__c">מינימום הכנסה חודשית למשק בית.</span></label></li>
+          <li class="stat"><label class="stat__box"><input class="stat__in" type="checkbox"><span class="stat__top"><span class="stat__n">תנאי 03</span><span class="stat__chk" aria-hidden="true"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5" pathLength="30"/></svg></span></span><span class="stat__k">חיסכון או נכס</span><span class="stat__v"><bdi data-roll>350,000</bdi><span class="stat__u">ש״ח</span></span><span class="stat__c">לפחות בחיסכון או בנכס שאינו ממונף במלואו.</span></label></li>
+        </ul>
+        <!-- הערה קטנה שמגיבה לסימון התנאים: מופיעה רק אחרי הסימון הראשון, ובשלושה מתוך שלושה מזמינה להצטרף -->
+        <p class="match__note" role="status" aria-live="polite"><span class="match__note-in"><span class="match__note-n" aria-hidden="true"></span><span class="match__note-t"></span></span></p>
+        <div class="match__go">
+          <a class="btn match__cta" href="#contact"><i class="hz" aria-hidden="true"></i><span class="match__ct">חושבים שאתם מתאימים? בדקו עכשיו</span><span class="arr">&gt;&gt;</span></a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== 5. לכל אורך הדרך (כהה): חלון קטן של הדרך שנפתח למסך מלא, ואז הטקסט שורה אחרי שורה ===================== -->
+    <section class="road2" id="boutique" data-theme="dark" data-header="glass" aria-labelledby="road2-title">
+      <div class="road2__stage">
+        <div class="road2__win" aria-hidden="true"><video muted playsinline preload="none" poster="assets/pier-home.jpg" data-src="assets/pier-home.mp4"></video></div>
+        <div class="road2__shade" aria-hidden="true"></div>
+        <div class="road2__content">
+        <h2 class="sec__title road2__title" id="road2-title" data-title>חשוב לנו להיות כאן בשבילכם <em>לכל אורך הדרך!</em></h2>
+        <p class="road2__lead">מתוך מחויבות מוחלטת להצלחה של כל משפחה, וכדי להבטיח שירות, זמינות ותוצאות מקסימליות, אנו פועלים במתכונת של <bdi lang="en">Family Office</bdi> בוטיק ומקבלים עד 50 משפחות בשנה בלבד.</p>
+        <p class="road2__stat"><span class="road2__stat-n">עד <span class="road2__count">50</span></span><span class="road2__stat-l">משפחות בשנה בלבד</span></p>
+        <p class="road2__en" lang="en" dir="ltr"><b>English Speakers in Israel? <span>So do we :)</span></b> We specialize in guiding expats and foreign residents through the complexities of local real estate, finance, and tax systems, clearing the confusion and securing your financial future.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== 6. המלצות (כהה): דיוקן עגול קטן מעל ציטוט ארוך, ורצועת פנים שמתנפחת מתחת לעכבר ===================== -->
+    <section class="voices" id="stories" data-theme="dark" aria-labelledby="voices-title">
+      <canvas class="dotfield" aria-hidden="true"></canvas>
+      <svg class="voices__mark" viewBox="5 7 15 10" aria-hidden="true"><path d="M6 17h3l2-4V7H5v6h3zm8 0h3l2-4V7h-6v6h3z"/></svg>
+      <h2 class="sec__title voices__title" id="voices-title" data-title>הרבה מדברים על חופש כלכלי <em>אלו אנשים שבאמת עשו את זה</em></h2>
+      <div class="voices__stage" data-voices>
+        <div class="voices__face"></div>
+        <blockquote class="voices__quote"><p></p></blockquote>
+        <p class="voices__name"></p>
+        <a class="btn voices__play" href="#stories"><i class="hz" aria-hidden="true"></i>תציץ בפנים<span class="arr">&gt;&gt;</span></a>
+      </div>
+      <div class="voices__film" role="tablist" aria-label="בחירת המלצה"></div>
+    </section>
+
+    <!-- ===================== 7. שלושת המצבים (כהה): שלושה כרטיסים שמגיעים מפוזרים ונערמים במרכז, כמו ניירות על שולחן,
+         ובגלילה מסתדרים בשורה ישרה. מבלגן לסדר ===================== -->
+    <section class="peak" id="cases" data-theme="dark" aria-labelledby="peak-title">
+      <div class="peak__stage">
+        <i class="peak__glow" aria-hidden="true"></i>
+        <header class="peak__head">
+          <h2 class="peak__title" id="peak-title" data-title>רוב המשפחות שפנו אלינו <em>היו באחד משלושת המצבים האלו:</em></h2>
+        </header>
+        <div class="cases">
+          <article class="case"><span class="case__n" aria-hidden="true">01</span><h3 class="case__name">מרוויחים,<br>אבל הכסף לא מצטבר</h3><p class="case__lead">היו להם סוכן פנסיוני, יועץ משכנתא, רואה חשבון וחבר שמומחה בשוק ההון - אבל אף אחד לא הסתכל על התמונה המלאה, וההחלטות שלהם הובילו למיסוי עודף, דמי ניהול יקרים והפסדים בשווי של מאות אלפי שקלים.</p></article>
+          <article class="case"><span class="case__n" aria-hidden="true">02</span><h3 class="case__name">קונים ספר על דחיינות,<br>ודוחים את הקריאה בו</h3><p class="case__lead">הם זכרו שכסף שלא מושקע מאבד ערך, הבינו שצריך לדאוג לעתיד וידעו שחבל על כל רגע - אבל מרוב אפשרויות, עצות סותרות ופחד מהקפיצה למים, הם בחרו לדחות ולדחות עד שזה התמסמס בתוך השגרה. ובסוף הם קפצו..</p></article>
+          <article class="case"><span class="case__n" aria-hidden="true">03</span><h3 class="case__name">רוצים הרבה,<br>אבל עושים מה שיוצא</h3><p class="case__lead">הם פתחו קופת גמל כי כדאי, חשבו לקנות דירה להשקעה כי כולם קונים, והכניסו כסף לבורסה כי מישהו אמר להם. חלק מההחלטות שלהם אולי היו טובות לכשעצמן, אבל עבורם הן היו טעויות אסטרטגיות קריטיות.</p></article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== 8. המפנה (כהה): 12 התוצאות כתוויות זכוכית מעל הזריחה של הדרך אל הבית =====================
+         הכול במסך אחד, בלי לגלול עליהן: הכותרת, 12 תוויות בארבעה טורים שנכנסות אחת אחרי השנייה, וההזמנה לשיחה -->
+    <section class="gain" id="gains" data-theme="dark" data-header="glass" aria-labelledby="gain-title">
+      <div class="gain__bg" aria-hidden="true"><img src="assets/art-sunrise.webp" alt="" loading="lazy" decoding="async"></div>
+      <div class="gain__in">
+        <h2 class="sec__title gain__turn" id="gain-title" data-title>עד שהן החליטו לקחת אחריות ולסדר את החיים הפיננסים<br>וכל אחת מהן יצאה עם:</h2>
+        <ul class="gain__tags">
+          <li class="gtag"><span class="gtag__n" aria-hidden="true">01</span>נכסי נדל"ן מניבים</li>
+          <li class="gtag"><span class="gtag__n" aria-hidden="true">02</span>תיק פיננסי צומח</li>
+          <li class="gtag"><span class="gtag__n" aria-hidden="true">03</span>הפחתת הוצאות</li>
+          <li class="gtag"><span class="gtag__n" aria-hidden="true">04</span>הוזלת הלוואות</li>
+          <li class="gtag"><span class="gtag__n" aria-hidden="true">05</span>הגדלת הכנסות</li>
+          <li class="gtag"><span class="gtag__n" aria-hidden="true">06</span>תכנית כלכלית</li>
+          <li class="gtag"><span class="gtag__n" aria-hidden="true">07</span>תזרים מאוזן</li>
+          <li class="gtag"><span class="gtag__n" aria-hidden="true">08</span>שקט נפשי</li>
+          <li class="gtag"><span class="gtag__n" aria-hidden="true">09</span>תשואה בצמיחה</li>
+          <li class="gtag"><span class="gtag__n" aria-hidden="true">10</span>רווחיות משופרת</li>
+          <li class="gtag"><span class="gtag__n" aria-hidden="true">11</span>התאמת השקעות</li>
+          <li class="gtag"><span class="gtag__n" aria-hidden="true">12</span>עתיד בטוח</li>
+        </ul>
+        <div class="gain__cta">
+          <p class="gain__q" data-title>חושבים שאתם מתאימים?</p>
+          <a class="btn" href="#contact" data-fade><i class="hz" aria-hidden="true"></i>בואו נקבע שיחת היכרות<span class="arr">&gt;&gt;</span></a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== 9. המסלולים (כהה): כרטיסים טיפוגרפיים, התמונה נחשפת במעבר עכבר ===================== -->
+    <section class="tracks2" id="envelope" data-theme="dark" aria-labelledby="tracks2-title">
+      <canvas class="dotfield" aria-hidden="true"></canvas>
+      <i class="tracks2__glow" aria-hidden="true"></i>
+      <header class="tracks2__head">
+        <h2 class="sec__title" id="tracks2-title" data-title>המעטפת הפיננסית שתצמיח את <em>ההון המשפחתי שלכם</em></h2>
+      </header>
+      <ul class="tracks2__list">
+        <li class="trk"><span class="trk__img"><img src="assets/trk-assets.jpg" alt="" loading="lazy" decoding="async"></span><span class="trk__n">מסלול 01</span><span class="trk__name" data-title><bdi lang="en">5M Assets</bdi></span><span class="trk__text" data-lines>תיק נכסי נדל&quot;ן מותאם אישית למשפחה.</span><span class="trk__go" aria-hidden="true">&gt;&gt;</span></li>
+        <li class="trk"><span class="trk__img"><img src="assets/trk-top.jpg" alt="" loading="lazy" decoding="async"></span><span class="trk__n">מסלול 02</span><span class="trk__name" data-title><bdi lang="en">Top 5%</bdi></span><span class="trk__text" data-lines>הצמחה מלאה של ההון והתזרים המשפחתי.</span><span class="trk__go" aria-hidden="true">&gt;&gt;</span></li>
+        <li class="trk"><span class="trk__img"><img src="assets/trk-intl.jpg" alt="" loading="lazy" decoding="async"></span><span class="trk__n">מסלול 03</span><span class="trk__name" data-title><bdi lang="en">5M International</bdi></span><span class="trk__text" data-lines>ניהול הון ומיסוי בזיקה בינלאומית.</span><span class="trk__go" aria-hidden="true">&gt;&gt;</span></li>
+      </ul>
+      <div class="tracks2__more"><a class="btn" href="#envelope" data-fade><i class="hz" aria-hidden="true"></i>לכל האופציות<span class="arr">&gt;&gt;</span></a></div>
+    </section>
+
+    <!-- ===================== 10. מרכז הידע (כהה) ===================== -->
+    <section class="know" id="knowledge" data-theme="dark" aria-labelledby="know-title">
+      <canvas class="dotfield" aria-hidden="true"></canvas>
+      <i class="know__glow" aria-hidden="true"></i>
+      <header class="know__head">
+        <div>
+          <h2 class="sec__title" id="know-title" data-title>מרכז הידע הפיננסי של <em><bdi lang="en">5M Group</bdi></em></h2>
+          <p class="sec__lead" data-lines>כל מה שרציתם לדעת על כסף, השקעות ונדל"ן</p>
+        </div>
+        <a class="btn" href="#knowledge" data-fade><i class="hz" aria-hidden="true"></i>למרכז הידע הפיננסי<span class="arr">&gt;&gt;</span></a>
+      </header>
+      <ul class="know__cards">
+        <li><a class="know__card" href="#knowledge"><span class="know__img"><img src="assets/know-money.jpg" alt="" loading="lazy" decoding="async"><i class="know__hz" aria-hidden="true"></i></span><span class="know__row"><span class="know__w" data-lines>כסף</span><span class="know__go" aria-hidden="true">&gt;&gt;</span></span></a></li>
+        <li><a class="know__card" href="#knowledge"><span class="know__img"><img src="assets/know-invest.jpg" alt="" loading="lazy" decoding="async"><i class="know__hz" aria-hidden="true"></i></span><span class="know__row"><span class="know__w" data-lines>השקעות</span><span class="know__go" aria-hidden="true">&gt;&gt;</span></span></a></li>
+        <li><a class="know__card" href="#knowledge"><span class="know__img"><img src="assets/know-home.jpg" alt="" loading="lazy" decoding="async"><i class="know__hz" aria-hidden="true"></i></span><span class="know__row"><span class="know__w" data-lines>נדל"ן</span><span class="know__go" aria-hidden="true">&gt;&gt;</span></span></a></li>
+      </ul>
+    </section>
+
+    <!-- ===================== 11. פוטר: הלוגו המקורי, ניווט ויצירת קשר ===================== -->
+    <footer class="foot" id="contact" data-theme="dark">
+      <div class="foot__sky" aria-hidden="true"><img src="assets/foot-sea.jpg" alt="" loading="lazy" decoding="async"></div>
+      <div class="foot__cta">
+        <p class="foot__text" data-lines>בואו לבדוק האם גם אתם יכולים לקחת שליטה על המצב הפיננסי שלכם ולהבטיח עתיד רגוע לעצמכם ולילדים.</p>
+        <a class="btn" href="#contact" data-fade><i class="hz" aria-hidden="true"></i>עומדים בתנאי הסף? דברו איתנו עכשיו<span class="arr">&gt;&gt;</span></a>
+      </div>
+      <div class="foot__grid">
+        <div class="foot__brand">
+          <img class="foot__logo" src="assets/logo-full-w.png" alt="5M Group, ממשכורת לתיק נכסים" width="700" height="722" loading="lazy">
+        </div>
+        <nav class="foot__nav" aria-label="ניווט בתחתית העמוד">
+          <p class="foot__h">ניווט</p>
+          <a href="#top"><i class="hz" aria-hidden="true"></i>בית</a><a href="about.html"><i class="hz" aria-hidden="true"></i>מי אנחנו</a><a href="tracks.html"><i class="hz" aria-hidden="true"></i>מי אתם</a><a href="#knowledge"><i class="hz" aria-hidden="true"></i>מרכז הידע הפיננסי</a><a href="#contact"><i class="hz" aria-hidden="true"></i>דברו איתנו</a>
+        </nav>
+        <div class="foot__contact">
+          <p class="foot__h">דברו איתנו</p>
+          <p class="foot__p" data-lines><bdi lang="en">Family Office</bdi> בוטיק למשפחות שמרוויחות יפה ופועלות להגיע לעצמאות כלכלית.</p>
+          <a class="btn btn--sm" href="https://wa.me/972532263339" target="_blank" rel="noopener" aria-label="לשיחה בוואטסאפ (נפתח בחלון חדש)"><i class="hz" aria-hidden="true"></i>לשיחה בוואטסאפ<span class="arr">&gt;&gt;</span></a>
+        </div>
+      </div>
+      <div class="foot__bar">
+        <nav class="foot__links" aria-label="מידע משפטי"><a href="#contact">הצהרת נגישות</a><a href="#contact">מדיניות פרטיות</a><a href="#contact">תקנון</a></nav>
+        <p class="foot__legal">© 2026 <bdi lang="en">5M Group</bdi>. כל הזכויות שמורות.</p>
+        <p class="foot__credit">עיצוב האתר: <a href="https://tsivia.com" target="_blank" rel="noopener">צביה אלגרבלי</a></p>
+      </div>
+      <div class="foot__giant" aria-hidden="true"><div class="foot__track"><span><bdi lang="en">5M GROUP</bdi> · ממשכורת לתיק נכסים · <bdi lang="en">5M GROUP</bdi> · ממשכורת לתיק נכסים · </span><span><bdi lang="en">5M GROUP</bdi> · ממשכורת לתיק נכסים · <bdi lang="en">5M GROUP</bdi> · ממשכורת לתיק נכסים · </span></div></div>
+    </footer>
+    <!-- המשולש התלת-ממדי: שכבה אחת קבועה מעל הסקשנים, כדי שיוכל לעבור ביניהם -->
+    <canvas class="tri3d" aria-hidden="true"></canvas>
+  </main>
+
+  <script>
+    // רמז הגלילה נעלם ברגע שמתחילים לגלול
+    const cue = document.querySelector(".hero__scroll");
+    addEventListener("scroll", () => cue && cue.classList.toggle("is-hidden", scrollY > 40), { passive: true });
+
+    // תפריט מובייל
+    const toggle = document.querySelector('.site-nav__toggle');
+    toggle.addEventListener('click', () => {
+      const open = toggle.getAttribute('aria-expanded') === 'true';
+      toggle.setAttribute('aria-expanded', String(!open));
+      document.body.classList.toggle('menu-open', !open);
+    });
+    document.querySelectorAll('.site-nav__list a').forEach(a =>
+      a.addEventListener('click', () => {
+        toggle.setAttribute('aria-expanded', 'false');
+        document.body.classList.remove('menu-open');
+      })
+    );
+  </script>
+  <!-- הסקריפטים יורדים כבר עכשיו (preload בראש העמוד), אבל רצים רק אחרי שהלוגו של מסך הטעינה סיים להיבנות:
+       ההכנה שלהם (ההירו, התלת-ממד, מאות האנימציות) עוצרת את הדפדפן לרגע, ואם היא קורית באמצע, הלוגו נתקע -->
+  <script>
+    (function () {
+      var src = ["hero-scene.js","https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js","https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js","https://cdn.jsdelivr.net/npm/lenis@1.1.13/dist/lenis.min.js","https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js","https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/SVGLoader.js","sides.js","sections.js"];
+      var load = function () { src.forEach(function (u) { var s = document.createElement('script'); s.src = u; s.async = false; document.body.appendChild(s); }); };
+      var wait = document.documentElement.classList.contains('is-loading') && !matchMedia('(prefers-reduced-motion: reduce)').matches;
+      wait ? setTimeout(load, Math.max(0, 1150 - performance.now())) : load();
+    })();
+  </script>
+</body>
+</html>
