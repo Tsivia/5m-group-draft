@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+  <meta name="robots" content="noindex, nofollow">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>סימולטור השקעות נדל״ן · 5M Group</title>
+  <meta name="description" content="ענו על מספר שאלות וגלו את פרופיל המשקיע שלכם.">
+  <link rel="preload" href="fonts/Cooperative-Regular.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="simulator.css">
+</head>
+<body class="sim-page">
+  <!-- דמו עיצובי בלבד: אין כאן חיבור למסד או שמירת לידים. הלוגיקה והטקסטים זהים לסימולטור הקיים. -->
+  <main class="sim">
+    <div class="sim__bg" aria-hidden="true"><img src="assets/foot-sea.jpg" alt="" width="2400" height="1350" decoding="async"></div>
+
+    <section class="sim__panel" id="sim" aria-labelledby="sim-title">
+      <span class="sim__sheen" aria-hidden="true"></span>
+
+      <header class="sim__head">
+        <img class="sim__logo" src="assets/logo.png" alt="5M Group" width="91" height="75">
+        <h1 class="sim__title" id="sim-title">סימולטור השקעות <em>נדל״ן</em></h1>
+        <p class="sim__sub">ענו על מספר שאלות וגלו את פרופיל המשקיע שלכם</p>
+      </header>
+
+      <div class="prog" id="prog" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+        <div class="prog__meta"><span id="prog-step">שלב <b>1</b> מתוך <b>7</b></span><span id="prog-pct">0%</span></div>
+        <div class="prog__bar"><span class="prog__fill" id="prog-fill"></span></div>
+      </div>
+
+      <div class="stage" id="stage" aria-live="polite"></div>
+    </section>
+  </main>
+
+  <script src="simulator.js"></script>
+</body>
+</html>

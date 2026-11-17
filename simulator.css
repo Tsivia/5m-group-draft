@@ -1,0 +1,282 @@
+/* =====================================================================
+   5M GROUP · סימולטור השקעות נדל"ן (עיצוב חדש)
+   קובץ עצמאי: לא תלוי ב-styles.css. כל הטוקנים כאן למעלה.
+   השפה: נייבי עם ים הפוטר מוחשך, לוח זכוכית מרובע (בלי פינות מעוגלות),
+   כותרות ב-Cooperative, כל השאר ב-Futurism 400, כתום אחד למגע ולבחירה.
+   ===================================================================== */
+
+@font-face { font-family: "Cooperative"; src: url("fonts/Cooperative-Regular.woff2") format("woff2"), url("fonts/Cooperative-Regular.woff") format("woff"); font-weight: 400; font-display: swap; }
+@font-face { font-family: "Futurism"; src: url("fonts/Futurism-Light.otf") format("opentype"); font-weight: 300; font-display: swap; }
+@font-face { font-family: "Futurism"; src: url("fonts/Futurism-Regular.otf") format("opentype"); font-weight: 400; font-display: swap; }
+
+:root {
+  --navy: #090725;
+  --orange: #F15A3B;
+  --orange-deep: #c9401f;
+  --paper: #FBF5F2;
+  --bad: #FF9A80;                       /* צבע השגיאה של טופס "דברו איתנו" */
+  --ink-70: rgb(251 245 242 / .7);
+  --ink-55: rgb(251 245 242 / .55);
+
+  --glass: rgb(255 255 255 / .05);
+  --glass-hover: rgb(255 255 255 / .08);
+  --glass-line: rgb(255 255 255 / .16);
+  --glass-line-hi: rgb(255 255 255 / .3);
+  --glass-hi: inset 0 1px 0 rgb(255 255 255 / .1);
+
+  --font-display: "Cooperative", "Futurism", "Arial Narrow", sans-serif;
+  --font-text: "Futurism", "Assistant", "Segoe UI", Arial, sans-serif;
+  --ease: cubic-bezier(.22, 1, .36, 1);
+  --ease-btn: cubic-bezier(.16, 1, .3, 1);
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body.sim-page { margin: 0; min-height: 100svh; background: var(--navy); color: var(--paper); font-family: var(--font-text); font-weight: 400; line-height: 1.3; -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; }
+button { font: inherit; color: inherit; }
+[hidden] { display: none !important; }
+:focus-visible { outline: 2px solid var(--orange); outline-offset: 3px; }
+
+/* ---------- הבמה: ים הפוטר, מוחשך ונמס לנייבי ---------- */
+.sim { position: relative; isolation: isolate; min-height: 100svh; display: grid; place-items: center; padding: clamp(16px, 3vh, 40px) 16px; overflow: hidden; }
+.sim__bg { position: absolute; inset: 0; z-index: -1; overflow: hidden; background: var(--navy); }
+.sim__bg img { position: absolute; left: 0; bottom: 0; width: 100%; height: 80%; object-fit: cover; object-position: 50% 58%; filter: saturate(.65) brightness(.9);
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0%, #000 30%, #000 55%, rgb(0 0 0 / .5) 78%, transparent 100%);
+  mask-image: linear-gradient(to bottom, transparent 0%, #000 30%, #000 55%, rgb(0 0 0 / .5) 78%, transparent 100%); }
+.sim__bg::after { content: ""; position: absolute; inset: 0;
+  background: linear-gradient(to bottom, var(--navy) 0%, var(--navy) 22%, rgb(9 7 37 / .72) 45%, rgb(9 7 37 / .55) 65%, rgb(9 7 37 / .78) 88%, var(--navy) 100%); }
+
+/* ---------- לוח הזכוכית ---------- */
+.sim__panel { --mx: 50%; --my: 0%; position: relative; isolation: isolate; width: min(100%, 880px);
+  padding: clamp(22px, 3.4vw, 44px) clamp(20px, 5vw, 64px) clamp(20px, 3vw, 36px);
+  background: linear-gradient(135deg, rgb(255 255 255 / .12), rgb(255 255 255 / .04) 45%, rgb(255 255 255 / .065));
+  border: 1px solid rgb(255 255 255 / .14);
+  box-shadow: inset 0 1px 0 rgb(255 255 255 / .2), 0 50px 100px rgb(3 2 18 / .45);
+  -webkit-backdrop-filter: blur(26px) saturate(110%); backdrop-filter: blur(26px) saturate(110%); }
+/* מסגרת אור: הפינה העליונה-ימנית תופסת אור */
+.sim__panel::before { content: ""; position: absolute; inset: -1px; z-index: -1; padding: 1px; pointer-events: none;
+  background: linear-gradient(225deg, rgb(255 255 255 / .5), rgb(255 255 255 / .08) 30%, rgb(255 255 255 / 0) 55%, rgb(255 255 255 / .1));
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); -webkit-mask-composite: xor; mask: linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0); }
+/* ברק עדין שעוקב אחרי העכבר */
+.sim__sheen { position: absolute; inset: 0; z-index: -1; pointer-events: none; opacity: 0; transition: opacity .6s ease;
+  background: radial-gradient(560px circle at var(--mx) var(--my), rgb(255 255 255 / .06), transparent 70%); }
+.sim__panel:hover .sim__sheen { opacity: 1; }
+
+/* ---------- ראש הלוח ---------- */
+.sim__head { display: flex; flex-direction: column; align-items: center; text-align: center; }
+.sim__logo { width: auto; height: clamp(40px, 4.4vw, 54px); }
+.sim__title { margin: clamp(14px, 1.8vw, 22px) 0 0; font-family: var(--font-display); font-weight: 400; font-size: clamp(28px, 3.6vw, 44px); line-height: 1.05; letter-spacing: -.005em; }
+.sim__title em { font-style: normal; color: var(--orange); }
+.sim__sub { margin: 8px 0 0; font-size: clamp(15px, 1.5vw, 18px); color: var(--ink-70); }
+
+/* ---------- מד התקדמות ---------- */
+.prog { margin-top: clamp(20px, 2.6vw, 30px); }
+.prog__meta { display: flex; justify-content: space-between; align-items: baseline; font-size: clamp(13px, 1.25vw, 15px); color: var(--ink-55); }
+.prog__meta b { font-family: var(--font-display); font-weight: 400; font-size: 1.25em; color: var(--paper); }
+.prog__bar { position: relative; height: 2px; margin-top: 10px; background: rgb(255 255 255 / .12); }
+.prog__fill { position: absolute; inset-block: 0; right: 0; width: 0; background: var(--orange); transition: width .8s var(--ease); }
+/* ראש המד: ריבוע קטן כתום בקצה */
+.prog__fill::after { content: ""; position: absolute; left: -3px; top: 50%; width: 7px; height: 7px; translate: 0 -50%; background: var(--orange); box-shadow: 0 0 12px rgb(241 90 59 / .55); }
+.prog.is-zero .prog__fill::after { opacity: 0; }
+
+/* ---------- אזור השלב ---------- */
+.stage { position: relative; min-height: clamp(360px, 44vh, 420px); display: flex; flex-direction: column; justify-content: center; padding-block: clamp(22px, 2.8vw, 34px) 0; }
+.q { display: flex; flex-direction: column; align-items: center; text-align: center; }
+.q__ic { display: grid; place-items: center; width: 54px; height: 54px; background: var(--glass); border: 1px solid var(--glass-line); box-shadow: var(--glass-hi); color: var(--orange); }
+.ic { width: 50%; height: 50%; overflow: visible; fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
+.q__eyebrow { margin: 18px 0 0; font-size: clamp(15px, 1.4vw, 17px); color: var(--orange); }
+.q__text { margin: 8px 0 0; max-width: 18em; font-family: var(--font-display); font-weight: 400; font-size: clamp(28px, 4.1vw, 48px); line-height: 1.08; text-wrap: balance; }
+.q__ic + .q__text { margin-top: 18px; }
+.q__sub { margin: 14px 0 0; max-width: 560px; font-size: clamp(15px, 1.45vw, 17px); line-height: 1.6; color: var(--ink-70); text-wrap: pretty; }
+
+/* ---------- בחירה: אריחי זכוכית מרובעים ---------- */
+.opts { display: grid; gap: 14px; width: min(100%, 500px); margin: clamp(26px, 3.2vw, 38px) auto 0; }
+.opts--2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.opts--3 { grid-template-columns: repeat(3, minmax(0, 1fr)); width: min(100%, 640px); }
+.opt { position: relative; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; min-height: 96px; padding: 18px 14px; margin: 0;
+  background: var(--glass); border: 1px solid var(--glass-line); box-shadow: var(--glass-hi); cursor: pointer; -webkit-appearance: none; appearance: none;
+  transition: background-color .45s var(--ease), border-color .45s var(--ease), color .45s var(--ease), transform .45s var(--ease); }
+.opt:hover { background: var(--glass-hover); border-color: var(--glass-line-hi); transform: translateY(-2px); }
+.opt__l { font-family: var(--font-display); font-size: clamp(28px, 3vw, 36px); line-height: 1; }
+.opt__l--sm { font-family: var(--font-text); font-size: clamp(16px, 1.6vw, 19px); line-height: 1.25; }
+.opt .ic { width: 30px; height: 30px; color: var(--orange); transition: color .45s var(--ease); }
+.opt[aria-pressed="true"] { background: var(--orange); border-color: var(--orange); }
+.opt[aria-pressed="true"] .ic { color: #fff; }
+
+/* ---------- שדה סכום ---------- */
+.num { position: relative; width: min(100%, 500px); margin: clamp(26px, 3.2vw, 38px) auto 0; background: var(--glass); border: 1px solid var(--glass-line); box-shadow: var(--glass-hi); transition: border-color .35s ease, background-color .35s ease; }
+.num:hover { border-color: var(--glass-line-hi); }
+.num:focus-within { border-color: var(--orange); background: rgb(255 255 255 / .075); }
+.num__in { display: block; width: 100%; height: clamp(84px, 9vw, 104px); margin: 0; padding: 0 64px; border: 0; outline: 0; background: transparent; color: var(--paper);
+  font-family: var(--font-display); font-weight: 400; font-size: clamp(42px, 5.4vw, 60px); line-height: 1; text-align: center; letter-spacing: .01em; -webkit-appearance: none; appearance: none; }
+.num__in::placeholder { font-family: var(--font-text); font-size: clamp(17px, 1.7vw, 20px); color: rgb(251 245 242 / .35); }
+.num__unit { position: absolute; left: 24px; top: 50%; translate: 0 -50%; font-family: var(--font-text); font-size: clamp(22px, 2.4vw, 30px); color: var(--orange); pointer-events: none; transition: opacity .3s ease; }
+.num.is-empty .num__unit { opacity: 0; }
+
+/* ---------- ניווט: הקודם / הבא ---------- */
+.nav { display: flex; justify-content: space-between; align-items: center; gap: 16px; margin-top: clamp(24px, 3vw, 36px); }
+.nav--end { justify-content: flex-start; }
+.back { display: inline-flex; align-items: center; gap: .4em; padding: 10px 0; border: 0; background: none; font-size: clamp(15px, 1.4vw, 17px); color: var(--ink-55); cursor: pointer; transition: color .3s ease; }
+.back:hover:not(:disabled) { color: var(--paper); }
+.back:disabled { opacity: .3; cursor: default; }
+.back .arr { transition: transform .55s var(--ease-btn); }
+.back:hover:not(:disabled) .arr { transform: translateX(5px); }
+
+/* הכפתור: בדיוק כמו .btn של ההירו באתר */
+.btn { position: relative; display: inline-flex; align-items: center; justify-content: center; padding: 16px 36px; margin: 0; border: 0; background: var(--orange); color: #F5F5F5;
+  font-family: var(--font-text); font-size: 20px; font-weight: 300; line-height: 1.2; white-space: nowrap; overflow: hidden; isolation: isolate; cursor: pointer; text-decoration: none;
+  -webkit-appearance: none; appearance: none; transition: color .45s var(--ease), background-color .5s var(--ease), opacity .4s ease; }
+.btn:hover, .btn:focus-visible { background: var(--orange-deep); }
+.btn .arr { display: inline-block; margin-inline-start: .3em; transition: transform .55s var(--ease-btn); }
+.btn:hover .arr, .btn:focus-visible .arr { transform: translateX(-6px); }
+.btn .hz { position: absolute; z-index: -1; inset: auto 0 0 0; height: 1px; background: #fff2e8; transform: scaleX(0); transform-origin: right; transition: transform .6s cubic-bezier(.65, 0, .35, 1); pointer-events: none; }
+.btn:hover .hz, .btn:focus-visible .hz { transform: scaleX(1); }
+.btn:disabled { opacity: .32; cursor: default; background: var(--orange); }
+.btn:disabled .hz { transform: scaleX(0); }
+.btn:disabled .arr { transform: none; }
+.btn--wide { width: 100%; white-space: normal; text-align: center; }
+
+/* ---------- מסך תגובה בין שאלות ---------- */
+/* כשאין מד התקדמות (תגובה, חישוב, תוצאה): יותר אוויר מתחת לכותרת הלוח */
+.prog[hidden] + .stage { padding-top: clamp(34px, 4.2vw, 52px); }
+.fb { display: flex; justify-content: center; align-items: center; min-height: clamp(360px, 44vh, 420px); }
+.fb__card { position: relative; width: min(100%, 460px); padding: clamp(30px, 4vw, 44px) clamp(24px, 3.4vw, 40px) clamp(34px, 4.4vw, 48px); text-align: center;
+  background: var(--glass); border: 1px solid var(--glass-line); box-shadow: var(--glass-hi); }
+.fb__ic { display: grid; place-items: center; width: 60px; height: 60px; margin: 0 auto; background: var(--orange); color: #fff; animation: fbPulse 2.2s ease-in-out infinite; }
+.fb__ic .ic { width: 50%; height: 50%; }
+@keyframes fbPulse { 50% { box-shadow: 0 0 0 10px rgb(241 90 59 / .12); } }
+.fb__t { margin: 22px 0 0; font-family: var(--font-display); font-weight: 400; font-size: clamp(24px, 2.8vw, 32px); line-height: 1.2; text-wrap: balance; }
+/* קו הזמן: מתמלא מימין לשמאל במשך הזמן שהמסך מוצג */
+.fb__time { position: absolute; inset: auto 0 0 0; height: 2px; background: rgb(255 255 255 / .1); }
+.fb__time i { position: absolute; inset: 0; background: var(--orange); transform: scaleX(0); transform-origin: right; animation: fbTime var(--dur, 4s) linear forwards; }
+@keyframes fbTime { to { transform: scaleX(1); } }
+
+/* ---------- טופס הפרטים (כמו "דברו איתנו") ---------- */
+.lead { width: min(100%, 480px); margin: 0 auto; }
+.lead__head { text-align: center; }
+.lead__head .q__ic { margin: 0 auto; }
+.lead__t { margin: 18px 0 0; font-family: var(--font-display); font-weight: 400; font-size: clamp(28px, 3.4vw, 40px); line-height: 1.08; }
+.lead__s { margin: 10px 0 0; font-size: clamp(15px, 1.45vw, 17px); color: var(--ink-70); }
+.lead__fields { display: flex; flex-direction: column; gap: 20px; margin-top: 22px; }
+.fld { position: relative; display: flex; flex-direction: column; gap: 8px; }
+.fld__l { font-size: 16px; color: var(--ink-70); transition: color .3s ease; }
+.fld__in { width: 100%; height: 52px; margin: 0; padding: 0 16px; border: 1px solid var(--glass-line); border-radius: 0; background: var(--glass); color: var(--paper);
+  font-family: var(--font-text); font-weight: 400; font-size: 19px; line-height: 1.2; text-align: right; outline: 0; -webkit-appearance: none; appearance: none; box-shadow: var(--glass-hi);
+  transition: border-color .35s ease, background-color .35s ease; }
+.fld__in[dir="ltr"] { text-align: left; }
+.fld__in::placeholder { color: rgb(251 245 242 / .3); }
+.fld__in:hover { border-color: var(--glass-line-hi); }
+.fld__in:focus { border-color: var(--orange); background: rgb(255 255 255 / .08); }
+.fld__in:-webkit-autofill { -webkit-text-fill-color: var(--paper); -webkit-box-shadow: 0 0 0 100px #2a2850 inset; }
+.fld:focus-within .fld__l { color: var(--orange); }
+.fld__err { position: absolute; top: 100%; right: 0; margin-top: 3px; font-size: 14px; line-height: 1.2; color: var(--bad); }
+.fld.is-bad .fld__in { border-color: var(--bad); }
+.fld.is-bad .fld__l { color: var(--bad); }
+.lead .btn { margin-top: 8px; }
+.lead .nav { margin-top: 18px; }
+
+/* ---------- מסך החישוב ---------- */
+.calc { width: min(100%, 560px); margin: 0 auto; text-align: center; transition: opacity .45s ease; }
+.calc.is-out { opacity: 0; }
+.calc__t { margin: 0; font-family: var(--font-display); font-weight: 400; font-size: clamp(30px, 3.8vw, 44px); line-height: 1.08; }
+.calc__p { margin: 14px 0 0; font-size: clamp(15px, 1.45vw, 17px); line-height: 1.65; color: var(--ink-70); }
+.calc__list { display: flex; flex-direction: column; gap: 10px; margin: 28px 0 0; padding: 0; list-style: none; }
+.calc__row { display: flex; align-items: center; gap: 14px; padding: 15px 18px; text-align: right; background: var(--glass); border: 1px solid var(--glass-line); box-shadow: var(--glass-hi);
+  font-size: clamp(15px, 1.5vw, 17px); opacity: 0; transform: translateY(12px); transition: opacity .6s var(--ease), transform .6s var(--ease), border-color .4s ease; }
+.calc__row.is-in { opacity: 1; transform: none; }
+.calc__row.is-now { border-color: rgb(241 90 59 / .55); }
+.calc__mark { position: relative; flex: none; width: 22px; height: 22px; border: 1px solid rgb(255 255 255 / .3); }
+.calc__row.is-now .calc__mark { border-color: var(--orange); border-top-color: transparent; animation: spin .9s linear infinite; }
+.calc__row.is-done .calc__mark { background: var(--orange); border-color: var(--orange); }
+.calc__mark svg { position: absolute; inset: 18%; width: 64%; height: 64%; fill: none; stroke: #fff; stroke-width: 3; stroke-linecap: square; stroke-dasharray: 30; stroke-dashoffset: 30; transition: stroke-dashoffset .4s ease .05s; }
+.calc__row.is-done .calc__mark svg { stroke-dashoffset: 0; }
+@keyframes spin { to { rotate: 360deg; } }
+.calc__time { position: relative; height: 2px; margin-top: 26px; background: rgb(255 255 255 / .1); }
+.calc__time i { position: absolute; inset: 0; background: var(--orange); transform: scaleX(0); transform-origin: right; animation: fbTime var(--dur, 7.2s) linear forwards; }
+
+/* ---------- התוצאה ---------- */
+.res { display: flex; flex-direction: column; gap: clamp(22px, 3vw, 34px); }
+.res__t { margin: 0; text-align: center; font-family: var(--font-display); font-weight: 400; font-size: clamp(30px, 3.8vw, 44px); line-height: 1.08; text-wrap: balance; }
+.res__h { margin: 0; text-align: center; font-family: var(--font-display); font-weight: 400; font-size: clamp(22px, 2.4vw, 28px); line-height: 1.15; }
+
+/* ארבע תיבות הסטטוס + ניקוד */
+.stat { display: grid; grid-template-columns: repeat(var(--n, 5), minmax(0, 1fr)); gap: 10px; }
+.stat__box { display: flex; flex-direction: column; align-items: center; gap: 10px; padding: 18px 8px 16px; text-align: center; background: var(--glass); border: 1px solid var(--glass-line); box-shadow: var(--glass-hi); }
+.stat__box .ic { width: 26px; height: 26px; color: var(--orange); }
+.stat__l { font-size: clamp(13px, 1.3vw, 15px); line-height: 1.25; color: var(--ink-70); }
+.stat__m { position: relative; display: grid; place-items: center; width: 26px; height: 26px; }
+.stat__m svg { width: 64%; height: 64%; fill: none; stroke-width: 2.6; stroke-linecap: square; }
+.stat__m--ok { background: var(--orange); }
+.stat__m--ok svg { stroke: #fff; }
+.stat__m--no { border: 1px solid rgb(255 154 128 / .6); }
+.stat__m--no svg { stroke: var(--bad); width: 50%; height: 50%; stroke-width: 2.2; }
+.stat__score { font-family: var(--font-display); font-size: 30px; line-height: 26px; color: var(--orange); }
+
+/* כמה נכסים: עמודות שנבנות מלמטה */
+.proj { display: flex; justify-content: center; align-items: flex-end; gap: clamp(14px, 3vw, 40px); height: clamp(200px, 24vw, 250px); }
+.proj__col { display: flex; flex-direction: column; align-items: center; gap: 10px; width: clamp(84px, 13vw, 132px); height: 100%; }
+.proj__bar { position: relative; flex: 1; width: 100%; display: flex; align-items: flex-end; }
+.proj__fill { position: relative; width: 100%; height: var(--h, 40%); display: flex; justify-content: center; align-items: flex-start; padding-top: 12px;
+  background: linear-gradient(to top, rgb(255 255 255 / .05), rgb(255 255 255 / .12)); border: 1px solid var(--glass-line); box-shadow: var(--glass-hi);
+  transform-origin: bottom; transform: scaleY(0); transition: transform 1.1s var(--ease); }
+.proj.is-on .proj__fill { transform: scaleY(1); }
+/* כשכל התנאים מתקיימים: קו עליון כתום לכל עמודה, והעמודה האחרונה (העתיד) מתמלאת בכתום */
+.proj--ok .proj__fill { border-top: 2px solid var(--orange); }
+.proj--ok .proj__col:last-child .proj__fill { background: linear-gradient(to top, rgb(241 90 59 / .5), var(--orange)); border-color: var(--orange); }
+.proj__n { font-family: var(--font-display); font-size: clamp(34px, 4vw, 50px); line-height: 1; }
+.proj__l { font-size: clamp(13px, 1.3vw, 15px); color: var(--ink-70); white-space: nowrap; }
+
+/* יכולת רכישה */
+.buy { padding: clamp(20px, 2.6vw, 30px); text-align: center; background: var(--glass); border: 1px solid var(--glass-line); box-shadow: var(--glass-hi); }
+.buy__l { margin: 0; font-size: clamp(15px, 1.5vw, 17px); color: var(--ink-70); }
+.buy__v { margin: 8px 0 0; font-family: var(--font-display); font-weight: 400; font-size: clamp(40px, 5vw, 58px); line-height: 1; color: var(--orange); unicode-bidi: isolate; }
+.buy__parts { display: flex; justify-content: center; flex-wrap: wrap; gap: 6px 28px; margin: 14px 0 0; font-size: clamp(14px, 1.35vw, 16px); color: var(--ink-70); }
+.buy__parts b { font-weight: 400; color: var(--paper); unicode-bidi: isolate; }
+
+/* מה זה אומר בתכל'ס */
+.sum { padding: clamp(22px, 3vw, 34px); background: var(--glass); border: 1px solid var(--glass-line); box-shadow: var(--glass-hi); }
+.sum--ok { border-color: rgb(241 90 59 / .5); }
+.sum__t { margin: 0; font-family: var(--font-display); font-weight: 400; font-size: clamp(22px, 2.4vw, 28px); line-height: 1.15; color: var(--orange); }
+.sum__lead { margin: 12px 0 0; font-size: clamp(17px, 1.7vw, 20px); line-height: 1.45; text-wrap: pretty; }
+.sum__p { margin: 10px 0 0; font-size: clamp(15px, 1.5vw, 17px); line-height: 1.7; color: rgb(251 245 242 / .78); white-space: pre-line; }
+.res__cta { display: flex; justify-content: center; }
+.res__luck { margin: 0; text-align: center; font-family: var(--font-display); font-size: clamp(24px, 2.8vw, 32px); color: var(--orange); }
+.res__again { display: flex; justify-content: center; margin-top: -8px; }
+
+/* ---------- כניסה של שלב חדש: שורה אחרי שורה ---------- */
+.rise { opacity: 0; transform: translateY(18px); animation: rise .8s var(--ease) forwards; animation-delay: calc(var(--i, 0) * 90ms); }
+@keyframes rise { to { opacity: 1; transform: none; } }
+/* כותרת: אות אחרי אות, כמו "מצד אחד" בדף הבית */
+.split .w { display: inline-block; white-space: nowrap; }
+.split .ch { display: inline-block; opacity: 0; transform: translateY(.45em) rotateX(-60deg); transform-origin: 50% 100%; animation: chIn .7s cubic-bezier(.34, 1.56, .64, 1) forwards; animation-delay: calc(var(--d, 0) * 1ms); }
+@keyframes chIn { to { opacity: 1; transform: none; } }
+.stage-out { opacity: 0; transform: translateY(-10px); transition: opacity .28s ease, transform .28s ease; }
+
+/* =====================================================================
+   מובייל
+   ===================================================================== */
+@media (max-width: 640px) {
+  .sim { place-items: start center; padding: 16px 12px 32px; }
+  .sim__panel { padding: 22px 18px 24px; }
+  .stage { min-height: 380px; padding-top: 26px; }
+  .q__ic, .fb__ic { width: 52px; height: 52px; }
+  .opts--3 { grid-template-columns: 1fr; }
+  .opts--3 .opt { flex-direction: row; justify-content: flex-start; gap: 14px; min-height: 64px; padding: 14px 18px; }
+  .opts--3 .opt .ic { width: 26px; height: 26px; }
+  .opt { min-height: 84px; }
+  .num__in { padding: 0 48px; }
+  .num__unit { left: 18px; }
+  .btn { padding: 14px 28px; font-size: 18px; }
+  .stat { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .stat__box:last-child:nth-child(odd) { grid-column: 1 / -1; }
+  .proj { height: 200px; gap: 10px; }
+  .proj__col { width: auto; flex: 1; }
+  .proj__l { white-space: normal; text-align: center; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .rise, .split .ch { animation: none; opacity: 1; transform: none; }
+  .fb__ic, .calc__row.is-now .calc__mark { animation: none; }
+  .proj__fill { transition: none; }
+  .opt, .btn, .back .arr, .btn .arr, .btn .hz, .prog__fill { transition: none; }
+}

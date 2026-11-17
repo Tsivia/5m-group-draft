@@ -1251,9 +1251,10 @@ html.has-loader.is-landed .site-header__logo { opacity: 1; }
 .sum2__big { display: block; font-family: var(--font-display); font-weight: 400; font-size: calc(132 * var(--u)); line-height: 1.02; color: var(--ink); white-space: nowrap; }
 .sum2__w { display: inline-block; }
 /* חלון התמונה בתוך המשפט: בדיוק בגובה האותיות (ב-Cooperative האותיות ת/ד/ע/ר גבוהות 0.77 מהגופן), יושב על קו הבסיס.
-   התמונה: המשפחה הולכת אל הבית בזריחה, שלמה מהראש עד הרגליים */
+   התמונה: המשפחה הולכת אל הבית בזריחה, שלמה מהראש עד הרגליים. sum-res.jpg = about-garden עם הצבעים של תמונות המשפחה בדף הבית
+   (העברת ממוצע וסטיית תקן ב-Lab מ-trk-top, trk-assets, trk-intl ו-sum-dawn), כדי שתתאים בדיוק לשפת התמונות */
 .sum2__pic { display: inline-block; width: calc(400 * var(--u)); height: .77em; margin: 0 .04em; overflow: hidden; vertical-align: baseline; }
-.sum2__pic img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 72%; filter: saturate(2) contrast(1.5) brightness(.86); }
+.sum2__pic img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 72%; }
 .sum2__sub { display: block; margin-top: calc(20 * var(--u)); font-family: var(--font-display); font-weight: 400; font-size: calc(86 * var(--u)); line-height: 1.05; color: var(--ink); white-space: nowrap; }
 .sum2 .aosh > i { color: var(--orange); }
 @media (min-width: 901px) { .sum2 { --u: min(calc(min(100vw, 1920px) / 1920), calc(100svh / 1060)); } }
