@@ -406,6 +406,7 @@
     uniform float uUnit, uZoom, uTime, uIntro, uDim, uFamAlpha, uLift, uHorizon, uRise, uVig, uEdgeW, uSunVis, uFeet, uSky;
     uniform vec4 uRect, uFamRect, uGlass, uPane;
     uniform vec3 uSun, uEdge, uNavy;
+    uniform vec2 uFadeV;        // מובייל: כמה מגובה הצילום נמס לכחול למעלה ולמטה (0 = כבוי)
     float hash(vec2 p){ return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453); }
     float vnoise(vec2 p){
       vec2 i = floor(p), f = fract(p); f = f * f * (3.0 - 2.0 * f);
@@ -611,6 +612,11 @@
         float g = (exp(-dot(dc, dc) / .06) * .22 + exp(-dot(dc, dc) / .3) * .09) * uCursor.z * (1.0 - uRoom);
         col = 1.0 - (1.0 - col) * (1.0 - clamp(vec3(.62, .78, 1.0) * g, 0.0, 1.0));
       }
+      // מובייל: הצילום נמס אל הכחול למעלה ולמטה (בלי קו שבו התמונה נגמרת)
+      if (uFadeV.x > 0.0) {
+        float vt = smoothstep(0.0, uFadeV.x, uv.y), vb = smoothstep(1.0, 1.0 - uFadeV.y, uv.y);
+        col = mix(uNavy, col, vt * vt * (3.0 - 2.0 * vt) * vb * vb * (3.0 - 2.0 * vb));
+      }
       col = mix(col, uNavy, uIntro);
       col = mix(col, uNavy, uDim);
       gl_FragColor = vec4(col, 1.0);
@@ -696,7 +702,7 @@
       texture(sunImg || bg, 4);
       ['uBgTex', 'uFamTex', 'uRoom', 'uRes', 'uPan', 'uMouse', 'uPar', 'uScrim', 'uUnit', 'uZoom', 'uTime', 'uIntro', 'uDim', 'uFamAlpha', 'uLift', 'uHorizon',
        'uRect', 'uFamRect', 'uGlass', 'uSun', 'uEdge', 'uNavy', 'uPane', 'uRise', 'uVig', 'uEdgeW', 'uSunVis', 'uFeet', 'uSky', 'uPlateTex', 'uHasPlate', 'uDisc', 'uSpill',
-       'uMaskTex', 'uSunTex', 'uHasMask', 'uSunOn', 'uWave', 'uView', 'uImgPx', 'uCursor', 'uFloor', 'uDepthK', 'uFx'].forEach(n => (uni[n] = gl.getUniformLocation(prog, n)));
+       'uMaskTex', 'uSunTex', 'uHasMask', 'uSunOn', 'uWave', 'uView', 'uImgPx', 'uCursor', 'uFloor', 'uDepthK', 'uFx', 'uFadeV'].forEach(n => (uni[n] = gl.getUniformLocation(prog, n)));
       gl.uniform1i(uni.uBgTex, 0);
       gl.uniform1i(uni.uFamTex, 1);
       gl.uniform1i(uni.uPlateTex, 2);
@@ -865,7 +871,8 @@
     gl.uniform1f(uni.uLift, PH.lift);
     gl.uniform3f(uni.uEdge, ...hexToRgb(PH.edge));
     gl.uniform3f(uni.uNavy, ...colors.bg);
-    const back = Math.min(1, Math.max(0, p / .3));
+    gl.uniform2f(uni.uFadeV, mobFit ? .3 : 0, mobFit ? .2 : 0);
+    const back =Math.min(1, Math.max(0, p / .3));
     const sk = mobFit ? 0 : 1 - back;   // במובייל אין טקסט בצדדים: בלי הכהיה בצד
     gl.uniform2f(uni.uScrim, PH.scrim[0] * sk, PH.scrim[1] * sk);
     gl.uniform1f(uni.uFamAlpha, 1 - Math.min(1, Math.max(0, (scrollE - .08) / .37)));
