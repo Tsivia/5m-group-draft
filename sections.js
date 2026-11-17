@@ -271,6 +271,11 @@
       // בכרטיס נשארים רק המספר, השם, ההסבר והכפתור, וכך יש מקום לפסל גדול יותר
       const incH = $('.gt__inc-h', gt);
       steps.forEach((s, k) => { const pn = panels[k]; if (!pn) return; pn.appendChild(incH.cloneNode(true)); pn.appendChild(sets[k]); });
+      // הכותרת והפסל קבועים למעלה והכרטיסים נערמים מתחתם: מודדים את גובה הכותרת ואת הכרטיס הגבוה, והפסל מקבל את מה שנשאר במסך
+      const head = $('.gt__head', gt);
+      const measure = () => { gt.style.removeProperty('--gtc'); gt.style.setProperty('--gth', head.offsetHeight + 'px'); gt.style.setProperty('--gtc', Math.max(...steps.map(s => s.offsetHeight)) + 'px'); };
+      measure(); addEventListener('resize', measure);
+      if (document.fonts) document.fonts.ready.then(measure);
     }
     if (!reduce && !car) parts.forEach(p => gsap.set(all(p), { autoAlpha: 0 }));
     // במובייל המגירה קבועה על המסך: בזמן שהיא פתוחה העמוד מאחוריה לא נגלל
@@ -322,7 +327,11 @@
     const AT = [1 / 3, 2 / 3, 1];   // לחיצה על שלב: המקטע שלו מלא
     // במובייל: לחיצה על מקטע או על שכבה בפסל מחליקה את הכרטיסים אל השלב (רק הצידה, העמוד לא זז)
     // במובייל השלבים אחד מתחת לשני והפסל דבוק למעלה: לחיצה על שכבה בפסל גוללת את העמוד אל הכרטיס שלה, מתחת לפסל
-    const slide = k => { const y = (window.lenis ? window.lenis.scroll : scrollY) + steps[k].getBoundingClientRect().top - fig.getBoundingClientRect().bottom - 14; window.lenis ? window.lenis.scrollTo(y, { duration: .9 }) : scrollTo({ top: y, behavior: reduce ? 'auto' : 'smooth' }); };
+    // הכרטיסים דבוקים (sticky), אז המיקום הטבעי שלהם מחושב מראש הרשימה: כל הכרטיסים שלפניו והרווחים ביניהם
+    const slide = k => { const sy = window.lenis ? window.lenis.scroll : scrollY, gap = parseFloat(getComputedStyle(track).rowGap) || 0;
+      let top = track.getBoundingClientRect().top + sy + (parseFloat(getComputedStyle(track).paddingTop) || 0);
+      for (let i = 0; i < k; i++) top += steps[i].offsetHeight + gap;
+      const y = top - (parseFloat(getComputedStyle(steps[k]).top) || fig.getBoundingClientRect().bottom) + 1; window.lenis ? window.lenis.scrollTo(y, { duration: .9 }) : scrollTo({ top: y, behavior: reduce ? 'auto' : 'smooth' }); };
     const go = k => { closeWin(); if (car) slide(k); else if (st) scrollToY(st.start + 2 + (st.end - st.start) * AT[k]); else show(k); };
     $$('[data-go]', gt).forEach(b => b.addEventListener('click', () => go(+b.dataset.go)));
     // במובייל: השלב הפעיל הוא הכרטיס שהכי קרוב למרכז. מחכים לסוף הכניסה של הפסל, כדי שהצבע יעלה אחרי שהוא נבנה

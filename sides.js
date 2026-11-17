@@ -204,12 +204,17 @@
   // הבלון: נע ברוח. מתנדנד סביב היד של הילדה (נקודות בפיקסלים של התמונה), החוט תמיד מהיד אל הקשר, והבלון מסתובב מעט סביב הקשר
   (() => {
     const bal = document.querySelector('.rat__balloon'), str = document.querySelector('.rat__string');
-    if (!bal || !str || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-    const HX = 1902, HY = 690, KX = 1978, KY = 499, BX = 40, BY = 107;   // היד, הקשר, והקשר בתוך תמונת הבלון
-    const L = Math.hypot(KX - HX, HY - KY), A0 = Math.atan2(KX - HX, HY - KY);
+    if (!bal || !str) return;
+    // במובייל הבלון עף לצד השני של הילדה (מעל המשפחה ולא מימין לה), כדי שהמשפחה תהיה במרכז המסך ותוכל להיות גדולה יותר
+    const KX = 1978, KY = 499;   // הקשר במיקום המקורי של הבלון בקובץ
+    const HX = 1902, HY = 690;   // היד של הילדה
+    const geo = () => { const m = innerWidth <= 900, kx = m ? 1868 : KX, ky = m ? 482 : KY; return { L: Math.hypot(kx - HX, HY - ky), A0: Math.atan2(kx - HX, HY - ky) }; };
+    let G = geo();
+    addEventListener('resize', () => { G = geo(); });   // (נרשם לפני ה-tick של resize, כך שהמיקום מחושב מחדש קודם)
+    const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
     let on = false;
     const tick = () => {
-      const t = performance.now() / 1000;
+      const t = still ? 0 : performance.now() / 1000, { L, A0 } = G;
       const a = A0 + .075 * Math.sin(t * .62) + .028 * Math.sin(t * 1.7 + 1.1);
       const l = L * (1 + .014 * Math.sin(t * 1.05 + .4));
       const kx = HX + l * Math.sin(a), ky = HY - l * Math.cos(a);
@@ -217,6 +222,7 @@
       str.setAttribute('d', `M${HX} ${HY} Q${mx.toFixed(1)} ${my.toFixed(1)} ${kx.toFixed(1)} ${ky.toFixed(1)}`);
       bal.setAttribute('transform', `translate(${(kx - KX).toFixed(2)} ${(ky - KY).toFixed(2)}) rotate(${((a - A0) * 57.3 * .7).toFixed(2)} ${KX} ${KY})`);
     };
+    if (still) { tick(); addEventListener('resize', tick); return; }
     new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting && !on) { on = true; gsap.ticker.add(tick); } else if (!e.isIntersecting && on) { on = false; gsap.ticker.remove(tick); } })).observe(ratCity);
   })();
   const dotsEl = section.querySelector('.sides__dots') || {};
