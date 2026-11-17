@@ -170,7 +170,7 @@
           <g class="rat__logo-t"><polygon points="427,107 427,606 683,606" fill="#F15A3B"/></g>
         </div>
         <!-- פיגמה 64:38: פסקה אחת, Futurism 40, מיושרת לימין מתחת לכותרת -->
-        <p class="rat__text">נעים מאד,<br>אתם חלק ממעמד הביניים בישראל, ואנחנו כאן כדי להצמיח עבורכם את ההון המשפחתי,<br>ולהשיג לכם את העצמאות, הביטחון והחופש שתמיד רציתם.</p>
+        <p class="rat__text">נעים מאד,<br>אתם חלק ממעמד הביניים בישראל, ואנחנו כאן כדי להצמיח עבורכם את ההון המשפחתי, <br>ולהשיג לכם את העצמאות, הביטחון והחופש שתמיד רציתם.</p>
       </div>
     </section>
 
@@ -472,11 +472,14 @@
       const open = toggle.getAttribute('aria-expanded') === 'true';
       toggle.setAttribute('aria-expanded', String(!open));
       document.body.classList.toggle('menu-open', !open);
+      // כשהתפריט פתוח העמוד שמאחוריו לא נגלל
+      if (window.lenis) open ? window.lenis.start() : window.lenis.stop();
     });
     document.querySelectorAll('.site-nav__list a').forEach(a =>
       a.addEventListener('click', () => {
         toggle.setAttribute('aria-expanded', 'false');
         document.body.classList.remove('menu-open');
+        if (window.lenis) window.lenis.start();
       })
     );
   </script>

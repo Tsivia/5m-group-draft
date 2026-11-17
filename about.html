@@ -6,8 +6,8 @@
   <title>מי אנחנו · 5M Group</title>
   <meta name="description" content="נעים מאד, אנחנו 5M Group: רפי ויינר וצוות מומחים בכלכלה, מימון, משפט ונדל״ן, שמלווים משפחות מהמשכורת אל תיק נכסים מניב ואל עצמאות כלכלית.">
   <link rel="preload" href="fonts/Cooperative-Regular.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="preload" href="assets/about-garden.webp" as="image" fetchpriority="high" media="(min-width: 901px)">
-  <link rel="preload" href="assets/about-garden-m.jpg" as="image" fetchpriority="high" media="(max-width: 900px)">
+  <link rel="preload" href="assets/about-room.jpg" as="image" fetchpriority="high">
+  <link rel="preload" href="assets/about-window.jpg" as="image" fetchpriority="high">
   <meta name="robots" content="noindex, nofollow">
   <link rel="stylesheet" href="styles.css">
   <link rel="stylesheet" href="about.css">
@@ -37,32 +37,16 @@
 
   <main id="top">
 
-    <!-- ===================== 1. פתיחה (בהיר): "נעים מאד" =====================
-         אותה קומפוזיציה של הפתיחה בדף הבית, בבהיר: חלון גדול במרכז ובו המשפחה הולכת בשביל הגינה אל הבית בזריחה מעל הים,
-         הכותרת מימין והשאלה "ואתם?" משמאל, ושתיהן חוצות מעט את החלון.
-         שלוש שכבות עומק שזזות עם העכבר. בגלילה החלון נפתח לכל המסך, והטקסטים זזים הצידה (about.js) -->
-    <section class="ah" data-theme="light" aria-labelledby="ah-title">
-      <div class="ah__stage">
-        <i class="ah__glow" aria-hidden="true"></i>
-        <div class="ah__win" aria-hidden="true">
-          <picture><source media="(max-width: 900px)" srcset="assets/about-garden-m.jpg"><img src="assets/about-garden.webp" alt="" width="2560" height="1440" fetchpriority="high" decoding="async"></picture>
-        </div>
-        <div class="ah__r">
-          <p class="eyebrow ah__eyebrow">מי אנחנו</p>
-          <h1 class="ah__title" id="ah-title"><span class="ah__l1">נעים מאד,</span> <span class="ah__l2">אנחנו <bdi lang="en">5M Group</bdi></span><span class="sr"> ואתם?</span></h1>
-        </div>
-        <p class="ah__q" aria-hidden="true"><span>ואתם?</span></p>
-      </div>
-    </section>
-    <!-- ===================== הצעות לפתיחה (17.11): 5 כיוונים, מחליפים בכפתורים בתחתית המסך (about.html?hero=1..5) =====================
-         about.js משאיר בעמוד רק את הכיוון שנבחר ומוחק את השאר -->
+        
 
-    <!-- 1. החדר: אותו חדר כחול של דף הבית, ובחלון הנוף של "מי אנחנו". בגלילה נכנסים לתוך החלון, אל האור -->
-    <section class="hx hx1" data-hv="1" aria-labelledby="hx1-t">
+    <!-- ===================== 1. פתיחה: "נעים מאד" =====================
+         אותו חדר כחול של דף הבית, ובחלון הנוף: המשפחה בדרך הביתה בזריחה. בגלילה נכנסים לתוך החלון, אל האור -->
+    <section class="hx hx1" aria-labelledby="hx1-t">
       <div class="hx1__stage">
         <div class="hx1__room" aria-hidden="true">
-          <img class="hx1__plate" src="assets/hero-c-room.jpg" alt="" width="2560" height="1440" decoding="async">
-          <div class="hx1__view"><img src="assets/about-garden.webp" alt="" width="2560" height="1440" decoding="async"></div>
+          <img class="hx1__plate" src="assets/about-room.jpg" alt="" width="2560" height="1440" decoding="async">
+          <div class="hx1__view"><img src="assets/about-window.jpg" alt="" width="1500" height="1402" decoding="async"></div>
+          <div class="hx1__refl"><img src="assets/about-window.jpg" alt="" width="1500" height="1402" decoding="async"></div>
           <i class="hx1__light"></i>
         </div>
         <div class="hx1__r">
@@ -73,83 +57,26 @@
       </div>
     </section>
 
-    <!-- 2. היכרות: חצי כחול עם הכותרת, וחצי תמונה חמה של משפחה צוחקת. "אנחנו" מצד אחד, "ואתם?" מצד שני -->
-    <section class="hx hx2" data-hv="2" aria-labelledby="hx2-t">
-      <div class="hx2__stage">
-        <canvas class="hx2__dots" aria-hidden="true"></canvas>
-        <div class="hx2__txt">
-          <p class="eyebrow hx2__eye">מי אנחנו</p>
-          <h1 class="hx__t hx2__t" id="hx2-t"><span class="hx__l">נעים מאד,</span> <span class="hx__l">אנחנו <bdi lang="en">5M Group</bdi></span><span class="sr"> ואתם?</span></h1>
-          <p class="hx__q hx2__q" aria-hidden="true"><span>ואתם?</span></p>
-        </div>
-        <figure class="hx2__ph" aria-hidden="true"><img src="assets/sum-family.jpg" alt="" decoding="async"></figure>
-      </div>
-    </section>
+    
 
-    <!-- 3. הגלולה: כותרת ענקית על נייר, ובתוכה חלון מעוגל עם המשפחה על הגבעה. בגלילה החלון נפתח לכל המסך -->
-    <section class="hx hx3" data-hv="3" data-theme="light" aria-labelledby="hx3-t">
-      <div class="hx3__stage">
-        <i class="hx3__glow" aria-hidden="true"></i>
-        <div class="hx3__in">
-          <p class="eyebrow hx3__eye">מי אנחנו</p>
-          <h1 class="hx__t hx3__t" id="hx3-t"><span class="hx__l">נעים מאד, <i class="hx3__slot" aria-hidden="true"></i></span> <span class="hx__l">אנחנו <bdi lang="en">5M Group</bdi></span> <span class="hx__l hx3__q">ואתם?</span></h1>
-        </div>
-        <div class="hx3__pill" aria-hidden="true"><img src="assets/about-hill.jpg" alt="" decoding="async"></div>
-      </div>
-    </section>
+    
 
-    <!-- 4. סרט: וידאו על כל המסך (המשפחה הולכת בשביל המואר אל הבית), פתיחה של סרט עם פסים שנפתחים -->
-    <section class="hx hx4" data-hv="4" aria-labelledby="hx4-t">
-      <div class="hx4__stage">
-        <div class="hx4__media" aria-hidden="true"><video muted playsinline loop autoplay preload="auto" poster="assets/path-home.jpg" src="assets/path-home.mp4"></video></div>
-        <i class="hx4__shade" aria-hidden="true"></i>
-        <div class="hx4__txt">
-          <p class="eyebrow hx4__eye">מי אנחנו</p>
-          <h1 class="hx__t hx4__t" id="hx4-t"><span class="hx__l">נעים מאד,</span> <span class="hx__l">אנחנו <bdi lang="en">5M Group</bdi></span><span class="sr"> ואתם?</span></h1>
-        </div>
-        <p class="hx__q hx4__q" aria-hidden="true"><span>ואתם?</span></p>
-        <i class="hx4__bar hx4__bar--t" aria-hidden="true"></i><i class="hx4__bar hx4__bar--b" aria-hidden="true"></i>
-      </div>
-    </section>
+    
 
-    <!-- 5. אלבום: הכותרת במרכז, ומסביבה תמונות של משפחות שמרחפות בעומקים שונים. זזות עם העכבר ומתפזרות בגלילה -->
-    <section class="hx hx5" data-hv="5" data-theme="light" aria-labelledby="hx5-t">
-      <div class="hx5__stage">
-        <i class="hx5__glow" aria-hidden="true"></i>
-        <div class="hx5__cards" aria-hidden="true">
-          <figure class="hx5__c hx5__c--1" data-d="1.3"><img src="assets/sum-dawn.jpg" alt="" decoding="async"></figure>
-          <figure class="hx5__c hx5__c--2" data-d=".7"><img src="assets/trk-life.webp" alt="" decoding="async"></figure>
-          <figure class="hx5__c hx5__c--3" data-d="1.1"><img src="assets/about-door.jpg" alt="" decoding="async"></figure>
-          <figure class="hx5__c hx5__c--4" data-d=".9"><img src="assets/path-dusk.jpg" alt="" decoding="async"></figure>
-          <figure class="hx5__c hx5__c--5" data-d=".5"><img src="assets/plan-top.jpg" alt="" decoding="async"></figure>
-          <figure class="hx5__c hx5__c--6" data-d=".6"><img src="assets/pier-home.jpg" alt="" decoding="async"></figure>
-          <figure class="hx5__c hx5__c--7" data-d="1.5"><img src="assets/sum-family.jpg" alt="" decoding="async"></figure>
-          <figure class="hx5__c hx5__c--8" data-d=".8"><img src="assets/about-hill.jpg" alt="" decoding="async"></figure>
-        </div>
-        <div class="hx5__in">
-          <p class="eyebrow hx5__eye">מי אנחנו</p>
-          <h1 class="hx__t hx5__t" id="hx5-t"><span class="hx__l">נעים מאד,</span> <span class="hx__l">אנחנו <bdi lang="en">5M Group</bdi></span><span class="sr"> ואתם?</span></h1>
-          <p class="hx__q hx5__q" aria-hidden="true"><span>ואתם?</span></p>
-        </div>
-      </div>
-    </section>
-
+    
 
     <!-- ===================== 2. אתם / גם אנחנו (בהיר): אותו רקע של הסגירה בעמוד המסלולים =====================
          המשפחה על הגבעה, והבלון הכתום שבידי הילדה מתנדנד ברוח. הטקסט מגובש: כותרת, משפט אחד, ותשובה.
-         שלושת הפעלים במשפט מקבלים קו כתום אחד אחרי השני, ובסוף המילה "אתם" מתהפכת ל"גם אנחנו" -->
+         שלושת הפעלים במשפט מקבלים קו כתום אחד אחרי השני -->
     <section class="at" id="think" data-theme="light" aria-labelledby="at-title">
       <i class="at__glow" aria-hidden="true"></i>
       <div class="at__land" aria-hidden="true"><img class="at__fam" src="assets/fam-hill.jpg" alt="" width="3072" height="1024" loading="lazy" decoding="async"><svg class="at__bal" viewBox="0 0 3072 1024" preserveAspectRatio="none"><path class="at__string" d="M1902 690 L1978 499"/><image class="at__balloon" href="assets/fam-balloon.png" x="1938" y="392" width="108" height="120"/></svg></div>
       <div class="at__in">
         <p class="at__k">אם קלטנו נכון,</p>
-        <h2 class="at__title" id="at-title">
-          <span class="sr">אתם אנשים שחושבים קדימה.</span>
-          <span class="at__flip" aria-hidden="true"><span class="at__w at__w--a">אתם</span><span class="at__w at__w--b">גם אנחנו</span></span>
-          <span class="at__rest" aria-hidden="true">אנשים שחושבים קדימה.</span>
-        </h2>
+        <h2 class="at__title" id="at-title">אתם אנשים שחושבים קדימה.</h2>
         <p class="at__lead">מאלו שחשוב להם <b class="at__v">לתכנן<i aria-hidden="true"></i></b> את החיים, <b class="at__v">למקסם<i aria-hidden="true"></i></b> הזדמנויות <b class="at__v">ולדאוג<i aria-hidden="true"></i></b> היום כדי לסדר את העתיד.</p>
         <p class="at__how"><span class="at__ask">איך ידענו?</span> <b class="at__ans">כי גם אנחנו.</b></p>
+        <p class="at__firm"><b>בדיוק בשביל זה הקמנו את <bdi lang="en">5M Group</bdi>.</b><br>אנחנו פירמה לתכנון הון למשפחות שמבקשות להפוך הכנסה שוטפת לתיק נכסים, ולבנות ממנו ביטחון ועצמאות כלכלית.</p>
       </div>
     </section>
 
@@ -163,10 +90,16 @@
         <figcaption class="ar__card"><span class="ar__card-n">רפי ויינר</span><span class="ar__card-r">מנכ"ל ובעלים של <bdi lang="en">5M Group</bdi></span></figcaption>
       </figure>
       <div class="ar__text">
-        <p class="eyebrow" data-lines>המייסד</p>
+        <p class="eyebrow" data-lines>הנה המשפחה שלנו.</p>
         <h2 class="sec__title" id="ar-name" data-title>רפי <em>ויינר</em></h2>
-        <p class="ar__big" data-lines>כלכלן, בעל תואר תלת תחומי במנהל עסקים, מימון, שוק ההון ונדל"ן, מוסמך מטעם משרד הבינוי והשיכון הישראלי ויועץ מימון בכיר.</p>
-        <p class="ar__body" data-lines>מייסד ובעלים משותף של חברת <bdi lang="en">Are White Stone Real Estate</bdi> עם ד"ר ליאור אמסלם דירקטור באפריקה ישראל בדימוס, מחבר הספר הכלכלי "מי הזיז את הנדל"ן שלי".</p>
+        <p class="ar__big" data-lines>מנכ"ל ובעלים של <bdi lang="en">5M Group</bdi>.<br>כלכלן, מומחה לתכנון הון.</p>
+        <!-- הפרטים בגופן קטן יותר (לפי הקופי) -->
+        <ul class="ar__body ar__cred" data-lines>
+          <li>בעל תואר תלת תחומי במנהל עסקים, מימון, שוק ההון ונדל"ן.</li>
+          <li>מוסמך מטעם משרד הבינוי והשיכון הישראלי ויועץ מימון בכיר.</li>
+          <li>מחבר הספר הכלכלי "מי הזיז את הנדל"ן שלי".</li>
+          <li>מייסד ובעלים משותף של חברת <bdi lang="en">Are White Stone Real Estate</bdi> עם ד"ר ליאור אמסלם, דירקטור באפריקה ישראל בדימוס.</li>
+        </ul>
         <a class="btn" href="#team" data-fade><i class="hz" aria-hidden="true"></i>הכירו את הצוות שלנו<span class="arr">&gt;&gt;</span></a>
       </div>
     </section>
@@ -181,35 +114,98 @@
         <p class="atm__lead" data-lines>לצד רפי פועל צוות מומחים בתחומי הכלכלה, המימון, הנדל"ן, המשפט, המס, שוק ההון ועוד, אשר יחד משלבים ידע וניסיון בהצמחת ההון של מאות משפחות.</p>
       </header>
       <div class="atm__stage" aria-live="polite">
-        <figure class="atm__ph"><img src="assets/team-ruti.webp" alt="" width="580" height="773" decoding="async"></figure>
+        <figure class="atm__ph"><img src="assets/team-rivka.webp" alt="" width="580" height="773" decoding="async"></figure>
         <div class="atm__tx">
-          <p class="atm__g">כלכלה ומימון</p>
-          <h3 class="atm__n">רותי פרידליס</h3>
-          <p class="atm__d">מייצרת שליטה ובהירות בכסף הביתי. בונה תשתית יציבה שמאפשרת התקדמות.</p>
+          <p class="atm__g">מנהלת קשרי משפחות</p>
+          <h3 class="atm__n">רבקה מוזר</h3>
+          <p class="atm__d">מחזיקה מערכת מורכבת בדיוק שקט. מתזמנת תהליכים כך שהכול מתקדם בזמן, בביטחון מלא.</p>
         </div>
       </div>
       <div class="atm__film" role="tablist" aria-label="בחירת איש צוות"></div>
       <!-- כל אנשי הצוות (מקור הנתונים לרצועה, וגם הרשימה המלאה לקוראי מסך ולמובייל) -->
       <ul class="atm__all">
-        <li data-img="ruti" data-g="כלכלה ומימון"><b>רותי פרידליס</b><span>מייצרת שליטה ובהירות בכסף הביתי. בונה תשתית יציבה שמאפשרת התקדמות.</span></li>
-        <li data-img="netanel" data-g="כלכלה ומימון"><b>נתנאל וינברג</b><span>מזהה כספים רדומים ומחדד מבנים קיימים. מתרגם נתונים להחלטות שמייצרות צמיחה אמיתית.</span></li>
-        <li data-img="israel" data-g="כלכלה ומימון"><b>ישראל וינוגרד</b><span>פותח אפשרויות מימון במקום שאחרים נעצרים. בונה מימון חכם שמשרת אסטרטגיה לאורך זמן.</span></li>
-        <li data-img="michael" data-g="משפט"><b>עו״ד מיכאל צ'ירטוק</b><span>מייצר יציבות משפטית בתוך מורכבות. שומר על תהליך מדויק, שקוף ונכון לכל אורכו.</span></li>
-        <li data-img="yair" data-g="משפט"><b>עו״ד יאיר רוזנברג</b><span>גורם משפטי נבחר המלווה את הפעילות. פועל בדיוק מוחלט ובוחן כל פרט לעומק.</span></li>
-        <li data-img="yossi" data-g="משפט" data-fy="26%"><b>עו״ד יוסי סילם</b><span>קורא עסקאות מעבר למסמך. מקדים סיכונים ובונה מעטפת משפטית להתקדמות בטוחה.</span></li>
-        <li data-img="aharon" data-g="נדל״ן ושטח"><b>אהרן קפלן</b><span>חי את השוק ביום יום ומזהה הזדמנויות לפני שהן מגיעות לחשיפה רחבה.</span></li>
-        <li data-img="beni" data-g="נדל״ן ושטח" data-fy="34%"><b>בני גולד</b><span>משלב שטח ואסטרטגיה, ומתרגם מציאות מורכבת להזדמנויות ברורות.</span></li>
-        <li data-img="yanki" data-g="נדל״ן ושטח"><b>יענקי רייניץ</b><span>מתאים נכסים לאנשים מתוך הבנה שכל מבנה כלכלי דורש התאמה מדויקת.</span></li>
-        <li data-img="itzik" data-g="נדל״ן ושטח"><b>איציק אליהו</b><span>פועל באזורים לפני פריצה ומזהה היכן העתיד הכלכלי מתחיל להיבנות.</span></li>
-        <li data-img="patrick" data-g="נדל״ן ושטח"><b>פטריק אלפסי</b><span>מניע תהליכים במהירות ובדיוק, ומוביל לעסקאות משביחות ואיכותיות.</span></li>
-        <li data-img="ishai" data-g="נדל״ן ושטח"><b>ישי קובי</b><span>קורא נכסים במהירות ובדיוק, ומבדיל בין פוטנציאל אמיתי לרעש.</span></li>
-        <li data-img="shimon" data-g="נדל״ן ושטח"><b>שמעון מנגיסטו</b><span>מחובר למקורות בשטח ומביא עסקאות שאינן מגיעות לשוק הפתוח.</span></li>
-        <li data-img="david" data-g="ניהול ותפעול"><b>דוד וקנין</b><span>מנהל נכסים באחריות מלאה, שומר על יציבות, תשואה ושקט לאורך זמן.</span></li>
-        <li data-img="rivka" data-g="ניהול ותפעול" data-fy="22%"><b>רבקה מוזר</b><span>מחזיקה מערכת מורכבת בדיוק שקט. מתזמנת תהליכים כך שהכול מתקדם בזמן, בביטחון מלא.</span></li>
+        <!-- הסדר והתחומים לפי הקופי (17.11). לעדי, ליוסף חיים ולניר עוד אין צילום: בינתיים ראשי תיבות (team-adi/yosef/nir.webp) -->
+        <li data-img="rivka" data-g="מנהלת קשרי משפחות" data-fy="22%"><b>רבקה מוזר</b><span>מחזיקה מערכת מורכבת בדיוק שקט. מתזמנת תהליכים כך שהכול מתקדם בזמן, בביטחון מלא.</span></li>
+        <li data-img="netanel" data-g="ביטוחים ופיננסי"><b>נתנאל וינברג</b><span>מזהה כספים רדומים ומחדד מבנים קיימים. מתרגם נתונים להחלטות שמייצרות צמיחה אמיתית.</span></li>
+        <li data-img="azarya" data-g="פיננסי ושוק הון" data-fy="12%"><b>עזריה רימקס</b><span>יוצר קרנות חיסכון, קופות גמל להשקעה, קרנות השתלמות, ממקסם תשואות, וחותך דמי ניהול.</span></li>
+        <li data-img="ruti" data-g="תקציב"><b>רותי פרידליס</b><span>מייצרת שליטה ובהירות בכסף הביתי. בונה תשתית יציבה שמאפשרת התקדמות.</span></li>
+        <li data-img="ari" data-g="כלכלת המשפחה" data-fy="12%"><b>ארי ליכטנשטיין</b><span>בונה תקציב. מפחית עלויות, ויוצר מודעות להתנהלות פיננסית נבונה.</span></li>
+        <li data-img="israel" data-g="מימון"><b>ישראל וינוגרד</b><span>פותח אפשרויות מימון במקום שאחרים נעצרים. בונה מימון חכם שמשרת אסטרטגיה לאורך זמן.</span></li>
+        <li data-img="adi" data-g="מימון" data-fy="50%"><b>עדי ואזנה</b><span>מתרגמת יכולת כלכלית למסגרת אשראי נכונה, ומדייקת את מבנה מפת ההשקעות.</span></li>
+        <li data-img="yosef" data-g="מימון" data-fy="50%"><b>יוסף חיים אמסלם</b><span>מזהה את מסלול המימון המתאים, בונה את התמהיל, מצמצם עלויות ומונע טעויות יקרות.</span></li>
+        <li data-img="michael" data-g="משפטי"><b>עו״ד מיכאל צ'ירטוק</b><span>מייצר יציבות משפטית בתוך מורכבות. שומר על תהליך מדויק, שקוף ונכון לכל אורכו.</span></li>
+        <li data-img="yair" data-g="משפטי"><b>עו״ד יאיר רוזנברג</b><span>גורם משפטי נבחר המלווה את הפעילות. פועל בדיוק מוחלט ובוחן כל פרט לעומק.</span></li>
+        <li data-img="yossi" data-g="משפטי" data-fy="26%"><b>עו״ד יוסי סילם</b><span>קורא עסקאות מעבר למסמך. מקדים סיכונים ובונה מעטפת משפטית להתקדמות בטוחה.</span></li>
+        <li data-img="aharon" data-g="נדל״ן"><b>אהרן קפלן</b><span>חי את השוק ביום יום ומזהה הזדמנויות לפני שהן מגיעות לחשיפה רחבה.</span></li>
+        <li data-img="beni" data-g="נדל״ן" data-fy="34%"><b>בני גולד</b><span>משלב שטח ואסטרטגיה, ומתרגם מציאות מורכבת להזדמנויות ברורות.</span></li>
+        <li data-img="yanki" data-g="נדל״ן"><b>יענקי רייניץ</b><span>מתאים נכסים לאנשים מתוך הבנה שכל מבנה כלכלי דורש התאמה מדויקת.</span></li>
+        <li data-img="itzik" data-g="ניהול נכסים"><b>איציק אליהו</b><span>פועל באזורים לפני פריצה ומזהה היכן העתיד הכלכלי מתחיל להיבנות.</span></li>
+        <li data-img="patrick" data-g="ניהול נכסים"><b>פטריק אלפסי</b><span>מניע תהליכים במהירות ובדיוק, ומוביל לעסקאות משביחות ואיכותיות.</span></li>
+        <li data-img="ishai" data-g="ניהול נכסים"><b>ישי קובי</b><span>קורא נכסים במהירות ובדיוק, ומבדיל בין פוטנציאל אמיתי לרעש.</span></li>
+        <li data-img="shimon" data-g="ניהול נכסים"><b>שמעון מנגיסטו</b><span>מחובר למקורות בשטח ומביא עסקאות שאינן מגיעות לשוק הפתוח.</span></li>
+        <li data-img="david" data-g="ניהול נכסים"><b>דוד וקנין</b><span>מנהל נכסים באחריות מלאה, שומר על יציבות, תשואה ושקט לאורך זמן.</span></li>
+        <li data-img="nir" data-g="טכנולוגיה" data-fy="50%"><b>ניר צין</b><span>בונה תשתית דיגיטלית שמרכזת מידע, תהליכים וכלים במקום אחד.</span></li>
+        <li data-img="almog" data-g="טכנולוגיה" data-fy="14%"><b>אלמוג</b><span>מחזיק את המנוע שמאחורי כל המערכת.</span></li>
       </ul>
     </section>
 
-    <!-- ===================== 5. למה 5M (כהה): וילה מעל הים בשחר, בשפה של "לכל אורך הדרך" בדף הבית =====================
+    <!-- ===================== 5. ה-DNA שלנו (בהיר): אותה ויזואליה של "משולש הזהב" בדף הבית =====================
+         הפסל במרכז, מימין השלב הפעיל (מספר, שם, הסבר ו"כאן עושים את זה."), משמאל המשפט על השולחן העגול,
+         ולמטה שלושה מקטעים שמתמלאים בגלילה. גלילה אחת = שלב אחד, ובכל שלב עוד שכבה בפסל מתמלאת (about.js) -->
+    <section class="gt agt" id="dna" data-theme="light" aria-labelledby="agt-title">
+      <div class="gt__stage">
+        <header class="gt__head">
+          <h2 class="sec__title" id="agt-title" data-title>וזה ה-<em><bdi lang="en">DNA</bdi></em> שלנו.</h2>
+        </header>
+        <div class="gt__body">
+          <div class="gt__now">
+            <div class="gt__steps">
+              <article class="gts" data-step="0">
+                <p class="gts__no"><span>שלב</span><b>01</b></p>
+                <h3 class="gts__name">תקציב.</h3>
+                <p class="gts__lead"><b>כל משפחה היא בעלת עסק, גם אם היא עדיין לא יודעת זאת.</b> הכנסות, הוצאות, מימון, שורת רווח והפסד. בפשטות, עסק. והוא צריך לגדול.</p>
+                <p class="gts__do">כאן עושים את זה.</p>
+              </article>
+              <article class="gts" data-step="1">
+                <p class="gts__no"><span>שלב</span><b>02</b></p>
+                <h3 class="gts__name">נכסים פיננסיים.</h3>
+                <p class="gts__lead"><b>בהרבה מקרים הכסף שלכם עובד. עליכם.</b> הוא אמור לעבוד בשבילכם.</p>
+                <p class="gts__do">כאן עושים את זה.</p>
+              </article>
+              <article class="gts" data-step="2">
+                <p class="gts__no"><span>שלב</span><b>03</b></p>
+                <h3 class="gts__name">תיק נכסים נדלנ״י.</h3>
+                <p class="gts__lead"><b><bdi>7.5%</bdi></b> מהמשפחות מחזיקות בנכס נדל״ן שני בבעלותם. <b><bdi>3%</bdi></b> מהמשפחות מחזיקות בנכס שלישי ומעלה בבעלותם.</p>
+                <p class="gts__do">כאן עושים את זה.</p>
+              </article>
+            </div>
+          </div>
+          <div class="gt__fig">
+            <div class="gt__sculpt">
+              <i class="gt__glow" aria-hidden="true"></i>
+              <i class="gt__floor" aria-hidden="true"></i>
+              <img class="gt__piece gt__piece--1" src="assets/gt-tri-1.webp" alt="" loading="lazy" decoding="async"><img class="gt__fill gt__fill--1" src="assets/gt-tri-1.webp" alt="" loading="lazy" decoding="async">
+              <img class="gt__piece gt__piece--2" src="assets/gt-tri-2.webp" alt="" loading="lazy" decoding="async"><img class="gt__fill gt__fill--2" src="assets/gt-tri-2.webp" alt="" loading="lazy" decoding="async">
+              <img class="gt__piece gt__piece--3" src="assets/gt-tri-3.webp" alt="" loading="lazy" decoding="async"><img class="gt__fill gt__fill--3" src="assets/gt-tri-3.webp" alt="" loading="lazy" decoding="async">
+              <button class="gt__hit gt__hit--3" type="button" data-go="2" aria-label="שלב 3: תיק נכסים נדלנ״י"></button>
+              <button class="gt__hit gt__hit--2" type="button" data-go="1" aria-label="שלב 2: נכסים פיננסיים"></button>
+              <button class="gt__hit gt__hit--1" type="button" data-go="0" aria-label="שלב 1: תקציב"></button>
+            </div>
+          </div>
+          <div class="gt__inc">
+            <p class="agt__round">המשולש הזה קורה <b>סביב השולחן העגול בסלון הבית.</b> דרך צוות פיננסי מקצועי של אנשי תכנון מס, מימון, פיננסים, משפט, נדל"ן וכלכלת משפחה.</p>
+            <p class="agt__round">כך אנו בונים משפחות רגועות עם ביטחון, הנכנסות לאוכלוסיית ה-<bdi>5%</bdi>. כך הן לא עובדות רק בשביל הבוס, אלא קודם כל בשביל עצמן. ממצות את הפוטנציאל שלהן, <b>וההון המשפחתי צומח יחד איתן.</b></p>
+          </div>
+        </div>
+        <ol class="gt__rail" aria-label="שלושת השלבים">
+          <li><button class="gt__seg" type="button" data-go="0"><i class="gt__bar" aria-hidden="true"><b></b></i><span class="gt__sn">01</span><span class="gt__st">תקציב</span></button></li>
+          <li><button class="gt__seg" type="button" data-go="1"><i class="gt__bar" aria-hidden="true"><b></b></i><span class="gt__sn">02</span><span class="gt__st">נכסים פיננסיים</span></button></li>
+          <li><button class="gt__seg" type="button" data-go="2"><i class="gt__bar" aria-hidden="true"><b></b></i><span class="gt__sn">03</span><span class="gt__st">תיק נכסים נדלנ״י</span></button></li>
+        </ol>
+      </div>
+    </section>
+
+    <!-- ===================== 6. למה 5M (כהה): וילה מעל הים בשחר, בשפה של "לכל אורך הדרך" בדף הבית =====================
          עולה מעל הצוות בגלילה אחת. הטקסט במרכז, שלושה כרטיסי זכוכית עם החיצים של הכפתור ביניהם,
          המספרים נספרים כשהם נכנסים, ובסוף משפט הסיום והכפתור -->
     <section class="a5" id="why-5m" data-theme="dark" data-header="glass" aria-labelledby="a5-title">
@@ -218,9 +214,9 @@
       <div class="a5__in">
         <h2 class="sec__title a5__title" id="a5-title" data-title>יודעים למה קוראים לנו <em><bdi lang="en">5M</bdi>?</em></h2>
         <p class="a5__lead" data-lines>כי זו המטרה הבסיסית והפשוטה ביותר שלנו:</p>
-        <p class="a5__body" data-lines>להביא אתכם כמה שיותר מהר לתיק נכסים בשווי של <bdi>+5M ₪</bdi>, שיכול לייצר לכם תשואה פסיבית סולידית של <bdi>+20K ₪</bdi> בחודש, וניתן למשוך אותה הביתה מבלי לפגוע בקרן.</p>
+        <p class="a5__body" data-lines>להביא את המשפחה לתיק נכסים בשווי של <span class="nobr"><bdi>+5M ₪</bdi>,</span> שיכול לייצר לכם תשואה פסיבית סולידית של <bdi>+20K ₪</bdi> בחודש, וניתן למשוך אותה הביתה מבלי לפגוע בקרן.</p>
         <ol class="a5__steps">
-          <li class="a5s"><span class="a5s__n" aria-hidden="true">01</span><span class="a5s__big"><bdi dir="ltr"><span class="a5s__v" data-to="5" data-fmt="M">5M</span> ₪</bdi></span><span class="a5s__t">תיק נכסים בשווי <bdi>5M ₪</bdi> שמניב תשואה גבוהה.</span></li>
+          <li class="a5s"><span class="a5s__n" aria-hidden="true">01</span><span class="a5s__big"><bdi dir="ltr"><span class="a5s__v" data-to="5" data-fmt="M">5M</span> ₪</bdi></span><span class="a5s__t">תיק נכסים בשווי <bdi>5M ₪</bdi> שמניב תשואה יפה.</span></li>
           <li class="a5__arr" aria-hidden="true">&gt;&gt;</li>
           <li class="a5s"><span class="a5s__n" aria-hidden="true">02</span><span class="a5s__big"><bdi dir="ltr"><span class="a5s__v" data-to="20" data-fmt="K">20K</span> ₪</bdi></span><span class="a5s__t">משיכה של <bdi>5%</bdi> בשנה = <bdi>20K ₪</bdi> בחודש הכנסה פסיבית.</span></li>
           <li class="a5__arr" aria-hidden="true">&gt;&gt;</li>
@@ -228,7 +224,7 @@
         </ol>
         <div class="a5__end">
           <p class="a5__close" data-title>וכך חברים, נראית תחילתה של עצמאות כלכלית!</p>
-          <a class="btn" href="tracks.html" data-fade><i class="hz" aria-hidden="true"></i>בואו להכיר יותר<span class="arr">&gt;&gt;</span></a>
+          <a class="btn" href="tracks.html" data-fade><i class="hz" aria-hidden="true"></i>בדקו התאמה<span class="arr">&gt;&gt;</span></a>
         </div>
       </div>
     </section>
@@ -277,7 +273,6 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/lenis@1.1.13/dist/lenis.min.js"></script>
-  <nav class="hxs" aria-label="הצעות לפתיחה"><span>פתיחה:</span><a href="?hero=1">1 · החדר</a><a href="?hero=2">2 · היכרות</a><a href="?hero=3">3 · הגלולה</a><a href="?hero=4">4 · סרט</a><a href="?hero=5">5 · אלבום</a></nav>
   <script src="about.js"></script>
 </body>
 </html>

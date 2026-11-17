@@ -253,24 +253,37 @@
   // ================= 1. משולש הזהב (גרסה 12): הפסל במרכז, מימין השלב הפעיל, משמאל התוויות שלו, ולמטה שלושה מקטעים שמתמלאים בגלילה =================
   const gt = $('.gt');
   if (gt) {
-    if ($('.rat.is-live') && !reduce) { gt.classList.add('is-cover'); snapCover(gt); }
+    // במובייל (car): בלי נעיצה ובלי גלילה בשלבים, הגלילה בעמוד טבעית. במגע, הגלילה בשלבים לא הזיזה את המסך עד שהאצבע עזבה
+    // (הרגיש תקוע), ומהשלב הראשון אי אפשר היה לחזור למעלה. במקום זה שלושת השלבים הם כרטיסים שמחליקים הצידה,
+    // והפסל והמקטעים מעליהם מגיבים לכרטיס שמול העיניים. גם הגלישה האוטומטית בכניסה לאזור כבויה במגע (נלחמה באצבע)
+    const car = mobile();
+    if ($('.rat.is-live') && !reduce) { gt.classList.add('is-cover'); if (!car) snapCover(gt); }
     const steps = $$('.gts', gt), sets = $$('.gt__sets .gts__tags', gt), segs = $$('.gt__seg', gt), bars = segs.map(s => $('.gt__bar b', s));
     const pieces = [1, 2, 3].map(n => $('.gt__piece--' + n, gt)), fills = [1, 2, 3].map(n => $('.gt__fill--' + n, gt)), sculpt = $('.gt__sculpt', gt);
     const pair = k => [pieces[k], fills[k]];
     const fig = $('.gt__fig', gt), panels = $$('.gt__panel', gt), xBtn = $('.gt__x', gt);
     const parts = steps.map((s, k) => ({ no: $('.gts__no', s), name: splitChars($('.gts__name', s)), words: splitWords($('.gts__lead', s)), btn: $('.btn', s), chips: $$('li', sets[k]) }));
     const all = p => [p.no, ...p.name, ...p.words, p.btn, ...p.chips];
-    if (!reduce) parts.forEach(p => gsap.set(all(p), { autoAlpha: 0 }));
+    const track = $('.gt__steps', gt);
+    if (car) {
+      gt.classList.add('is-car');
+      // התוויות של כל שלב ("מה כולל השלב") עוברות לתוך הכרטיס שלו, מעל הכפתור
+      const incH = $('.gt__inc-h', gt);
+      steps.forEach((s, k) => { s.insertBefore(incH.cloneNode(true), parts[k].btn); s.insertBefore(sets[k], parts[k].btn); });
+    }
+    if (!reduce && !car) parts.forEach(p => gsap.set(all(p), { autoAlpha: 0 }));
+    // במובייל המגירה קבועה על המסך: בזמן שהיא פתוחה העמוד מאחוריה לא נגלל
+    const lock = v => { if (!car) return; document.documentElement.style.overflow = v ? 'hidden' : ''; if (window.lenis) v ? window.lenis.stop() : window.lenis.start(); };
 
     const panelWords = panels.map(() => null);
     let lastBtn = null;
     const openWin = k => {
       panels.forEach((pn, i) => { pn.hidden = i !== k; });
-      gt.classList.add('is-open'); $('.gt__win', gt).scrollTop = 0;
+      gt.classList.add('is-open'); $('.gt__win', gt).scrollTop = 0; lock(true);
       if (!reduce) { if (!panelWords[k]) panelWords[k] = $$('.gt__pt, p', panels[k]).flatMap(splitWords); hideLines(panelWords[k]); setTimeout(() => playLines(panelWords[k]), 380); }
       xBtn.focus({ preventScroll: true });
     };
-    const closeWin = () => { if (!gt.classList.contains('is-open')) return; gt.classList.remove('is-open'); lastBtn && lastBtn.focus({ preventScroll: true }); };
+    const closeWin = () => { if (!gt.classList.contains('is-open')) return; gt.classList.remove('is-open'); lock(false); lastBtn && lastBtn.focus({ preventScroll: true }); };
     $$('[data-open]', gt).forEach(b => b.addEventListener('click', () => { lastBtn = b; openWin(+b.dataset.open); }));
     xBtn.addEventListener('click', closeWin);
     $('.gt__scrim', gt).addEventListener('click', closeWin);   // לחיצה מחוץ למגירה סוגרת אותה
@@ -288,7 +301,8 @@
       fills.forEach((f, k) => { f.classList.toggle('is-on', k <= i); f.classList.toggle('is-now', k === i); });
       sculpt.classList.add('has-on');
       closeWin();
-      if (reduce) { steps.forEach((s, k) => s.classList.toggle('is-on', k === i)); sets.forEach((s, k) => s.classList.toggle('is-on', k === i)); return; }
+      if (car) bars.forEach((b, k) => { b.style.transform = 'scaleX(' + (k <= i ? 1 : 0) + ')'; });   // המקטעים מתמלאים עד הכרטיס הנוכחי
+      if (reduce || car) { steps.forEach((s, k) => s.classList.toggle('is-on', k === i)); sets.forEach((s, k) => s.classList.toggle('is-on', k === i)); return; }
       if (prev >= 0) {
         const p = parts[prev], s = steps[prev], c = sets[prev];
         gsap.to(all(p), { autoAlpha: 0, y: -18, duration: .3, stagger: .002, ease: 'power2.in', overwrite: true, onComplete: () => { if (on !== prev) { s.classList.remove('is-on'); c.classList.remove('is-on'); } } });
@@ -305,28 +319,37 @@
 
     let st = null;
     const AT = [1 / 3, 2 / 3, 1];   // לחיצה על שלב: המקטע שלו מלא
-    const go = k => { closeWin(); if (st) scrollToY(st.start + 2 + (st.end - st.start) * AT[k]); else show(k); };
+    // במובייל: לחיצה על מקטע או על שכבה בפסל מחליקה את הכרטיסים אל השלב (רק הצידה, העמוד לא זז)
+    const slide = k => { const r = track.getBoundingClientRect(), b = steps[k].getBoundingClientRect(), pad = parseFloat(getComputedStyle(track).paddingRight) || 0; track.scrollBy({ left: b.right - (r.right - pad), behavior: reduce ? 'auto' : 'smooth' }); };
+    const go = k => { closeWin(); if (car) slide(k); else if (st) scrollToY(st.start + 2 + (st.end - st.start) * AT[k]); else show(k); };
     $$('[data-go]', gt).forEach(b => b.addEventListener('click', () => go(+b.dataset.go)));
-    if (reduce) { show(0); bars.forEach(b => { b.style.transform = 'scaleX(1)'; }); }
+    // במובייל: השלב הפעיל הוא הכרטיס שהכי קרוב למרכז. מחכים לסוף הכניסה של הפסל, כדי שהצבע יעלה אחרי שהוא נבנה
+    let carReady = reduce;
+    const pick = () => { const r = track.getBoundingClientRect(), c = r.left + r.width / 2; let k = 0, d = Infinity; steps.forEach((s, i) => { const b = s.getBoundingClientRect(), e = Math.abs(b.left + b.width / 2 - c); if (e < d) { d = e; k = i; } }); if (carReady) show(k); };
+    if (car) { let fr = 0; track.addEventListener('scroll', () => { fr = fr || requestAnimationFrame(() => { fr = 0; pick(); }); }, { passive: true }); }
+    if (reduce) { show(0); if (!car) bars.forEach(b => { b.style.transform = 'scaleX(1)'; }); }
     else {
       // הכניסה: הפסל נבנה. הבסיס עולה, האמצע נוחת עליו, וקודקוד הזהב יורד אחרון ונשאר לרחף בעדינות. המקטעים למטה עולים אחריו
       gsap.set(pair(0), { y: 120, autoAlpha: 0 });
       gsap.set(pair(1), { y: -150, autoAlpha: 0 });
       gsap.set(pair(2), { y: -260, rotation: -6, autoAlpha: 0 });
-      gsap.set([...segs, $('.gt__inc', gt)], { autoAlpha: 0, y: 20 });
-      ScrollTrigger.create({ trigger: gt, start: 'top 45%', once: true, onEnter: () => {
+      const inc = car ? track : $('.gt__inc', gt);   // במובייל הכרטיסים עולים במקום עמודת התוויות
+      gsap.set([...segs, inc], { autoAlpha: 0, y: 20 });
+      ScrollTrigger.create({ trigger: gt, start: car ? 'top 70%' : 'top 45%', once: true, onEnter: () => {
         gsap.to(pair(0), { y: 0, autoAlpha: 1, duration: 1.3, ease: 'expo.out' });
         gsap.to(pair(1), { y: 0, autoAlpha: 1, duration: 1.2, delay: .3, ease: 'back.out(1.2)' });
         gsap.to(pair(2), { y: 0, rotation: 0, autoAlpha: 1, duration: 1.4, delay: .6, ease: 'back.out(1.5)', onComplete: () => gsap.to(pair(2), { y: -9, duration: 2.8, yoyo: true, repeat: -1, ease: 'sine.inOut' }) });
-        gsap.to($('.gt__inc', gt), { autoAlpha: 1, y: 0, duration: 1, delay: .5, ease: 'expo.out' });
+        gsap.to(inc, { autoAlpha: 1, y: 0, duration: 1, delay: .5, ease: 'expo.out' });
         gsap.to(segs, { autoAlpha: 1, y: 0, duration: 1, stagger: .12, delay: .7, ease: 'expo.out', clearProps: 'opacity,visibility,transform' });
-        gsap.delayedCall(.9, () => { if (on < 0) show(0); });
+        gsap.delayedCall(.9, () => { if (car) { carReady = true; pick(); } else if (on < 0) show(0); });
       } });
-      st = ScrollTrigger.create({ trigger: gt, start: 'top top', end: () => '+=' + Math.round(innerHeight * (mobile() ? 1.7 : 1.8)), pin: true, invalidateOnRefresh: true,
-        onUpdate: s => { const p = s.progress; bars.forEach((b, k) => { b.style.transform = 'scaleX(' + clamp(p * 2 + 1 - k).toFixed(3) + ')'; }); if (on >= 0 || p > 0) show(p < .25 ? 0 : p < .75 ? 1 : 2); } });
-      // גלילה אחת = שלב אחד. כשמגיעים לאזור כבר רואים את שלב 1, ולכן הגלילה הראשונה עוברת לשלב 2.
-      // אחרי השלישי, עוד גלילה אחת עוברת ל"שורה תחתונה"
-      stepper(st, 3, null, () => { const nx = ScrollTrigger.getAll().find(s => s.pin && s.trigger === $('.sum2')); return nx ? nx.start + 2 : st.end + innerHeight; });
+      if (!car) {
+        st = ScrollTrigger.create({ trigger: gt, start: 'top top', end: () => '+=' + Math.round(innerHeight * 1.8), pin: true, invalidateOnRefresh: true,
+          onUpdate: s => { const p = s.progress; bars.forEach((b, k) => { b.style.transform = 'scaleX(' + clamp(p * 2 + 1 - k).toFixed(3) + ')'; }); if (on >= 0 || p > 0) show(p < .25 ? 0 : p < .75 ? 1 : 2); } });
+        // גלילה אחת = שלב אחד. כשמגיעים לאזור כבר רואים את שלב 1, ולכן הגלילה הראשונה עוברת לשלב 2.
+        // אחרי השלישי, עוד גלילה אחת עוברת ל"שורה תחתונה"
+        stepper(st, 3, null, () => { const nx = ScrollTrigger.getAll().find(s => s.pin && s.trigger === $('.sum2')); return nx ? nx.start + 2 : st.end + innerHeight; });
+      }
     }
   }
 
@@ -503,7 +526,7 @@
   if (road2) {
     if (match && !reduce) {
       ScrollTrigger.create({ trigger: match, start: 'bottom bottom', end: () => '+=' + Math.round(innerHeight * (mobile() ? 1.5 : 1.6)), pin: true, pinSpacing: false });
-      snapCover(road2);
+      if (!mobile()) snapCover(road2);   // במגע הגלישה האוטומטית נלחמה באצבע: במובייל המסך עולה פשוט עם הגלילה
     }
     const win = $('.road2__win', road2), img = $$('video, img', win), shade = $('.road2__shade', road2);
     // סרטון הזריחה: נטען רק כשמתקרבים, ומתחיל לנוע ברגע שהחלון נפתח
@@ -533,6 +556,8 @@
     const vStop = () => { vOn = false; cancelAnimationFrame(vTick); vids.forEach(v => { v.pause(); v.currentTime = 0; }); };
     const words = splitWords($('.road2__lead', road2)), stat = $('.road2__stat', road2), en = $('.road2__en', road2), cnt = $('.road2__count', road2);
     const rtitle = $('.road2__title', road2);
+    // במובייל החלון הקטן מתחיל ממש מתחת לכותרת (בכל גובה מסך), כך שרואים בו את הבית בקצה המזח ולא רק מים, והכותרת לא יושבת עליו
+    const winM = () => { const s = $('.road2__stage', road2).getBoundingClientRect(), t = rtitle.getBoundingClientRect(); return 'inset(' + clamp((t.bottom - s.top + 26) / s.height * 100, 28, 52).toFixed(1) + '% 12% 11% 12%)'; };
     const fitEn = () => { if (mobile()) { en.style.width = ''; return; } const r = document.createRange(); r.selectNodeContents(rtitle); en.style.width = Math.round(r.getBoundingClientRect().width) + 'px'; };
     fitEn(); addEventListener('resize', () => requestAnimationFrame(fitEn)); document.fonts && document.fonts.ready.then(fitEn);
     let filled = -1;
@@ -543,7 +568,7 @@
       gsap.set([stat, en], { autoAlpha: 0, y: 30 });
       const o = { v: 0 };
       const tl = gsap.timeline({ defaults: { ease: 'none' } })
-        .fromTo(win, { clipPath: () => mobile() ? 'inset(40% 14% 16% 14%)' : 'inset(42% 35% 10% 35%)' }, { clipPath: 'inset(0% 0% 0% 0%)', duration: 1.2, ease: 'power2.inOut' }, 0)
+        .fromTo(win, { clipPath: () => mobile() ? winM() : 'inset(42% 35% 10% 35%)' }, { clipPath: 'inset(0% 0% 0% 0%)', duration: 1.2, ease: 'power2.inOut' }, 0)
         .fromTo(media, { scale: 1.1 }, { scale: 1, duration: 2, ease: 'sine.out' }, 0)   // זום עדין ואחיד לאורך כל הפתיחה
         .to({}, { duration: .01, onStart: vPlay, onReverseComplete: vStop }, .05)
         .to(shade, { opacity: 1, duration: .6 }, .7)
@@ -585,6 +610,14 @@
     measure(); addEventListener('resize', () => requestAnimationFrame(measure)); document.fonts && document.fonts.ready.then(measure);
     const thumbs = $$('.vthumb', film), bars = thumbs.map(t => $('i', t));
     let cur = -1, prog = null, hover = false, inView = false;
+    const centerThumb = k => {
+      if (film.scrollWidth <= film.clientWidth + 2) return;
+      const fr = film.getBoundingClientRect(), tr = thumbs[k].getBoundingClientRect();
+      film.scrollBy({ left: (tr.left + tr.width / 2) - (fr.left + fr.width / 2), behavior: reduce ? 'auto' : 'smooth' });
+    };
+    // ההתמוססות בקצה השמאלי היא רמז שיש עוד פנים. כשמגיעים לסוף הרצועה היא נעלמת, כדי שהפנים האחרונות לא ייראו דהויות
+    const filmEdge = () => film.classList.toggle('is-end', Math.abs(film.scrollLeft) >= film.scrollWidth - film.clientWidth - 4);
+    film.addEventListener('scroll', filmEdge, { passive: true }); filmEdge();
     const sync = () => { if (prog) (inView && !hover && document.visibilityState === 'visible') ? prog.resume() : prog.pause(); };
     const run = () => {
       if (prog) prog.kill();
@@ -599,6 +632,8 @@
       const first = cur < 0; cur = i;
       thumbs.forEach((t, k) => { t.classList.toggle('is-on', k === i); t.setAttribute('aria-selected', k === i ? 'true' : 'false'); t.tabIndex = k === i ? 0 : -1; gsap.to(t, { '--b': k === i ? 1.3 : 1, duration: reduce ? 0 : .55, ease: 'power3.out', overwrite: 'auto' }); });
       if (focus) thumbs[i].focus();
+      // בטלפון הרצועה נגללת הצידה: הפנים הפעילות מגיעות לאמצע (אחרי שהתנפחו), בלי להזיז את העמוד עצמו
+      if (!first) gsap.delayedCall(reduce ? 0 : .6, () => centerThumb(i));
       // הדיוקן העגול: החדש נכנס מעל הקודם
       const im = new Image(); im.src = pic(i); im.alt = ''; im.decoding = 'async';
       face.appendChild(im);
@@ -622,6 +657,14 @@
       run();
     };
     thumbs.forEach((t, k) => t.addEventListener('click', () => go(k)));
+    // החלקה על ההמלצה עצמה בטלפון: ימינה = הבאה (כמו הרצועה, שממשיכה שמאלה), שמאלה = הקודמת. גלילה אנכית לא נחסמת
+    let sx = null, sy = 0;
+    vs.addEventListener('touchstart', e => { const t = e.touches[0]; sx = t.clientX; sy = t.clientY; }, { passive: true });
+    vs.addEventListener('touchend', e => {
+      if (sx === null) return; const t = e.changedTouches[0], dx = t.clientX - sx, dy = t.clientY - sy; sx = null;
+      if (Math.abs(dx) < 50 || Math.abs(dx) < Math.abs(dy) * 1.5) return;
+      go((cur + (dx > 0 ? 1 : -1) + thumbs.length) % thumbs.length);
+    }, { passive: true });
     film.addEventListener('keydown', e => {
       const d = e.key === 'ArrowLeft' ? 1 : e.key === 'ArrowRight' ? -1 : 0; if (!d) return;
       e.preventDefault(); go((cur + d + thumbs.length) % thumbs.length, true);
@@ -687,9 +730,10 @@
         c.addEventListener('mouseleave', () => { rx(0); ry(0); });
       });
     } else if (!reduce) {
-      const MESS = [-4, 3, 5];
-      cards.forEach((c, i) => gsap.fromTo(c, { rotation: MESS[i], x: (i % 2 ? -1 : 1) * 36, scale: .95 },
-        { rotation: 0, x: 0, scale: 1, ease: 'power2.out', scrollTrigger: { trigger: c, start: 'top 96%', end: 'top 58%', scrub: .6 } }));
+      // בטלפון: נטייה ותזוזה עדינות יותר, כדי שפינות הכרטיס לא ייצאו מהמסך, והכרטיס כבר ישר כשמגיעים לקרוא אותו
+      const MESS = [-3, 2.5, 3.5];
+      cards.forEach((c, i) => gsap.fromTo(c, { rotation: MESS[i], x: (i % 2 ? -1 : 1) * 16, scale: .96 },
+        { rotation: 0, x: 0, scale: 1, ease: 'power2.out', scrollTrigger: { trigger: c, start: 'top 96%', end: 'top 64%', scrub: .6 } }));
     }
   }
 

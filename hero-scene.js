@@ -801,6 +801,13 @@
     return { x: x0, y: y0, w: x1 - x0, h: y1 - y0 };
   };
   function sceneRect() {
+    if (PHOTO && mobFit) {
+      // מובייל: החלון והמשפחה בגובה המסך, ממורכזים, בין ה-95% שלמעלה ל-5% שלמטה (בזמן המנוחה, אחרי הזום האיטי של הפתיחה)
+      const z = SCROLL_FX ? 1.045 : 1, pan = SCROLL_FX ? ZOOM_AT_Y * H * (1 - z) : 0, k = unit * z;
+      const y0 = (mobFit.top - H / 2 - pan) / k, y1 = (mobFit.feet - H / 2 - pan) / k;
+      const h = Math.max(1, (y1 - y0) / (PH.feetLine - PH.glass[1])), w = h * imgAspect, fc = PH.fam[0] + PH.fam[2] / 2;
+      return [-w * fc, y0 - PH.glass[1] * h, w, h];
+    }
     if (PHOTO) {
       // במסכים צרים מ-16:9 (כמו 1440×900) הטקסטים קרובים יותר זה לזה, אז הצילום מוקטן באותו יחס: החלון תמיד ברווח שביניהם
       const r = Math.min(1, (W / H) / (REF_W / REF_H)), k = ds.photoFit ? Math.pow(r, num(ds.photoFitK, 1.6)) : 1;
@@ -859,7 +866,8 @@
     gl.uniform3f(uni.uEdge, ...hexToRgb(PH.edge));
     gl.uniform3f(uni.uNavy, ...colors.bg);
     const back = Math.min(1, Math.max(0, p / .3));
-    gl.uniform2f(uni.uScrim, PH.scrim[0] * (1 - back), PH.scrim[1] * (1 - back));
+    const sk = mobFit ? 0 : 1 - back;   // במובייל אין טקסט בצדדים: בלי הכהיה בצד
+    gl.uniform2f(uni.uScrim, PH.scrim[0] * sk, PH.scrim[1] * sk);
     gl.uniform1f(uni.uFamAlpha, 1 - Math.min(1, Math.max(0, (scrollE - .08) / .37)));
     gl.uniform1f(uni.uIntro, intro * intro);
     const room = SCROLL_FX ? Math.min(1, Math.max(0, (p - .1) / .45)) : 0;
@@ -999,6 +1007,19 @@
     heroEl.style.setProperty('--glass-top', ((R[1] + PH.glass[1] * R[3]) * unit * z + H / 2 + pan).toFixed(1) + 'px');
   }
   const heroEl = story.querySelector('.hero');
+  /* מובייל: ההירו הנקי. ה-CSS ממקם את "95%" למעלה ואת "5%" למטה, והצילום (החלון והמשפחה) נכנס בדיוק ביניהם,
+     כך שהמשפחה אף פעם לא מתחת לטקסט */
+  let mobFit = null;
+  function fitMobile() {
+    mobFit = null;
+    if (!PHOTO || innerWidth > 900 || !heroEl) return;
+    const a = heroEl.querySelector('.hero__stat:not(.hero__stat--few)'), b = heroEl.querySelector('.hero__stat--few');
+    if (!a || !b) return;
+    const t = heroEl.getBoundingClientRect().top, ra = a.getBoundingClientRect(), rb = b.getBoundingClientRect();
+    if (!ra.height || !rb.height) return;
+    mobFit = { top: ra.bottom - t + Math.max(22, H * .038), feet: rb.top - t - Math.max(24, H * .045) };
+  }
+  if (document.fonts) document.fonts.ready.then(() => { fitMobile(); if (glReady) placeFeet(); });
   function resize() {
     requestAnimationFrame(placeSun);
     const r = host.getBoundingClientRect();
@@ -1006,16 +1027,24 @@
     DPR = 1;
     glCanvas.width = Math.round(W * DPR); glCanvas.height = Math.round(H * DPR);
     unit = Math.max(W / REF_W, H / REF_H);
+    fitMobile();
     if (glReady) { readColors(); placeFeet(); }
     onScroll();
     if (calm) drawGL();
   }
 
-  const hero = story.querySelector('.hero');
+  const hero = story.querySelector('.hero'), heroBrand = hero && hero.querySelector('.hero__brand');
   function onScroll() {
     const travel = Math.max(1, (hero ? hero.offsetHeight : innerHeight));
     const top = story.getBoundingClientRect().top;
     scrollP = SCROLL_FX ? Math.min(Math.max(-top / travel, 0), 1) : 0;
+    // מובייל: הטקסט (95/5) נעלם מהר בתחילת הגלילה, לפני שהמשפחה גדלה לעברו
+    if (heroBrand && (mobFit || heroBrand.style.opacity)) {
+      const f = mobFit ? Math.min(1, -top / (H * .2)) : 0, e = f > 0 ? f * f * (3 - 2 * f) : 0;
+      heroBrand.style.opacity = e > 0 ? (1 - e).toFixed(3) : '';
+      heroBrand.style.transform = e > 0 ? 'translateY(' + (-18 * e).toFixed(1) + 'px)' : '';
+      heroBrand.style.pointerEvents = e > .9 ? 'none' : '';
+    }
     if (calm) { scrollE = scrollP; drawGL(); }
   }
 

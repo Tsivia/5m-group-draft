@@ -348,12 +348,15 @@
     // (גם ההמלצות וגם "מזדהים"), כך שאין רגע שבו רואים כחול ליד בהיר. התוכן של ההמלצות נעלם בזמן הזה, והטקסט כאן מתכהה
     const setTheme = s => { const t = s.progress > .55 ? 'light' : 'dark'; tc.dataset.theme = t; if (tv) tv.dataset.theme = t; };
     const tvOut = tv ? $$(':scope > *:not(.tv__src)', tv) : [];
-    gsap.timeline({ defaults: { ease: 'none' }, scrollTrigger: { trigger: tc, start: 'top 75%', end: 'top 15%', scrub: true, onUpdate: setTheme, onRefresh: setTheme } })
+    // במובייל ההמלצות לא עולות על המסלולים, ולכן גם בלי הצל העליון (אחרת הוא נראה כמו כתם אפור מעל הכחול)
+    const tvShadow = a => mobile() ? 'none' : '0 -30px 60px rgba(9,7,37,' + a + ')';
+    gsap.timeline({ defaults: { ease: 'none' }, scrollTrigger: { trigger: tc, start: 'top 75%', end: 'top 15%', scrub: true, invalidateOnRefresh: true, onUpdate: setTheme, onRefresh: setTheme } })
       .fromTo(tc, { backgroundColor: '#090725', color: '#FBF5F2' }, { backgroundColor: '#FBF5F2', color: '#100E36' }, 0)
-      .fromTo(tv, { backgroundColor: '#090725', boxShadow: '0 -30px 60px rgba(9,7,37,.25)' }, { backgroundColor: '#FBF5F2', boxShadow: '0 -30px 60px rgba(9,7,37,0)' }, 0)
+      .fromTo(tv, { backgroundColor: '#090725', boxShadow: () => tvShadow(.25) }, { backgroundColor: '#FBF5F2', boxShadow: () => tvShadow(0) }, 0)
       .fromTo(tvOut, { opacity: 1 }, { opacity: 0, duration: .6 }, 0);
     const tcLight = $('.light', tc);
-    if (tcLight) gsap.fromTo(tcLight, { opacity: 0 }, { opacity: .5, ease: 'none', scrollTrigger: { trigger: tc, start: 'top 10%', end: 'top -40%', scrub: true } });
+    // אור החלון: בטלפון חלש יותר, כדי שהנייר יישאר נקי
+    if (tcLight) gsap.fromTo(tcLight, { opacity: 0 }, { opacity: () => mobile() ? .3 : .5, ease: 'none', scrollTrigger: { trigger: tc, start: 'top 10%', end: 'top -40%', scrub: true, invalidateOnRefresh: true } });
     const rolls = $$('[data-roll]', tc);
     rolls.forEach(el => { el._t = el.textContent; });
     const fmt = n => Math.round(n).toLocaleString('en-US');
@@ -443,7 +446,7 @@
   const mapZones = () => {
     hh = header ? header.offsetHeight : 64;
     // אזורים נעוצים יושבים בתוך pin-spacer, ולכן מודדים את העוטף שלהם
-    zones = $$('main > [data-theme], main > .pin-spacer > [data-theme]').map(sec => { const box = sec.parentElement.classList.contains('pin-spacer') ? sec.parentElement : sec; const r = box.getBoundingClientRect(), top = r.top + scrollY; return { sec, top, bottom: top + r.height, glass: sec.dataset.header === 'glass' }; });
+    zones = $$('main > [data-theme], main > .pin-spacer > [data-theme]').map(sec => { const box = sec.parentElement.classList.contains('pin-spacer') ? sec.parentElement : sec; const r = box.getBoundingClientRect(), top = r.top + scrollY; return { sec, top, bottom: top + r.height, glass: sec.dataset.header === 'glass' && !mobile() }; });
     // הרווח שלפני אזור שעולה על הקודם (בזמן שהקודם נעוץ) שייך לאזור הקודם
     zones.forEach((z, i) => { if (zones[i + 1]) z.bottom = Math.max(z.bottom, zones[i + 1].top); });
   };

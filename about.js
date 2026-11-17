@@ -13,17 +13,7 @@
   const logoA = header && $('.site-header__logo', header);
   if (logoA && !$('.logo-on-light', logoA)) { const im = document.createElement('img'); im.className = 'logo-on-light'; im.src = 'assets/logo-5m.svg'; im.alt = ''; im.setAttribute('aria-hidden', 'true'); logoA.appendChild(im); }
 
-  /* ---------- הצעות לפתיחה: בעמוד נשאר רק הכיוון שנבחר (about.html?hero=1..5) ---------- */
-  const HV = (() => { const v = +new URLSearchParams(location.search).get('hero'); return v >= 1 && v <= 5 ? v : 1; })();
-  $$('.hx').forEach(s => { if (+s.dataset.hv !== HV) s.remove(); });
-  { const old = $('.ah'); if (old) old.remove(); }
-  $$('.hxs a').forEach(a => a.classList.toggle('is-on', a.getAttribute('href') === '?hero=' + HV));
   const hx = $('.hx');
-  // 3. הגלולה: החלון המעוגל יושב בדיוק על המקום שנשמר לו בתוך השורה
-  const pill = hx && $('.hx3__pill', hx), slot = hx && $('.hx3__slot', hx);
-  const slotBox = () => { const s = slot.getBoundingClientRect(), st = slot.closest('.hx3__stage').getBoundingClientRect(); return { left: s.left - st.left, top: s.top - st.top, width: s.width, height: s.height }; };
-  const placePill = () => { if (!pill || !slot) return; const b = slotBox(); Object.assign(pill.style, { left: b.left + 'px', top: b.top + 'px', width: b.width + 'px', height: b.height + 'px' }); };
-  if (pill) { placePill(); document.fonts && document.fonts.ready.then(placePill); }
 
   /* ---------- הצוות: עובד גם בלי אנימציות (לחיצה על תמונה ברצועה) ---------- */
   const atm = $('.atm'), people = atm ? $$('.atm__all li', atm) : [], film = atm && $('.atm__film', atm);
@@ -192,42 +182,9 @@
   const DARK_DOTS = { color: '245,245,245', base: .06, hover: .16 }, LIGHT_DOTS = { base: .07, hover: .1, swell: .25, push: 8 };
   $$('.dotfield').forEach(c => dotField(c, c.closest('[data-theme="light"]') ? LIGHT_DOTS : DARK_DOTS));
 
-  /* ================= 1. פתיחה: "נעים מאד" =================
-     נכנסים ורואים את כל הנוף על כל המסך. אחרי רגע קצר התמונה מתכווצת לבד לחלון במרכז (--p), בלי לחכות לגלילה,
-     והכותרת והשאלה נכנסות מהצדדים, אות אחרי אות. סימן השאלה מתנדנד מדי פעם.
-     עומק: התמונה והטקסטים זזים עם העכבר במהירויות שונות */
-  const ah = $('.ah');
-  if (ah && !reduce) {
-    const stage = $('.ah__stage', ah), win = $('.ah__win', ah), img = $('.ah__win img', ah), r = $('.ah__r', ah), q = $('.ah__q', ah), eye = $('.ah__eyebrow', ah);
-    const c1 = splitChars($('.ah__l1', ah)), c2 = splitChars($('.ah__l2', ah)), c3 = splitChars($('.ah__q span', ah));
-    const desk = !mobile();
-    gsap.set([...c1, ...c2, ...c3], LETTER);
-    const playTitles = () => {
-      playChars(c1); playChars(c2, .25);
-      gsap.to(c3, { autoAlpha: 1, y: 0, rotateX: 0, duration: .9, stagger: .08, delay: .55, ease: 'back.out(2.4)' });
-      const mark = c3[c3.length - 1];
-      if (mark) gsap.timeline({ repeat: -1, repeatDelay: 3.4, delay: 3 }).to(mark, { rotation: -10, duration: .45, ease: 'sine.inOut' }).to(mark, { rotation: 7, duration: .5, ease: 'sine.inOut' }).to(mark, { rotation: 0, duration: .7, ease: 'elastic.out(1, .5)' });
-    };
-    const tl = gsap.timeline({ delay: .05 });
-    tl.fromTo(win, { autoAlpha: 0 }, { autoAlpha: 1, duration: .9, ease: 'power2.out' }, 0)
-      .fromTo(img, { scale: 1.08 }, { scale: 1, duration: 2.6, ease: 'expo.out' }, 0);
-    if (desk) {
-      tl.fromTo(stage, { '--p': 1 }, { '--p': 0, duration: 1.7, ease: 'expo.inOut' }, 1.1)
-        .add(playTitles, 1.9);
-      if (matchMedia('(hover: hover)').matches) {
-        const qi = [gsap.quickTo(img, 'x', { duration: 1.8, ease: 'power3.out' }), gsap.quickTo(img, 'y', { duration: 1.8, ease: 'power3.out' })];
-        const qt = [gsap.quickTo([r, q], 'x', { duration: 1.6, ease: 'power3.out' }), gsap.quickTo([r, q], 'y', { duration: 1.6, ease: 'power3.out' })];
-        addEventListener('mousemove', e => { const nx = e.clientX / innerWidth - .5, ny = e.clientY / innerHeight - .5; qi[0](-nx * 22); qi[1](-ny * 14); qt[0](nx * 10); qt[1](ny * 6); }, { passive: true });
-      }
-    } else {
-      gsap.set(eye, { autoAlpha: 0, y: 16 });
-      tl.to(eye, { autoAlpha: 1, y: 0, duration: .8, ease: 'power3.out' }, .4).add(playTitles, .6);
-    }
-  }
-
-  /* ================= הצעות לפתיחה: הכניסה של כל כיוון =================
+  /* ================= 1. פתיחה: "נעים מאד" בתוך החדר =================
      הכותרת אות אחרי אות (כמו בכל האתר), ו"ואתם?" קופץ אחרון וסימן השאלה מתנדנד מדי פעם.
-     הגלילה של כל כיוון: heroScroll(), שנקרא ליד שאר המעברים */
+     החדר זז מעט עם העכבר, ובגלילה נכנסים לתוך החלון (heroScroll, שנקרא ליד שאר המעברים) */
   let heroScroll = () => {};
   if (hx && !reduce) {
     const desk = !mobile();
@@ -245,11 +202,9 @@
     });
     const hover = desk && matchMedia('(hover: hover)').matches;
 
-    if (HV === 1) {
-      // החדר: נכנסים מעט מקרוב ונסוגים, והחדר זז מעט עם העכבר (עומק)
+    {
+      // החדר עומד במקומו מהרגע הראשון (בלי תמונה גדולה שמתכווצת בכניסה), וזז מעט עם העכבר (עומק)
       const stage = $('.hx1__stage', hx), room = $('.hx1__room', hx), r = $('.hx1__r', hx), q = $('.hx1__q', hx);
-      gsap.fromTo(stage, { '--z': 1.14 }, { '--z': 1, duration: 2.8, ease: 'expo.out' });
-      gsap.fromTo(room, { autoAlpha: 0 }, { autoAlpha: 1, duration: 1.2, ease: 'power2.out' });
       titles(.7);
       if (hover) {
         let mx = 0, my = 0, tx = 0, ty = 0;
@@ -258,84 +213,24 @@
       }
       // בגלילה: נכנסים לתוך החלון עד שהנוף ממלא את המסך, ואז האור ממלא הכל והאזור הבא עולה
       heroScroll = () => {
-        cover(hx, at, 0, false, 85);
-        if (!desk) return;
-        const zMax = () => { const b = room.getBoundingClientRect(), z = parseFloat(getComputedStyle(stage).getPropertyValue('--z')) || 1, w = b.width / z, h = b.height / z; return Math.max(innerWidth / (.328 * w), innerHeight / (.55 * h)) * 1.1; };
-        gsap.timeline({ scrollTrigger: { start: 0, end: () => '+=' + Math.round(innerHeight * .85), scrub: .6, invalidateOnRefresh: true } })
+        cover(hx, at, 0, false, 55);
+        // מובייל: אותו רעיון בלי ההצמדה. כשגוללים החוצה האור ממלא את הפתיחה, כך שאין קו בין הכחול לנייר שמתחת
+        if (!desk) { gsap.fromTo(stage, { '--f': 0 }, { '--f': 1, ease: 'none', scrollTrigger: { trigger: hx, start: 'top top', end: () => '+=' + Math.round(innerHeight * .4), scrub: true, invalidateOnRefresh: true,
+          onUpdate: s => header && header.classList.toggle('is-light', s.progress > .85) } }); return; }
+        const zMax = () => { const b = room.getBoundingClientRect(), z = parseFloat(getComputedStyle(stage).getPropertyValue('--z')) || 1, w = b.width / z, h = b.height / z; return Math.max(innerWidth / (.343 * w), innerHeight / (.57 * h)) * 1.06; };
+        gsap.timeline({ scrollTrigger: { start: 0, end: () => '+=' + Math.round(innerHeight * .55), scrub: .5, invalidateOnRefresh: true,
+            onUpdate: s => header && header.classList.toggle('is-light', s.progress > .85) } })   // כשהאור ממלא את המסך, ההדר עובר לבהיר
           .fromTo(stage, { '--z': 1 }, { '--z': zMax, duration: 1, ease: 'power2.in', immediateRender: false }, 0)
           .to(r, { x: 260, autoAlpha: 0, duration: .4, ease: 'power1.in' }, 0)
           .to(q, { x: -260, autoAlpha: 0, duration: .4, ease: 'power1.in' }, 0)
           .fromTo(stage, { '--f': 0 }, { '--f': 1, duration: .22, ease: 'none', immediateRender: false }, .78);
       };
     }
-
-    if (HV === 2) {
-      // היכרות: התמונה נחשפת מהקו האמצעי החוצה, והכותרת נכנסת בצד הכחול
-      const ph = $('.hx2__ph', hx), img = $('.hx2__ph img', hx);
-      if (desk) dotField($('.hx2__dots', hx), DARK_DOTS);
-      gsap.fromTo(ph, { clipPath: 'inset(0% 0% 0% 100%)' }, { clipPath: 'inset(0% 0% 0% 0%)', duration: 1.8, ease: 'expo.inOut', delay: .15 });
-      gsap.fromTo(img, { scale: 1.18 }, { scale: 1, duration: 3, ease: 'expo.out', delay: .15 });
-      titles(.8);
-      if (hover) { const qi = [gsap.quickTo(img, 'x', { duration: 1.8, ease: 'power3.out' }), gsap.quickTo(img, 'y', { duration: 1.8, ease: 'power3.out' })];
-        addEventListener('mousemove', e => { qi[0]((e.clientX / innerWidth - .5) * -18); qi[1]((e.clientY / innerHeight - .5) * -12); }, { passive: true }); }
-      heroScroll = () => {
-        cover(hx, at, .35, false, 25);
-        if (desk) gsap.to(img, { yPercent: -5, ease: 'none', scrollTrigger: { start: 0, end: () => '+=' + Math.round(innerHeight * 1.25), scrub: true } });
-      };
-    }
-
-    if (HV === 3) {
-      // הגלולה: החלון נפתח באמצע השורה, והתמונה בתוכו מתקרבת לאט
-      const img = $('img', pill), inEl = $('.hx3__in', hx), stage = $('.hx3__stage', hx);
-      gsap.fromTo(pill, { autoAlpha: 0, scale: .3 }, { autoAlpha: 1, scale: 1, duration: 1.5, ease: 'expo.out', delay: .9 });
-      gsap.fromTo(img, { scale: 2.3 }, { scale: 1.8, duration: 3.2, ease: 'expo.out', delay: .9 });
-      titles(.2);
-      // בגלילה: החלון גדל עד שהוא ממלא את כל המסך, והכותרת נעלמת
-      heroScroll = () => {
-        cover(hx, at, 0, false, 95);
-        if (!desk) { addEventListener('resize', placePill); return; }
-        gsap.timeline({ scrollTrigger: { start: 0, end: () => '+=' + Math.round(innerHeight * .9), scrub: .6, invalidateOnRefresh: true } })
-          .fromTo(pill, { left: () => slotBox().left, top: () => slotBox().top, width: () => slotBox().width, height: () => slotBox().height, borderRadius: () => slotBox().height / 2 },
-            { left: 0, top: 0, width: () => stage.clientWidth, height: () => stage.clientHeight, borderRadius: 0, duration: 1, ease: 'power2.inOut', immediateRender: false }, 0)
-          .to(inEl, { autoAlpha: 0, duration: .35, ease: 'none' }, .05)
-          .fromTo(img, { scale: 1.8 }, { scale: 1, duration: 1, ease: 'power2.inOut', immediateRender: false }, 0);
-      };
-    }
-
-    if (HV === 4) {
-      // סרט: הפסים השחורים נפתחים, הווידאו מתרחק לאט, ואז הכותרת
-      const vid = $('video', hx), bars = $$('.hx4__bar', hx);
-      if (vid) { vid.play && vid.play().catch(() => {}); gsap.fromTo(vid, { scale: 1.16 }, { scale: 1.02, duration: 7, ease: 'power2.out' }); }
-      gsap.fromTo(bars, { scaleY: 1 }, { scaleY: 0, duration: 1.8, ease: 'expo.inOut', delay: .35 });
-      titles(1.3);
-      heroScroll = () => {
-        cover(hx, at, .45, false, 25);
-        if (desk && vid) gsap.to($('.hx4__media', hx), { scale: 1.1, yPercent: 4, ease: 'none', scrollTrigger: { start: 0, end: () => '+=' + Math.round(innerHeight * 1.25), scrub: true } });
-      };
-    }
-
-    if (HV === 5) {
-      // אלבום: התמונות מגיעות מהמרכז אחת אחרי השנייה, זזות עם העכבר לפי העומק שלהן, ומתפזרות בגלילה
-      const cards = $$('.hx5__c', hx), stage = $('.hx5__stage', hx);
-      gsap.fromTo(cards, { autoAlpha: 0, scale: .55 }, { autoAlpha: 1, scale: 1, duration: 1.6, stagger: { each: .09, from: 'random' }, ease: 'expo.out', delay: .25 });
-      titles(.5);
-      if (hover) {
-        const qs = cards.map(c => [gsap.quickTo(c, 'x', { duration: 1.6, ease: 'power3.out' }), gsap.quickTo(c, 'y', { duration: 1.6, ease: 'power3.out' }), +c.dataset.d || 1]);
-        addEventListener('mousemove', e => { const nx = e.clientX / innerWidth - .5, ny = e.clientY / innerHeight - .5; qs.forEach(([fx, fy, d]) => { fx(-nx * 40 * d); fy(-ny * 26 * d); }); }, { passive: true });
-      }
-      heroScroll = () => {
-        cover(hx, at, 0, false, 40);
-        if (!desk) return;
-        const tl = gsap.timeline({ scrollTrigger: { start: 0, end: () => '+=' + Math.round(innerHeight * 1.4), scrub: .6 } });
-        cards.forEach(c => { const d = +c.dataset.d || 1, r = c.getBoundingClientRect(), side = (r.left + r.width / 2) < stage.clientWidth / 2 ? -1 : 1;
-          tl.to(c, { yPercent: -70 * d, xPercent: side * 22 * d, ease: 'none', duration: 1 }, 0); });
-      };
-    }
   }
 
   /* ================= 2. אתם / גם אנחנו =================
      כשהאזור מגיע: הכותרת אות אחרי אות, המשפט שורה אחרי שורה, קו כתום נמתח תחת כל אחד משלושת הפעלים,
-     ואז "איך ידענו?", המילה "אתם" מתהפכת ל"גם אנחנו", ו"כי גם אנחנו." נכנס. בלי לעצור את הגלילה.
+     ואז "איך ידענו?" ו"כי גם אנחנו.". בלי לעצור את הגלילה.
      ברקע המשפחה על הגבעה, והבלון מתנדנד ברוח (בדיוק כמו בעמוד המסלולים) */
   const at = $('.at');
   if (at) {
@@ -355,26 +250,18 @@
     if (bal && str && !reduce) new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting && !on) { on = true; gsap.ticker.add(sway); } else if (!e.isIntersecting && on) { on = false; gsap.ticker.remove(sway); } })).observe(land);
   }
   if (at && !reduce) {
-    const flip = $('.at__flip', at), wa = $('.at__w--a', at), wb = $('.at__w--b', at), rest = $('.at__rest', at);
-    const k = $('.at__k', at), lead = $('.at__lead', at), lines = $$('.at__v i', at), ask = $('.at__ask', at), ans = $('.at__ans', at);
-    const titleChars = [...splitChars(wa), ...splitChars(rest)];
-    const words = splitWords(lead);
-    const widths = () => ({ a: wa.offsetWidth, b: wb.offsetWidth });
-    let WD = widths(), flipped = false;
-    gsap.set(flip, { width: WD.a });
-    ScrollTrigger.addEventListener('refreshInit', () => { gsap.set(flip, { clearProps: 'width' }); WD = widths(); gsap.set(flip, { width: flipped ? WD.b : WD.a }); });
-    gsap.set(titleChars, LETTER); gsap.set(k, { autoAlpha: 0, y: 18 }); gsap.set(words, { autoAlpha: 0, y: 26 }); gsap.set([ask, ans], { autoAlpha: 0, y: 24 });
+    const k = $('.at__k', at), lead = $('.at__lead', at), lines = $$('.at__v i', at), ask = $('.at__ask', at), ans = $('.at__ans', at), firm = $('.at__firm', at);
+    const titleChars = splitChars($('.at__title', at));
+    const words = splitWords(lead), fw = firm ? splitWords(firm) : [];
+    gsap.set(titleChars, LETTER); gsap.set(k, { autoAlpha: 0, y: 18 }); gsap.set(words, { autoAlpha: 0, y: 26 }); gsap.set([ask, ans], { autoAlpha: 0, y: 24 }); gsap.set(fw, { autoAlpha: 0, y: 26 });
     const tl = gsap.timeline({ paused: true, defaults: { ease: 'power3.out' } });
     tl.to(k, { autoAlpha: 1, y: 0, duration: .6 }, 0)
       .add(() => playChars(titleChars), .1)
       .add(() => playLines(words), .45);
     lines.forEach((l, i) => tl.to(l, { scaleX: 1, duration: .5, ease: 'power2.inOut' }, .85 + i * .2));
     tl.to(ask, { autoAlpha: 1, y: 0, duration: .6 }, 1.3)
-      .add(() => { flipped = true; }, 1.55)
-      .to(wa, { rotationX: -90, autoAlpha: 0, duration: .35, ease: 'power2.in' }, 1.55)
-      .to(flip, { width: () => WD.b, duration: .55, ease: 'power3.inOut' }, 1.57)
-      .fromTo(wb, { rotationX: 90, autoAlpha: 0 }, { rotationX: 0, autoAlpha: 1, duration: .55, ease: 'back.out(1.5)', immediateRender: false }, 1.75)
-      .to(ans, { autoAlpha: 1, y: 0, duration: .6, ease: 'back.out(1.6)' }, 1.9);
+      .to(ans, { autoAlpha: 1, y: 0, duration: .6, ease: 'back.out(1.6)' }, 1.6)
+      .add(() => playLines(fw), 2.05);   // ואז "בדיוק בשביל זה הקמנו את 5M Group"
     ScrollTrigger.create({ trigger: at, start: 'top 72%', once: true, onEnter: () => tl.play() });
   }
 
@@ -420,6 +307,8 @@
       if (i === cur && animate) return;
       cur = i;
       thumbs.forEach((b, j) => { b.classList.toggle('is-on', j === i); b.setAttribute('aria-selected', String(j === i)); if (j !== i) gsap.set(bars[j], { scaleX: 0 }); });
+      // ברצועה שנגללת הצידה (מובייל): הפנים הפעילות תמיד במרכז הרצועה. רק הרצועה זזה, לא העמוד
+      if (film.scrollWidth > film.clientWidth + 2) { const fr = film.getBoundingClientRect(), br = thumbs[i].getBoundingClientRect(); film.scrollBy({ left: br.left + br.width / 2 - (fr.left + fr.width / 2), behavior: reduce ? 'auto' : 'smooth' }); }
       if (!animate || reduce) { fillTeam(i); return; }
       gsap.to([tPh, tTx], { autoAlpha: 0, y: 12, duration: .25, ease: 'power2.in', overwrite: true, onComplete: () => {
         fillTeam(i);
@@ -516,7 +405,117 @@
     else { gsap.set(cols.filter(c => c !== center), { autoAlpha: 0, y: 60 }); ScrollTrigger.create({ trigger: atm, start: 'top 70%', once: true, onEnter: () => gsap.to(cols.filter(c => c !== center), { autoAlpha: 1, y: 0, duration: 1.4, stagger: .1, ease: 'expo.out', clearProps: 'transform' }) }); }
   }
 
-  /* ================= 5. למה 5M: המספרים נספרים כשהכרטיסים נכנסים ================= */
+  /* ================= 5. ה-DNA שלנו: משולש הזהב של דף הבית (sections.js), בלי התוויות והמגירה =================
+     בכניסה הפסל נבנה: הבסיס עולה, האמצע נוחת עליו והקודקוד יורד אחרון. גלילה אחת = שלב אחד:
+     המספר, השם אות אחרי אות, ההסבר שורה אחרי שורה ו"כאן עושים את זה.", השכבה שלו בפסל מתמלאת ומתרוממת,
+     והמקטע שלו למטה מתמלא. אחרי השלב השלישי עוד גלילה אחת ממשיכה ל"למה 5M".
+     במובייל: בלי נעיצה, שלושת השלבים הם כרטיסים שמחליקים הצידה (כמו בדף הבית) */
+  const STEP_DUR = .85;
+  let stepLock = 0;
+  const stepEase = t => t < .5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+  const stepper = (st, count, prevY, nextY) => {
+    const stops = () => Array.from({ length: count }, (_, k) => st.start + (st.end - st.start) * k / (count - 1));
+    const curY = () => window.lenis ? window.lenis.scroll : scrollY;
+    const inZone = () => { const y = curY(); return y >= st.start - 4 && y <= st.end + 4; };
+    const nearest = () => { const y = curY(), S = stops(); let k = 0; S.forEach((v, i) => { if (Math.abs(v - y) < Math.abs(S[k] - y)) k = i; }); return k; };
+    let busy = false, queued = 0, lastT = 0, lastAbs = 0, lastStep = 0, guard = 0;
+    const glide = y => {
+      busy = true; clearTimeout(guard); stepLock = performance.now() + STEP_DUR * 1000 + 120;
+      const done = () => { if (!busy) return; busy = false; clearTimeout(guard); if (queued) { const d = queued; queued = 0; stepTo(d); } };
+      window.lenis ? window.lenis.scrollTo(y, { duration: STEP_DUR, easing: stepEase, force: true, onComplete: done }) : scrollTo(0, y);
+      guard = setTimeout(done, STEP_DUR * 1000 + 200);
+    };
+    const stepTo = dir => {
+      const n = nearest() + dir;
+      if (n < 0) { const y = prevY && prevY(); if (y != null) glide(y); return; }
+      if (n > count - 1) { const y = nextY && nextY(); if (y != null) glide(y); return; }
+      lastStep = performance.now(); glide(stops()[n]);
+    };
+    addEventListener('wheel', e => {
+      if (e.ctrlKey) return;
+      if (!inZone()) { if (performance.now() < stepLock) { e.preventDefault(); e.stopImmediatePropagation(); } return; }
+      const dir = Math.sign(e.deltaY); if (!dir) return;
+      if (dir < 0 && !prevY && curY() <= st.start + 4) return;
+      e.preventDefault(); e.stopImmediatePropagation();
+      const now = performance.now(), gap = now - lastT, abs = Math.abs(e.deltaY);
+      const fresh = gap > 140 || abs > lastAbs * 1.4 + 4;
+      lastT = now; lastAbs = abs;
+      if (!fresh) return;
+      if (busy) { if (now - lastStep > 300) queued = dir; return; }
+      stepTo(dir);
+    }, { capture: true, passive: false });
+  };
+
+  const agt = $('.agt');
+  if (agt) {
+    const car = mobile();
+    const steps = $$('.gts', agt), segs = $$('.gt__seg', agt), bars = segs.map(s => $('.gt__bar b', s));
+    const pieces = [1, 2, 3].map(n => $('.gt__piece--' + n, agt)), fills = [1, 2, 3].map(n => $('.gt__fill--' + n, agt)), sculpt = $('.gt__sculpt', agt);
+    const pair = k => [pieces[k], fills[k]];
+    const parts = steps.map(s => ({ no: $('.gts__no', s), name: splitChars($('.gts__name', s)), words: splitWords($('.gts__lead', s)), dn: $('.gts__do', s) }));
+    const all = p => [p.no, ...p.name, ...p.words, p.dn];
+    const track = $('.gt__steps', agt);
+    if (car) agt.classList.add('is-car');
+    if (!reduce && !car) parts.forEach(p => gsap.set(all(p), { autoAlpha: 0 }));
+
+    let on = -1;
+    const show = i => {
+      if (i === on) return;
+      const prev = on; on = i;
+      segs.forEach((s, k) => { s.classList.toggle('is-on', k === i); s.setAttribute('aria-current', k === i ? 'step' : 'false'); });
+      // השכבות מתמלאות בצבע מלמטה: בשלב 1 הבסיס, בשלב 2 גם האמצע, ובשלב 3 שלושתן. השכבה של השלב הנוכחי מתרוממת
+      pieces.forEach((p, k) => p.classList.toggle('is-now', k === i));
+      fills.forEach((f, k) => { f.classList.toggle('is-on', k <= i); f.classList.toggle('is-now', k === i); });
+      sculpt.classList.add('has-on');
+      if (car) bars.forEach((b, k) => { b.style.transform = 'scaleX(' + (k <= i ? 1 : 0) + ')'; });
+      if (reduce || car) { steps.forEach((s, k) => s.classList.toggle('is-on', k === i)); return; }
+      if (prev >= 0) {
+        const p = parts[prev], s = steps[prev];
+        gsap.to(all(p), { autoAlpha: 0, y: -18, duration: .3, stagger: .002, ease: 'power2.in', overwrite: true, onComplete: () => { if (on !== prev) s.classList.remove('is-on'); } });
+      }
+      const p = parts[i]; steps[i].classList.add('is-on');
+      const d = prev >= 0 ? .3 : .1;
+      gsap.set(p.name, LETTER); gsap.set(p.words, { autoAlpha: 0, y: 26 });
+      gsap.to(p.name, { autoAlpha: 1, y: 0, rotateX: 0, duration: .7, stagger: .03, delay: d, ease: 'back.out(1.8)', overwrite: true });
+      gsap.delayedCall(d + .25, () => { if (on === i) playLines(p.words); });
+      gsap.fromTo(p.dn, { autoAlpha: 0, y: 16 }, { autoAlpha: 1, y: 0, duration: .6, delay: d + .6, ease: 'power3.out', overwrite: true });
+      gsap.fromTo(p.no, { autoAlpha: 0, y: 14 }, { autoAlpha: 1, y: 0, duration: .6, delay: d - .05, ease: 'power3.out', overwrite: true });
+    };
+
+    let st = null;
+    const AT = [1 / 3, 2 / 3, 1];
+    const toY = y => window.lenis ? window.lenis.scrollTo(y, { duration: 1.4 }) : scrollTo({ top: y, behavior: 'smooth' });
+    const slide = k => { const r = track.getBoundingClientRect(), b = steps[k].getBoundingClientRect(), pd = parseFloat(getComputedStyle(track).paddingRight) || 0; track.scrollBy({ left: b.right - (r.right - pd), behavior: reduce ? 'auto' : 'smooth' }); };
+    const go = k => { if (car) slide(k); else if (st) toY(st.start + 2 + (st.end - st.start) * AT[k]); else show(k); };
+    $$('[data-go]', agt).forEach(b => b.addEventListener('click', () => go(+b.dataset.go)));
+    let carReady = reduce;
+    const pick = () => { const r = track.getBoundingClientRect(), c = r.left + r.width / 2; let k = 0, dd = Infinity; steps.forEach((s, i) => { const b = s.getBoundingClientRect(), e = Math.abs(b.left + b.width / 2 - c); if (e < dd) { dd = e; k = i; } }); if (carReady) show(k); };
+    if (car) { let fr = 0; track.addEventListener('scroll', () => { fr = fr || requestAnimationFrame(() => { fr = 0; pick(); }); }, { passive: true }); }
+    if (reduce) { show(0); if (!car) bars.forEach(b => { b.style.transform = 'scaleX(1)'; }); }
+    else {
+      gsap.set(pair(0), { y: 120, autoAlpha: 0 });
+      gsap.set(pair(1), { y: -150, autoAlpha: 0 });
+      gsap.set(pair(2), { y: -260, rotation: -6, autoAlpha: 0 });
+      const inc = car ? track : $('.gt__inc', agt);
+      gsap.set([...segs, inc], { autoAlpha: 0, y: 20 });
+      ScrollTrigger.create({ trigger: agt, start: car ? 'top 70%' : 'top 45%', once: true, onEnter: () => {
+        gsap.to(pair(0), { y: 0, autoAlpha: 1, duration: 1.3, ease: 'expo.out' });
+        gsap.to(pair(1), { y: 0, autoAlpha: 1, duration: 1.2, delay: .3, ease: 'back.out(1.2)' });
+        gsap.to(pair(2), { y: 0, rotation: 0, autoAlpha: 1, duration: 1.4, delay: .6, ease: 'back.out(1.5)', onComplete: () => gsap.to(pair(2), { y: -9, duration: 2.8, yoyo: true, repeat: -1, ease: 'sine.inOut' }) });
+        gsap.to(inc, { autoAlpha: 1, y: 0, duration: 1, delay: .5, ease: 'expo.out' });
+        gsap.to(segs, { autoAlpha: 1, y: 0, duration: 1, stagger: .12, delay: .7, ease: 'expo.out', clearProps: 'opacity,visibility,transform' });
+        gsap.delayedCall(.9, () => { if (car) { carReady = true; pick(); } else if (on < 0) show(0); });
+      } });
+      if (!car) {
+        st = ScrollTrigger.create({ trigger: agt, start: 'top top', end: () => '+=' + Math.round(innerHeight * 1.8), pin: true, invalidateOnRefresh: true,
+          onUpdate: s => { const p = s.progress; bars.forEach((b, k) => { b.style.transform = 'scaleX(' + clamp(p * 2 + 1 - k).toFixed(3) + ')'; }); if (on >= 0 || p > 0) show(p < .25 ? 0 : p < .75 ? 1 : 2); } });
+        // אחרי השלב השלישי, עוד גלילה אחת מביאה את "למה 5M" למסך
+        stepper(st, 3, null, () => st.end + innerHeight);
+      }
+    }
+  }
+
+  /* ================= 6. למה 5M: המספרים נספרים כשהכרטיסים נכנסים ================= */
   const a5 = $('.a5');
   if (a5 && !reduce) {
     const steps = $$('.a5s', a5), arrs = $$('.a5__arr', a5), vals = $$('.a5s__v', a5);
@@ -532,7 +531,7 @@
       });
       gsap.to(arrs, { autoAlpha: 1, x: 0, duration: .7, stagger: .32, delay: .45, ease: 'power3.out' });
     } });
-    gsap.fromTo($('.a5__bg', a5), { yPercent: -4 }, { yPercent: 4, ease: 'none', scrollTrigger: { trigger: a5, start: 'top bottom', end: 'bottom top', scrub: true } });
+    if (!mobile()) gsap.fromTo($('.a5__bg', a5), { yPercent: -4 }, { yPercent: 4, ease: 'none', scrollTrigger: { trigger: a5, start: 'top bottom', end: 'bottom top', scrub: true } });
   }
 
   /* ================= מעברים: האזור הבא עולה כולו מעל הקודם בגלילה אחת (כמו בדף הבית) =================
@@ -553,8 +552,8 @@
       onEnterBack: s => { const t = target(); if (t > s.start && t < s.end) go(s.start - 2); } });
   };
   heroScroll();
-  cover(at, $('.ar'), .08, false, 50);
-  cover(atm, a5, .35, false, 50);
+  // אחרי "אם קלטנו נכון" הגלילה רגילה: רפי לא עולה מעל האזור, פשוט ממשיכים אליו
+  cover(atm, agt, .08, false, 50);   // ה-DNA עולה מעל הצוות, אחרי רגע שבו הצוות עומד שלם
 
   /* ================= פוטר: השמש על הקצה התחתון של לוח הזכוכית, והטורים עולים ================= */
   const sky = $('.foot__sky'), skyImg = $('.foot__sky img'), fgrid = $('.foot__grid');

@@ -6,7 +6,7 @@
   <title>דברו איתנו · 5M Group</title>
   <meta name="description" content="בואו נדבר על העצמאות הכלכלית שלכם. השאירו פרטים, או פנו ל-5M Group בטלפון, בוואטסאפ, במייל או במשרד בירושלים.">
   <link rel="preload" href="fonts/Cooperative-Regular.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="preload" href="assets/pier-home.jpg" as="image" fetchpriority="high">
+  <link rel="preload" href="assets/foot-sea.jpg" as="image" fetchpriority="high">
   <meta name="robots" content="noindex, nofollow">
   <link rel="stylesheet" href="styles.css">
   <link rel="stylesheet" href="contact.css">
@@ -37,12 +37,12 @@
   <main id="top">
 
     <!-- ===================== דברו איתנו (כהה, מסך אחד בדיוק) =====================
-         ברקע: המזח של דף הבית (המשפחה הולכת הביתה בדמדומים, עם הפנסים), מוחשך לנייבי.
-         הכותרת בשמיים, ומתחתיה לוח זכוכית אחד שמחזיק הכל: הפנסים והאור עוברים דרכו מטושטשים.
+         ברקע: הים של הפוטר בלבד, בלי אנשים (השמש על האופק), כך שהעמוד ממשיך אל הפוטר באותה תמונה.
+         החלק העליון נייבי מלא מאחורי הכותרת. מתחתיה לוח זכוכית אחד שמחזיק הכל, והשמש והים עוברים דרכו מטושטשים.
          מימין הטופס בשדות זכוכית, משמאל ארבע דרכי הפנייה, כל אחת עם אייקון קו כתום שמצטייר בכניסה וזז במעבר עכבר.
          הכל נמדד גם לפי גובה המסך (--cu), כך שהאזור תמיד נכנס במסך אחד. הפוטר ממשיך מיד אחרי -->
     <section class="cx" data-theme="dark" aria-labelledby="cx-title">
-      <div class="cx__bg" aria-hidden="true"><img src="assets/pier-home.jpg" alt="" width="1920" height="1080" fetchpriority="high" decoding="async"></div>
+      <div class="cx__bg" aria-hidden="true"><img src="assets/foot-sea.jpg" alt="" width="2400" height="1350" fetchpriority="high" decoding="async"></div>
 
       <h1 class="cx__title" id="cx-title"><span class="cx__l1">בואו נדבר על</span> <span class="cx__l2">העצמאות הכלכלית שלכם!</span></h1>
 
@@ -66,6 +66,15 @@
                   <label class="fld__l" for="cx-tel">טלפון</label>
                   <input class="fld__in" id="cx-tel" name="phone" type="tel" inputmode="tel" autocomplete="tel" dir="ltr" required aria-describedby="cx-tel-err">
                   <span class="fld__err" id="cx-tel-err" aria-live="polite"></span>
+                </div>
+                <!-- אישור מדיניות הפרטיות: חובה לפני השליחה -->
+                <div class="fld fld--ok">
+                  <label class="ok">
+                    <input class="ok__in" id="cx-ok" name="privacy" type="checkbox" required aria-describedby="cx-ok-err">
+                    <span class="ok__box" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5" pathLength="30"/></svg></span>
+                    <span class="ok__t">קראתי ואני מאשר/ת את <a class="ok__a" href="#contact">מדיניות הפרטיות</a></span>
+                  </label>
+                  <span class="fld__err" id="cx-ok-err" aria-live="polite"></span>
                 </div>
                 <button class="btn cx__send" type="submit"><i class="hz" aria-hidden="true"></i>קליק אחד ואנחנו איתכם<span class="arr">&gt;&gt;</span></button>
               </div>
@@ -143,7 +152,7 @@
         </div>
         <nav class="foot__nav" aria-label="ניווט בתחתית העמוד">
           <p class="foot__h">ניווט</p>
-          <a href="index.html"><i class="hz" aria-hidden="true"></i>בית</a><a href="about.html"><i class="hz" aria-hidden="true"></i>מי אנחנו</a><a href="tracks.html"><i class="hz" aria-hidden="true"></i>מי אתם</a><a href="index.html#knowledge"><i class="hz" aria-hidden="true"></i>מרכז הידע הפיננסי</a><a href="contact.html" aria-current="page"><i class="hz" aria-hidden="true"></i>דברו איתנו</a>
+          <a href="index.html"><i class="hz" aria-hidden="true"></i>בית</a><a href="about.html"><i class="hz" aria-hidden="true"></i>מי אנחנו</a><a href="tracks.html"><i class="hz" aria-hidden="true"></i>מסלולים</a><a href="index.html#knowledge"><i class="hz" aria-hidden="true"></i>מרכז הידע הפיננסי</a><a href="contact.html" aria-current="page"><i class="hz" aria-hidden="true"></i>דברו איתנו</a>
         </nav>
         <div class="foot__contact">
           <p class="foot__h">דברו איתנו</p>

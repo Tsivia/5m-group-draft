@@ -184,69 +184,136 @@
    מובייל: אפיון מחדש
    ===================================================================== */
 @media (max-width: 900px) {
-  .th { min-height: 0; padding: calc(var(--hh) + 28px) 16px 40px; }
-  .th__title { font-size: min(12.4vw, 54px); line-height: 1; }
-  .th__ask { font-size: 18px; margin-top: 12px; }
-  .th__hint { font-size: 15px; margin-top: 8px; }
-  .opts { grid-template-columns: 1fr; margin: 18px 0 0; }
+  /* --- 1. פתיחה: כותרת גדולה, ושלושה משפטים בשורות עם תמונה עגולה בצד. כל השורה היא אזור לחיצה --- */
+  .th { min-height: 0; padding: calc(var(--hh) + 38px) 22px 40px; }
+  .th .light { opacity: .3; }
+  .th__title { font-size: min(13.6vw, 58px); line-height: 1; }
+  .th__ask { margin-top: 16px; font-size: 18px; line-height: 1.4; text-wrap: balance; }
+  .th__hint { margin-top: 10px; font-size: 15px; }
+  .opts { grid-template-columns: 1fr; margin: 26px 0 0; }
   .opt + .opt { border-right: 0; border-top: 1px solid rgb(16 14 54 / .1); }
-  .opt__a { display: grid; grid-template-columns: 84px 1fr; grid-template-areas: "face q" "face foot" "face trk"; column-gap: 18px; align-items: start; padding: 20px 2px; text-align: right; }
+  .opt__a { display: grid; grid-template-columns: 84px minmax(0, 1fr); grid-template-areas: "face q" "face foot" "face trk"; column-gap: 18px; align-items: start; padding: 24px 0; text-align: right; }
   .opt__face { grid-area: face; width: 76px; outline-offset: 4px; margin: 4px; }
-  .opt__q { grid-area: q; margin: 0; font-size: 16px; text-wrap: pretty; }
-  .opt__foot { grid-area: foot; margin-top: 12px; gap: 10px; }
-  .opt__chk { width: 24px; height: 24px; }
-  .opt__pick { font-size: 21px; }
-  .opt__trk { grid-area: trk; margin-top: 6px; font-size: 12.5px; }
+  .opt__q { grid-area: q; margin: 0; font-size: 16px; line-height: 1.6; text-wrap: pretty; }
+  .opt__foot { grid-area: foot; margin-top: 14px; gap: 12px; }
+  .opt__chk { width: 26px; height: 26px; }
+  .opt__pick { font-size: 22px; }
+  .opt__trk { grid-area: trk; margin-top: 6px; font-size: 14px; }
 
-  .tp { padding: 80px 20px; }
-  .tp__list { grid-template-columns: 1fr; grid-template-rows: none; row-gap: 24px; margin-top: 30px; }
-  .plan { grid-row: auto; grid-template-rows: none; display: block; }
+  /* --- 2. המסלולים: כרטיס אחד מתחת לשני, תמונה ברוחב הכרטיס, טקסט קריא --- */
+  .tp { padding: 76px 20px 92px; }
+  .tp__title { font-size: min(9.4vw, 38px); }
+  .tp__list { grid-template-columns: 1fr; grid-template-rows: none; row-gap: 28px; margin-top: 34px; }
+  .plan { grid-row: auto; grid-template-rows: none; display: block; filter: drop-shadow(0 10px 24px rgb(16 14 54 / .07)); }
   .plan__in { display: flex; flex-direction: column; }
-  .plan__img { height: 230px; }
-  .plan__head { margin-top: -24px; padding: 0 20px; }
-  .plan__n { font-size: 13px; }
-  .plan__name { font-size: 34px; white-space: normal; }
-  .plan__tag { font-size: 16px; }
-  .plan__d, .plan__inc { font-size: 15px; padding-inline: 20px; }
-  .plan__inc { padding-top: 18px; }
-  .plan__acc { padding: 0 20px; }
-  .row__h { font-size: 16px; padding: 14px 0; }
-  .row__list li { font-size: 14px; padding-right: 16px; }
-  .plan__go { padding: 22px 20px 26px; }
-  .plan__go, .plan__inc { align-self: stretch; }
+  .plan__img { height: auto; aspect-ratio: 3 / 2; }
+  .plan__img img { position: absolute; inset: 0; }
+  .plan__head { margin-top: -26px; padding: 0 22px; }
+  .plan__n { font-size: 14px; }
+  .plan__name { margin-top: 6px; font-size: 36px; white-space: normal; }
+  .plan__tag { margin-top: 10px; font-size: 17px; line-height: 1.45; }
+  .plan__d { padding: 14px 22px 0; font-size: 16px; line-height: 1.6; }
+  .plan__inc { align-self: stretch; padding: 22px 22px 12px; font-size: 16px; }
+  .plan__acc { padding: 0 22px; }
+  .row__h { min-height: 54px; padding: 14px 0; font-size: 17px; }
+  .row__list { padding-bottom: 16px; }
+  .row__list li { padding: 5px 20px 5px 0; font-size: 15px; }
+  .row__list li::before { right: 2px; top: calc(5px + .45em); width: 5px; height: 9px; }
+  .row__en { font-size: 14px; }
+  /* קישור בתוך הטקסט: אזור לחיצה גבוה יותר בלי להזיז את השורות */
+  .plan__link { padding-block: 12px; margin-block: -12px; background-origin: content-box; background-clip: content-box; }
+  .plan__go { align-self: stretch; padding: 24px 22px 26px; }
 
-  .tv { min-height: 0; margin-top: 0; padding: 90px 20px 70px; box-shadow: none; }
-  .tv__title { font-size: 30px; }
-  .tv__stage { margin-top: 26px; }
-  .tv__face { width: 76px; }
-  .tv__quote p { font-size: 18px; text-wrap: pretty; }
-  .tv__film { --tw: 52px; justify-content: center; margin-top: 26px; }
+  /* --- 3. המשפטים של המשפחות: תמונה גדולה יותר, משפט קריא, והרצועה תמיד נכנסת ברוחב המסך --- */
+  .tv { min-height: 0; margin-top: 0; padding: 84px 22px 76px; box-shadow: none; }
+  .tv__title { font-size: min(8.4vw, 32px); }
+  .tv__stage { margin-top: 30px; }
+  .tv__face { width: 84px; outline-offset: 6px; }
+  .tv__quote { margin-top: 26px; }
+  .tv__quote p { font-size: 18px; line-height: 1.6; text-wrap: pretty; }
+  .tv__film { --tw: min(52px, calc((100vw - 80px) / 5.4)); justify-content: center; overflow: visible; margin-top: 30px; }
 
-  .tc { padding: 80px 20px; }
-  .tc__title { font-size: 68px; }
-  .tc__lead { font-size: 18px; }
-  .tc__stats { margin-top: 28px; }
-  .stat__or { font-size: 15px; }
+  /* --- 4. מזדהים: כרטיסי תנאי הסף צפופים יותר, אותו עיצוב --- */
+  .tc { padding: 76px 22px 60px; }
+  .tc__title { font-size: min(19vw, 76px); }
+  .tc__lead { margin-top: 12px; font-size: 18px; text-wrap: balance; }
+  .tc__stats { gap: 14px; margin-top: 30px; }
+  .tc .stat__box { padding: 18px 20px 20px; }
+  .tc .stat__n { font-size: 14px; }
+  .tc .stat__chk { width: 28px; height: 28px; }
+  .tc .stat__k { margin-top: 6px; font-size: 16px; }
+  .tc .stat__v { margin-top: 4px; font-size: 56px; }
+  .tc .stat__u { font-size: 16px; }
+  .tc .stat__or { margin-top: 4px; font-size: 15px; }
+  .tc .stat__c { margin-top: 8px; font-size: 15px; }
+  .tc .match__note-t { font-size: 15px; }
+  .tc__go { margin-top: 14px; }
 
+  /* --- 6. התחילו בקטן: בלי זכוכית מטושטשת ובלי זוהר. רשימה אחת בשורות, וכל התוכן נכנס במסך --- */
   .ts { margin-top: 0; }
-  .ts__content { justify-content: center; padding: calc(var(--hh) + 10px) 20px 0; }
-  .ts__title { font-size: 32px; }
-  .ts__stat { margin-top: 14px; gap: 10px; }
-  .ts__stat-n { font-size: 60px; } .ts__stat-l { font-size: 18px; }
-  .ts__t { font-size: 24px; margin-top: 12px; }
-  .ts__lead { font-size: 15px; margin-top: 8px; max-width: none; }
-  .ts__list { grid-template-columns: 1fr 1fr; margin-top: 18px; }
-  .ts__list li { padding: 12px 12px; font-size: 13.5px; gap: 6px; }
-  .ts__list li + li { border-right: 0; }
-  .ts__list li:nth-child(even) { border-right: 1px solid var(--glass-line); }
-  .ts__list li:nth-child(n+3) { border-top: 1px solid var(--glass-line); }
-  .ts__n { font-size: 15px; }
-  .ts__cta { margin-top: 18px; }
+  .ts__shade { background: radial-gradient(90% 60% at 50% 55%, rgb(9 7 37 / .74), rgb(9 7 37 / .5) 80%), linear-gradient(to bottom, rgb(9 7 37 / .85), rgb(9 7 37 / .3) 34%, rgb(9 7 37 / .55) 66%, var(--navy) 96%); }
+  .ts__content { justify-content: center; padding: calc(var(--hh) + 12px) 22px 12px; }
+  .ts__title, .ts__stat-n, .ts__stat-l, .ts__t, .ts__lead { text-shadow: none; }
+  .ts__title { font-size: min(8.4vw, 34px); }
+  .ts__stat { margin-top: 16px; gap: 10px; }
+  .ts__stat-n { font-size: 60px; }
+  .ts__stat-l { font-size: 18px; }
+  .ts__t { margin-top: 12px; font-size: 25px; }
+  .ts__lead { max-width: 440px; margin-top: 8px; font-size: 16px; line-height: 1.45; }
+  .ts__list { grid-template-columns: 1fr; width: 100%; max-width: 440px; margin-top: 20px; background: rgb(9 7 37 / .5); box-shadow: none; -webkit-backdrop-filter: none; backdrop-filter: none; }
+  .ts__list li { flex-direction: row; align-items: baseline; gap: 14px; padding: 12px 18px; font-size: 16px; line-height: 1.35; }
+  .ts__list li + li { border-right: 0; border-top: 1px solid var(--glass-line); }
+  .ts__n { flex: none; font-size: 17px; }
+  .ts__cta { margin-top: 22px; }
 
-  .tf { min-height: 0; padding: 120px 20px 54vw; }
-  .tf__a { font-size: 34px; }
-  .tf__b { font-size: 52px; }
+  /* --- 5. סגירה --- */
+  .tf { min-height: 0; padding: 72px 22px 56vw; }
+  .tf__a { font-size: min(9vw, 36px); }
+  .tf__b { font-size: min(13.6vw, 58px); }
   .tf__land { width: 190vw; bottom: -2vw; }
+}
+
+/* טלפונים צרים (320-360) */
+@media (max-width: 360px) {
+  .th, .tv, .tc, .tf { padding-inline: 20px; }
+  .tp { padding-inline: 16px; }
+  .opt__a { grid-template-columns: 70px minmax(0, 1fr); column-gap: 14px; }
+  .opt__face { width: 62px; }
+  .opt__q { font-size: 15.5px; }
+  .plan__head, .plan__d, .plan__acc { padding-inline: 18px; }
+  .plan__inc { padding-inline: 18px; }
+  .plan__go { padding-inline: 18px; }
+  .plan__name { font-size: 32px; }
+  .ts__content { padding-inline: 18px; }
+}
+
+/* מסך נמוך (למשל 375×667, 320×568): "התחילו בקטן" נכנס כולו במסך */
+@media (max-width: 900px) and (max-height: 760px) {
+  .ts__title { font-size: min(7.6vw, 30px); }
+  .ts__stat { margin-top: 10px; }
+  .ts__stat-n { font-size: 46px; }
+  .ts__stat-l { font-size: 16px; }
+  .ts__t { margin-top: 8px; font-size: 22px; }
+  .ts__lead { font-size: 15px; line-height: 1.4; }
+  .ts__list { margin-top: 14px; }
+  .ts__list li { padding: 9px 16px; font-size: 15px; }
+  .ts__cta { margin-top: 16px; padding-block: 14px; }
+}
+@media (max-width: 900px) and (max-height: 600px) {
+  .ts__content { padding-top: calc(var(--hh) + 6px); }
+  .ts__title { font-size: 26px; }
+  .ts__stat-n { font-size: 38px; }
+  .ts__t { font-size: 20px; }
+  .ts__lead { font-size: 14.5px; }
+  .ts__list li { padding: 7px 14px; }
+}
+
+/* טאבלט (601-900): אותו פריסה של הטלפון, אבל ברוחב קריא ובמרכז */
+@media (min-width: 601px) and (max-width: 900px) {
+  .th { padding-inline: 40px; }
+  .opts, .tp__list, .tc__stats { width: 100%; max-width: 600px; margin-inline: auto; }
+  .tv__stage, .tc__lead { max-width: 600px; margin-inline: auto; }
+  .tp, .tv, .tc { padding-inline: 40px; }
 }
 
 @media (prefers-reduced-motion: reduce) {

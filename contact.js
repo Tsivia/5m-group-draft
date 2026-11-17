@@ -19,10 +19,11 @@
   const RULES = {
     name: v => v.trim().length >= 2 ? '' : 'נא למלא שם',
     email: v => !v.trim() || /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v.trim()) ? '' : 'כתובת המייל לא נראית תקינה',
-    phone: v => { const d = v.replace(/\D/g, ''); return d.length >= 9 && d.length <= 13 ? '' : 'נא למלא מספר טלפון תקין'; }
+    phone: v => { const d = v.replace(/\D/g, ''); return d.length >= 9 && d.length <= 13 ? '' : 'נא למלא מספר טלפון תקין'; },
+    privacy: (v, inp) => inp.checked ? '' : 'יש לאשר את מדיניות הפרטיות כדי לשלוח'
   };
   const check = inp => {
-    const msg = RULES[inp.name] ? RULES[inp.name](inp.value) : '';
+    const msg = RULES[inp.name] ? RULES[inp.name](inp.value, inp) : '';
     const fld = inp.closest('.fld'), err = $('.fld__err', fld);
     fld.classList.toggle('is-bad', !!msg);
     inp.setAttribute('aria-invalid', String(!!msg));
@@ -30,12 +31,13 @@
     return !msg;
   };
   if (form) {
-    const inputs = $$('.fld__in', form);
+    const ok = $('.ok__in', form), inputs = [...$$('.fld__in', form), ok].filter(Boolean);
     // השגיאה מופיעה רק אחרי שיוצאים מהשדה, ונעלמת ברגע שמתקנים
-    inputs.forEach(inp => {
+    $$('.fld__in', form).forEach(inp => {
       inp.addEventListener('blur', () => { if (inp.value.trim()) check(inp); });
       inp.addEventListener('input', () => { if (inp.closest('.fld').classList.contains('is-bad')) check(inp); });
     });
+    ok && ok.addEventListener('change', () => { if (ok.closest('.fld').classList.contains('is-bad')) check(ok); });
     form.addEventListener('submit', e => {
       e.preventDefault();
       const bad = inputs.filter(inp => !check(inp));

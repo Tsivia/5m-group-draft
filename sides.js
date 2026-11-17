@@ -26,6 +26,16 @@
 
   const A = section.querySelector('.sides__state--a');
   const B = section.querySelector('.sides__state--b');
+  // מובייל: איפה מתחילה הכותרת בכל מצב. הבית, המבוך והרגע הגדול של המשולש ממורכזים באזור שמעליה (CSS: --sides-ta / --sides-tb)
+  const TXT = { a: 0, b: 0 };
+  const measureTxt = () => {
+    if (innerWidth > 900) { TXT.a = TXT.b = 0; section.style.removeProperty('--sides-ta'); section.style.removeProperty('--sides-tb'); return; }
+    const t = s => s.querySelector('.sides__title').offsetTop;
+    TXT.a = t(A); TXT.b = t(B);
+    section.style.setProperty('--sides-ta', TXT.a + 'px'); section.style.setProperty('--sides-tb', TXT.b + 'px');
+  };
+  measureTxt();
+  ScrollTrigger.addEventListener('refreshInit', measureTxt);
   const lines = s => s.querySelectorAll('.sides__title > span');
   const texts = s => s.querySelectorAll('.sides__pt');
   /* הטקסט הרץ נכנס שורה אחרי שורה: מפצלים לפי מילים (ההדגשות נשמרות), מזהים את השורות לפי הגובה שלהן במסך,
@@ -106,16 +116,19 @@
     const f = k => [r.left - c.left + SEAT[k][0] * r.width, r.top - c.top + SEAT[k][1] * r.height];
     return { A: f('A'), B: f('B'), C: f('C'), depth: (+(section.querySelector('.sides__maze--lit')?.dataset.seatDepth) || 0) * r.height }; };
   // הרגע הגדול: המשולש גדול ופונה אלינו, באמצע הצד השמאלי (במובייל: באמצע), כדי שיבינו מה רואים
+  // במובייל: באמצע האזור שמעל הטקסט (בין ההדר לכותרת), במקום שבו היה הבית
   const big = () => { const W = section.offsetWidth, H = section.offsetHeight, mob = W <= 900;
-    const h = Math.min(H * (mob ? .34 : .52), W * (mob ? .3 : .21) / .511), w = h * .511;
-    return { x: W * (mob ? .5 : .27) - w / 2, y: H * (mob ? .24 : .46) - h / 2, w, h }; };
+    if (mob) { const top = 64, bot = TXT.a || H * .6, h = Math.min(H * .3, W * .3 / .511, (bot - top) * .62), w = h * .511;
+      return { x: W * .5 - w / 2, y: (top + bot) / 2 - h / 2, w, h }; }
+    const h = Math.min(H * .52, W * .21 / .511), w = h * .511;
+    return { x: W * .27 - w / 2, y: H * .46 - h / 2, w, h }; };
   // ממש מעל החדר, רגע לפני שהוא נוחת
-  const hover = () => { const b = room(); return { x: b.x, y: b.y - innerHeight * .1, w: b.w, h: b.h }; };
+  const hover = () => { const b = room(); return { x: b.x, y: b.y - innerHeight * (innerWidth <= 900 ? .07 : .1), w: b.w, h: b.h }; };
   // בין האזורים: מרחף באמצע המסך
   const float = () => slotOf(bigRect());
   // בתחתית החדר: עומד בפנים, כמעט כולו מתחת לשפת הקירות (הקירות מסתירים אותו)
   const deep = () => { const b = room(); return { x: b.x, y: b.y + b.h * .85, w: b.w, h: b.h }; };
-  const stand = () => { const b = room(); return { x: b.x, y: b.y - innerHeight * .2 - b.h * .25, w: b.w, h: b.h }; };   // מעל המבוך, אחרי שעלה מהחדר   // בין האזורים: המשולש של הלוגו הגדול במרכז המסך
+  const stand = () => { const b = room(); return { x: b.x, y: b.y - innerHeight * (innerWidth <= 900 ? .11 : .2) - b.h * .25, w: b.w, h: b.h }; };   // מעל המבוך, אחרי שעלה מהחדר   // בין האזורים: המשולש של הלוגו הגדול במרכז המסך
   const floatOld = () => { const W = innerWidth, H = innerHeight, h = H * (W <= 900 ? .26 : .34), w = h * .511;
     return { x: W / 2 - w / 2, y: H * .44 - h / 2, w, h }; };
   const at = (r, extra) => Object.assign({ x: () => r().x, y: () => r().y, w: () => r().w, h: () => r().h }, extra);
