@@ -119,13 +119,16 @@
 @media (max-width: 900px) {
   .kh { padding: calc(var(--hh) + 44px) var(--gutter) var(--pad); }
   .kh .light { height: 640px; opacity: .3; }
-  .kh__head { flex-direction: column; align-items: flex-start; gap: var(--gap-lead); }
-  .kh__lead { width: auto; margin: 0; }
+  /* הראש ממורכז, והכותרת תמיד בשתי שורות: הגודל נגזר מרוחב המסך כך ש"כל מה שרציתם לדעת על" נכנס בשורה אחת */
+  .kh__head { flex-direction: column; align-items: center; gap: var(--gap-lead); text-align: center; }
+  .kh__title { font-size: clamp(30px, calc((100vw - 2 * var(--gutter)) / 7.4), 56px); }
+  .kh__lead { width: auto; max-width: 30em; margin: 0; text-wrap: balance; }
   .kf { gap: 24px; }
   .kf__b { min-height: 44px; padding: 10px 0 12px; font-size: 17px; }
   .kgrid { grid-template-columns: 1fr; margin-top: 32px; }
-  .kc { margin-bottom: 44px; }
-  .kc__a { --kp: 12px; }
+  .kc { margin-bottom: 28px; }
+  /* בטלפון אין מעבר עכבר, אז הכרטיס תמיד במצב של ההובר: משטח לבן עם צל רך, בתוך השוליים של העמוד */
+  .kc__a { --kp: 12px; margin: 0; padding: 12px 12px 22px; background: var(--paper-hi); box-shadow: var(--shadow-soft); }
   .kc__meta { margin-top: 16px; gap: 12px; }
   .tag { padding: 4px 10px 5px; }
   .kc__t { margin-top: 12px; font-size: 26px; white-space: normal; }
@@ -144,7 +147,8 @@
   .ka__meta { margin-top: 32px; gap: 12px; }
   .ka__lead { font-size: var(--fs-lead); }
   .ka__img { height: auto; min-height: 0; aspect-ratio: 4 / 3; }
-  .ka__glass { right: 12px; left: 12px; bottom: 12px; gap: 4px; padding: 14px 16px; }
+  /* בטלפון התווית כיסתה כמעט את כל התמונה, אז מוותרים עליה (לבקשת צביה) */
+  .ka__glass { display: none; }
   .ka__num { font-size: 34px; }
   .kb__cta .btn { width: 100%; }
   .km__head { flex-direction: column; align-items: flex-start; gap: 22px; padding-top: 48px; }

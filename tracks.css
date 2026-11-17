@@ -187,23 +187,27 @@
    מובייל: אפיון מחדש
    ===================================================================== */
 @media (max-width: 900px) {
-  /* --- 1. פתיחה: כותרת גדולה, ושלושה משפטים בשורות עם תמונה עגולה בצד. כל השורה היא אזור לחיצה --- */
+  /* --- 1. פתיחה: כותרת גדולה, ושלושה משפטים אחד מתחת לשני. בכל אחד העיגול באמצע,
+         והמשפט מתחתיו לכל הרוחב (שורות ארוכות יותר), ממורכז. כל הבלוק הוא אזור לחיצה --- */
   .th { min-height: 0; padding: calc(var(--hh) + 38px) var(--gutter) 40px; }
   .th .light { opacity: .3; }
   .th__ask { font-size: 18px; text-wrap: balance; }
   .th__hint { margin-top: 10px; font-size: 15px; }
   .opts { grid-template-columns: 1fr; margin: var(--gap-head) 0 0; }
   .opt + .opt { border-right: 0; border-top: 1px solid rgb(16 14 54 / .1); }
-  .opt__a { display: grid; grid-template-columns: 84px minmax(0, 1fr); grid-template-areas: "face q" "face foot" "face trk"; column-gap: 18px; align-items: start; padding: 24px 0; text-align: right; }
-  .opt__face { grid-area: face; width: 76px; outline-offset: 4px; margin: 4px; }
-  .opt__q { grid-area: q; margin: 0; font-size: 16px; text-wrap: pretty; }
-  .opt__foot { grid-area: foot; margin-top: 14px; gap: 12px; }
+  .opt__a { display: flex; flex-direction: column; align-items: center; padding: 32px 0 30px; text-align: center; }
+  .opt__face { width: 120px; outline-offset: 6px; margin: 6px; }
+  .opt__q { flex: none; margin-top: 22px; font-size: 17px; text-wrap: pretty; }
+  .opt__foot { margin-top: 18px; gap: 12px; }
   .opt__chk { width: 26px; height: 26px; }
   .opt__pick { font-size: 22px; }
-  .opt__trk { grid-area: trk; margin-top: 6px; }
+  .opt__trk { margin-top: 8px; }
 
   /* --- 2. המסלולים: כרטיס אחד מתחת לשני, תמונה ברוחב הכרטיס, טקסט קריא --- */
   .tp { padding: var(--pad) var(--gutter); }
+  /* הכותרת בשתי שורות: בלי הרוחב המקסימלי של המחשב (שבטלפון יצא 223 פיקסלים ושבר ל-4 שורות),
+     ובגודל שבו "המעטפת הפיננסית שתצמיח" נכנס בשורה אחת. גובר על הכלל הכללי של כותרות במובייל ב-styles.css */
+  html:not(#_):not(#_) .tp__title { max-width: none; font-size: clamp(30px, 10.8vw, 46px); }
   .tp__list { grid-template-columns: 1fr; grid-template-rows: none; row-gap: 28px; }
   .plan { grid-row: auto; grid-template-rows: none; display: block; filter: drop-shadow(0 10px 24px rgb(16 14 54 / .07)); }
   .plan__in { display: flex; flex-direction: column; }
@@ -269,9 +273,8 @@
 /* טלפונים צרים (320-360) */
 @media (max-width: 360px) {
   .tp { padding-inline: 16px; }
-  .opt__a { grid-template-columns: 70px minmax(0, 1fr); column-gap: 14px; }
-  .opt__face { width: 62px; }
-  .opt__q { font-size: 15.5px; }
+  .opt__face { width: 104px; }
+  .opt__q { font-size: 16px; }
   .plan__head, .plan__d, .plan__acc { padding-inline: 18px; }
   .plan__inc { padding-inline: 18px; }
   .plan__go { padding-inline: 18px; }
