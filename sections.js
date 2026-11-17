@@ -374,7 +374,7 @@
   const sum2 = $('.sum2');
   if (sum2) {
     const rows = $$('.sum2__row', sum2), ops = $$('.sum2__op', sum2), eq = $('.sum2__eq', sum2), words = $$('.sum2__w', sum2),
-      pic = $('.sum2__pic', sum2), picImg = $('.sum2__pic img', sum2), sub = $('.sum2__sub', sum2);
+      pic = $('.sum2__pic', sum2), picImg = $('.sum2__pic img', sum2), sub = $('.sum2__sub', sum2), go = $('.sum2__go', sum2);
     if (reduce) sum2.classList.add('is-done');
     else {
       gsap.set(rows, { autoAlpha: 0, y: 26 * U() });
@@ -384,6 +384,7 @@
       gsap.set(pic, { clipPath: 'inset(0% 50% 0% 50%)' });
       gsap.set(picImg, { scale: 1.35 });
       gsap.set(sub, { autoAlpha: 0, y: 26 * U() });
+      if (go) gsap.set(go, { autoAlpha: 0, y: 22 * U() });
       const tl = gsap.timeline({ paused: true, onComplete: () => sum2.classList.add('is-done') });
       rows.forEach((r, k) => {
         const at = .1 + k * .5;
@@ -395,6 +396,7 @@
         .to(pic, { clipPath: 'inset(0% 0% 0% 0%)', duration: 1, ease: 'expo.inOut' }, 2.15)
         .to(picImg, { scale: 1, duration: 1.6, ease: 'power2.out' }, 2.15)
         .to(sub, { autoAlpha: 1, y: 0, duration: .8, ease: 'power3.out' }, 2.7);
+      if (go) tl.to(go, { autoAlpha: 1, y: 0, duration: .8, ease: 'power3.out' }, 3.2);   // ואז ההזמנה לסימולטור
       // החשבון נסגר כשהאזור כמעט כולו במסך (גם כשמגיעים בגלילה רגילה)
       ScrollTrigger.create({ trigger: sum2, start: mobile() ? 'top 60%' : 'top 30%', once: true, onEnter: () => tl.play() });
       if (!mobile()) {
@@ -733,6 +735,9 @@
           .fromTo(sh, { xPercent: -120 }, { xPercent: 120, duration: .55, ease: 'power1.inOut' }, t + .7);
         // התוכן של הכרטיסים שמתחת לערימה נכנס רק כשהם נוחתים
       });
+      // בסוף, כשהכרטיסים בשורה: ההזמנה לסימולטור עולה מתחתם
+      const pgo = $('.peak__go', peak);
+      if (pgo) tl.fromTo(pgo, { autoAlpha: 0, y: 24 * U() }, { autoAlpha: 1, y: 0, duration: .5, ease: 'power3.out', immediateRender: true }, 1.25);
       tl.to({}, { duration: .5 });
       pin(peak, tl, () => 1.1);
       // עניין: כל כרטיס נוטה מעט אחרי העכבר, כמו כרטיס אמיתי ביד

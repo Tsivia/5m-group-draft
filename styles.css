@@ -2052,3 +2052,19 @@ html[data-hero-text="dark"] .site-header:not(.is-solid):not(.is-light) .site-hea
 /* מובייל: במעבר ללוגו של 5M GROUP השכבה הלבנה הייתה בגובה המסך הקטן (svh). כשסרגל הכתובת מתקפל המסך גדל,
    ולמטה נשאר מלבן כחול עד שהתמונה של המשפחה הגיעה. השכבה הלבנה יורדת עד לתחתית המסך הגדול (lvh) */
 @media (max-width: 900px) { @supports (height: 100lvh) { html:not(#_) .sides.is-live .sides__white { bottom: calc(100svh - 100lvh); } } }
+
+/* =====================================================================
+   כפתורים לסימולטור לאורך דף הבית (לבקשת צביה): בסוף "שורה תחתונה" ובסוף "שלושת המצבים".
+   משפט קצר שמזמין להכניס את המספרים שלכם, ומתחתיו אותו כפתור כתום של ההירו
+   ===================================================================== */
+.sim-go { position: relative; z-index: 2; display: flex; flex-direction: column; align-items: center; gap: calc(18 * var(--u)); margin-top: calc(48 * var(--u)); text-align: center; }
+.sim-go__q { margin: 0; font-family: var(--font-text); font-weight: 400; font-size: var(--fs-lead); line-height: var(--lh-body); text-wrap: balance; }
+.sum2__go .sim-go__q { color: var(--ink-2); }
+.peak__go { margin-top: calc(40 * var(--u)); }
+.peak__go .sim-go__q { color: var(--paper-2); }
+@media (max-width: 900px) {
+  .sim-go { gap: 16px; margin-top: 40px; }
+  html:not(#_) .sim-go__q { max-width: 22em; font-size: var(--fs-body); }
+  .sim-go .btn { min-height: 52px; padding-inline: 30px; }
+  .peak__go { margin-top: 36px; }
+}
