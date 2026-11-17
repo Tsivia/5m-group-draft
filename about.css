@@ -75,7 +75,7 @@
 /* רצועת הפנים: אותה רצועה של ההמלצות (מתנפחת מתחת לעכבר, הפעיל בצבע עם פס התקדמות) */
 .atm__film { --tw: calc(70 * var(--u)); position: relative; z-index: 1; display: flex; justify-content: center; align-items: flex-end; gap: calc(9 * var(--u)); height: calc(var(--tw) * 2.15); margin-top: calc(40 * var(--u)); contain: layout style; }
 .tthumb { --z: 0; position: relative; flex: none; width: calc(var(--tw) * (1 + .55 * var(--z))); aspect-ratio: 4 / 5; padding: 0; border: 0; overflow: hidden; background: var(--ph); cursor: pointer; box-shadow: 0 calc(10 * var(--u)) calc(22 * var(--u)) rgb(16 14 54 / .1); }
-.tthumb img { width: 100%; height: 100%; object-fit: cover; object-position: 50% var(--fy, 18%); filter: grayscale(calc(1 - var(--z))) sepia(calc(.25 * (1 - var(--z)))) brightness(calc(1.04 - .04 * var(--z))); }
+.tthumb img { width: 100%; height: 100%; object-fit: cover; object-position: 50% var(--fy, 18%); filter: grayscale(1) sepia(.5) hue-rotate(195deg) saturate(1.1) brightness(1.02); }
 .tthumb.is-on img { filter: none; }
 .tthumb i { position: absolute; left: 0; right: 0; bottom: 0; height: 3px; background: var(--orange); transform: scaleX(0); transform-origin: right; }
 .tthumb:focus-visible { outline: 2px solid var(--orange); outline-offset: 3px; }
@@ -195,11 +195,12 @@
 .twall__bar i { position: absolute; inset: 0; background: var(--orange); transform: scaleX(0); transform-origin: right; }
 .wp { padding-bottom: calc(26 * var(--u)); }
 .wp__b { position: relative; display: block; width: 100%; aspect-ratio: 4 / 5; padding: 0; border: 0; overflow: hidden; background: var(--ph); cursor: pointer; box-shadow: 0 calc(14 * var(--u)) calc(30 * var(--u)) rgb(16 14 54 / .1); transition: transform .7s var(--ease-out), box-shadow .7s var(--ease-out); }
-.wp__b img { width: 100%; height: 100%; object-fit: cover; object-position: 50% var(--fy, 18%); filter: grayscale(1) sepia(.28) contrast(1.03) brightness(1.04); transition: filter .6s var(--ease-out), transform 1.1s var(--ease-out); }
+.wp__b img { width: 100%; height: 100%; object-fit: cover; object-position: 50% var(--fy, 18%); filter: grayscale(1) sepia(.5) hue-rotate(195deg) saturate(1.1) brightness(1.02); transition: filter .6s var(--ease-out), transform 1.1s var(--ease-out); }
 .wp__b::after { content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 3px; background: var(--orange); transform: scaleX(0); transform-origin: right; transition: transform .6s cubic-bezier(.65, 0, .35, 1); }
 .wp__b:hover { transform: scale(1.06); z-index: 2; box-shadow: 0 calc(26 * var(--u)) calc(50 * var(--u)) rgb(16 14 54 / .22); }
-.wp__b:hover img, .wp.is-on .wp__b img { filter: none; }
-.wp.is-on .wp__b::after { transform: scaleX(1); }
+/* צבע מקורי רק לאדם שמוצג באמצע. במעבר עכבר רק הקו הכתום מופיע */
+.wp.is-on .wp__b img { filter: none; }
+.wp__b:hover::after, .wp.is-on .wp__b::after { transform: scaleX(1); }
 .wp__b:focus-visible { outline: 2px solid var(--orange); outline-offset: 3px; }
 
 

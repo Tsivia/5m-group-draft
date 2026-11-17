@@ -402,7 +402,8 @@
     };
     set(0, false);
     const run = () => { fill && fill.kill(); if (reduce || hovering || !inView) return; fill = gsap.fromTo(bar, { scaleX: 0 }, { scaleX: 1, duration: 4.4, ease: 'none', onComplete: () => { set((at3 + 1) % people.length); run(); } }); };
-    buttons.forEach(w => { const b = $('button', w), i = +w.dataset.i; const pick = () => { hovering = true; fill && fill.kill(); gsap.set(bar, { scaleX: 1 }); if (i !== at3) set(i); }; b.addEventListener('mouseenter', pick); b.addEventListener('focus', pick); b.addEventListener('click', pick); });
+    // מעבר עכבר רק עוצר את ההחלפה האוטומטית (והקו הכתום מופיע ב-CSS). לחיצה מעבירה את האדם לאמצע, ורק אז הוא בצבע
+    buttons.forEach(w => { const b = $('button', w), i = +w.dataset.i; const hold = () => { hovering = true; fill && fill.kill(); }; const pick = () => { hold(); gsap.set(bar, { scaleX: 1 }); if (i !== at3) set(i); }; b.addEventListener('mouseenter', hold); b.addEventListener('focus', pick); b.addEventListener('click', pick); });
     wall.addEventListener('mouseleave', () => { hovering = false; run(); });
     new IntersectionObserver(es => { inView = es[0].isIntersecting; inView ? run() : fill && fill.kill(); }, { threshold: .4 }).observe(center);
     if (reduce) wall.classList.add('is-paused');

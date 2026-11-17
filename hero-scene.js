@@ -823,7 +823,16 @@
         // החלון ממורכז בדיוק ברווח שבין 95%/5% משמאל לטקסט מימין (במחשבים ניידים הוא נכנס מתחת לטקסט),
         // ואם הרווח צר מהחלון, הצילום קטן מעט כדי שיישאר מרווח משני הצדדים (הגובה נשמר סביב אותו מרכז)
         const z = SCROLL_FX ? 1.045 : 1, gc = (PH.glass[0] + PH.glass[2]) / 2, gw = (PH.glass[2] - PH.glass[0]) * w * unit * z;
-        if (gw > deskFit.room) { const s = deskFit.room / gw; y += h * (1 - s) / 2; w *= s; h *= s; }
+        // וכשיש מקום פנוי בצדדים, החלון גדל עד 12% כדי למלא אותו (אבל לא נכנס להדר ולא יורד על סמן הגלילה שבתחתית)
+        const k2 = unit * z, pan = SCROLL_FX ? ZOOM_AT_Y * H * (1 - z) : 0, sy = v => v * k2 + H / 2 + pan;
+        const bot = H - 48, span = (PH.feetLine - PH.glass[1]) * h * k2;   // מראש החלון עד קו הרגליים, על המסך
+        const s = gw > deskFit.room ? deskFit.room / gw : Math.max(1, Math.min(deskFit.room / gw, 1.12, (bot - deskFit.top) / span));
+        if (s !== 1) {
+          y += h * (1 - s) / 2; w *= s; h *= s;
+          // אם הגדילה דחפה את החלון אל ההדר או את הרגליים אל התחתית, הוא זז מעט כדי להישאר ביניהם
+          const t = sy(y + PH.glass[1] * h), f = sy(y + PH.feetLine * h);
+          if (f > bot) y -= (f - bot) / k2; else if (t < deskFit.top) y += (deskFit.top - t) / k2;
+        }
         x = (deskFit.mid - W / 2) / (unit * z) - gc * w;
       }
       return [x, y, w, h];
@@ -1048,7 +1057,8 @@
     const aR = left(l) + l.offsetWidth, bL = left(r), hL = left(host);
     if (!l.offsetWidth || !r.offsetWidth || bL <= aR) return;
     const M = Math.max(28, W * .022);   // מרווח מינימלי בין החלון לכל טקסט
-    deskFit = { mid: (aR + bL) / 2 - hL, room: bL - aR - 2 * M };
+    const hdr = document.querySelector('.site-header');
+    deskFit = { mid: (aR + bL) / 2 - hL, room: bL - aR - 2 * M, top: (hdr ? hdr.offsetHeight : 88) + 48 };
   }
   if (document.fonts) document.fonts.ready.then(() => { fitMobile(); fitDesk(); if (glReady) placeFeet(); });
   function resize() {

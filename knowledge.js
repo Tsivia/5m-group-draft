@@ -38,6 +38,8 @@
     };
     addEventListener('resize', () => moveLine(true));
     document.fonts && document.fonts.ready.then(() => moveLine(true));
+    // בטלפון השורה ממורכזת: כל שינוי ברוחב השורה (גם בלי resize של החלון) מזיז את המילים, אז הקו נמדד מחדש
+    if (window.ResizeObserver && line) new ResizeObserver(() => moveLine(true)).observe(line.parentElement);
     const apply = (cat, animate) => {
       btns.forEach(b => b.setAttribute('aria-pressed', String(b.dataset.cat === cat)));
       moveLine(!animate);
@@ -234,9 +236,13 @@
   const mapZones = () => {
     hh = header ? header.offsetHeight : 64;
     // אזור נעוץ יושב בתוך pin-spacer, ולכן מודדים את העוטף שלו. הפוטר שעולה מעליו מנצח (הוא האחרון ברשימה)
-    zones = $$('main > [data-theme], main > .pin-spacer > [data-theme]').map(sec => { const box = sec.parentElement.classList.contains('pin-spacer') ? sec.parentElement : sec; const r = box.getBoundingClientRect(), top = r.top + scrollY; return { top, bottom: top + r.height, light: sec.dataset.theme === 'light', glass: sec.dataset.header === 'glass' }; });
+    // אזור בהיר שנמס לנייבי בתחתיתו (.kh::after, .km::after): החצי התחתון של המעבר כבר כהה, ולכן ההדר מתחלף לכהה שם.
+    // כך ההדר נהיה כהה מעל הפוטר גם במסכים שבהם הפוטר נמוך מהמסך (אחרת קו ההדר לא מגיע אליו לעולם, ונשאר בהיר עד הסוף)
+    zones = $$('main > [data-theme], main > .pin-spacer > [data-theme]').map(sec => { const box = sec.parentElement.classList.contains('pin-spacer') ? sec.parentElement : sec; const r = box.getBoundingClientRect(), top = r.top + scrollY, light = sec.dataset.theme === 'light', fade = light ? parseFloat(getComputedStyle(sec, '::after').height) || 0 : 0; return { top, bottom: top + r.height - fade / 2, light, glass: sec.dataset.header === 'glass' }; });
   };
   ScrollTrigger.addEventListener('refresh', mapZones);
+  // גובה התוכן משתנה גם בלי refresh (פונטים שנטענים, סינון המאמרים): מודדים את האזורים מחדש
+  if (window.ResizeObserver && $('main')) { let raf = 0; new ResizeObserver(() => { cancelAnimationFrame(raf); raf = requestAnimationFrame(mapZones); }).observe($('main')); }
   const tick = () => {
     if (!header) return;
     const y = window.lenis ? window.lenis.scroll : scrollY, line = y + hh + 4;

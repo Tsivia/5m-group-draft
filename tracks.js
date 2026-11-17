@@ -185,7 +185,7 @@
   $$('.dotfield').forEach(c => dotField(c, c.closest('[data-theme="light"]') ? LIGHT_DOTS : DARK_DOTS));
 
   // מעבר בגלילה אחת: כשמתחילים לגלול לתוך המעבר, הגלילה ממשיכה לבד עד שהאזור הבא מכסה את המסך (אותו קוד של דף הבית)
-  const snapCover = el => {
+  const snapCover = (el, withEdge = false) => {
     if (reduce || !el) return;
     let busy = false;
     const go = y => {
@@ -194,7 +194,9 @@
       setTimeout(() => { busy = false; }, 1400);
     };
     const target = () => window.lenis ? window.lenis.targetScroll : scrollY;
-    ScrollTrigger.create({ trigger: el, start: 'top bottom-=2', end: 'top top+=2',
+    // withEdge: הקצה הרך שמעל האזור (::before) עולה לפני האזור עצמו, ולכן הקפיצה מתחילה כבר אז, שלא יישאר מונח על המשפחה בסגירה
+    const edge = () => withEdge ? Math.round(parseFloat(getComputedStyle(el, '::before').height) || 0) : 0;
+    ScrollTrigger.create({ trigger: el, start: () => 'top bottom+=' + (edge() - 2), end: 'top top+=2', invalidateOnRefresh: true,
       onEnter: s => { const t = target(); if (t > s.start && t < s.end) go(s.end + 2); },
       onEnterBack: s => { const t = target(); if (t > s.start && t < s.end) go(s.start - 2); } });
   };
@@ -344,14 +346,8 @@
 
   /* ================= 4. מזדהים? המספרים נספרים, וסימן השאלה מתנדנד ================= */
   if (tc && !reduce) {
-    // בלי קו בין הכחול לבהיר: "מזדהים" מתחיל בכחול של ההמלצות, ותוך כדי גלילה כל המסך מתבהר יחד
-    // (גם ההמלצות וגם "מזדהים"), כך שאין רגע שבו רואים כחול ליד בהיר. התוכן של ההמלצות נעלם בזמן הזה, והטקסט כאן מתכהה
-    const setTheme = s => { const t = s.progress > .55 ? 'light' : 'dark'; tc.dataset.theme = t; if (tv) tv.dataset.theme = t; };
-    const tvOut = tv ? $$(':scope > *:not(.tv__src)', tv) : [];
-    gsap.timeline({ defaults: { ease: 'none' }, scrollTrigger: { trigger: tc, start: 'top 75%', end: 'top 15%', scrub: true, invalidateOnRefresh: true, onUpdate: setTheme, onRefresh: setTheme } })
-      .fromTo(tc, { backgroundColor: '#090725', color: '#FBF5F2' }, { backgroundColor: '#FBF5F2', color: '#100E36' }, 0)
-      .fromTo(tv, { backgroundColor: '#090725' }, { backgroundColor: '#FBF5F2' }, 0)
-      .fromTo(tvOut, { opacity: 1 }, { opacity: 0, duration: .6 }, 0);
+    // המעבר מהכחול של ההמלצות לנייר: בלי צביעה של כל המסך (שעברה דרך אפור עכור). ההמלצות נשארות כחולות ו"מזדהים" נשאר בהיר,
+    // וביניהם רצועה רכה מהכחול לנייר (tv::after ב-tracks.css), שעוברת עם הגלילה
     const tcLight = $('.light', tc);
     // אור החלון: בטלפון חלש יותר, כדי שהנייר יישאר נקי
     if (tcLight) gsap.fromTo(tcLight, { opacity: 0 }, { opacity: () => mobile() ? .3 : .5, ease: 'none', scrollTrigger: { trigger: tc, start: 'top 10%', end: 'top -40%', scrub: true, invalidateOnRefresh: true } });
@@ -388,7 +384,8 @@
       gsap.set(chars, LETTER);
       gsap.set(parts, { autoAlpha: 0, y: 30 });
       const tl = gsap.timeline({ defaults: { ease: 'none' } })
-        .fromTo(win, { clipPath: () => mobile() ? 'inset(40% 14% 16% 14%)' : 'inset(42% 35% 10% 35%)' }, { clipPath: 'inset(0% 0% 0% 0%)', duration: 1.2, ease: 'power2.inOut' }, 0)
+        // החלון הקטן במחשב: צר וגבוה, קצת שמאלה מהמרכז, כך שרואים רק את הבית, הפנסים והמזח (בלי האבא שנחתך בקצה)
+        .fromTo(win, { clipPath: () => mobile() ? 'inset(40% 14% 16% 14%)' : 'inset(34% 41% 14% 37%)' }, { clipPath: 'inset(0% 0% 0% 0%)', duration: 1.2, ease: 'power2.inOut' }, 0)
         .fromTo(vid, { scale: 1.1 }, { scale: 1, duration: 2, ease: 'sine.out' }, 0)
         .fromTo(shade, { opacity: 0 }, { opacity: 1, duration: .6 }, .7)
         .to(chars, { autoAlpha: 1, y: 0, rotateX: 0, duration: .35, stagger: .008, ease: 'back.out(1.6)' }, 1.0)
@@ -407,7 +404,7 @@
     // הסגירה נעוצה ורואים אותה עוד רגע (60svh), ורק אז "התחילו בקטן" עולה עליה בגלילה אחת
     if (!mobile()) ScrollTrigger.create({ trigger: tf, start: 'bottom bottom', end: () => '+=' + Math.round(innerHeight * 1.6), pin: true, pinSpacing: false });
     // במובייל אין נעיצה, ולכן גם בלי קפיצה אוטומטית: שלא ידלגו על המשפחה עם הבלון
-    if (!mobile()) snapCover(document.querySelector('.ts'));
+    if (!mobile()) snapCover(document.querySelector('.ts'), true);
     const land = $('.tf__land', tf);
     gsap.fromTo(land, { y: () => innerHeight * .1 }, { y: 0, ease: 'none', scrollTrigger: { trigger: tf, start: 'top bottom', end: 'bottom bottom', scrub: true, invalidateOnRefresh: true } });
     // הבלון מתנדנד סביב היד של הילדה (נקודות בפיקסלים של התמונה), החוט תמיד מהיד אל הקשר, והבלון מסתובב מעט
