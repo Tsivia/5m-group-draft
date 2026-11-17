@@ -2036,3 +2036,17 @@ html[data-hero-text="dark"] .site-header:not(.is-solid):not(.is-light) .site-hea
 }
 /* "כמה מילים עלינו" במובייל: בלי שדה הנקודות מאחורי הטקסט (הפריע לקריאה, לבקשת צביה) */
 @media (max-width: 900px) { html:not(#_) .who > .dotfield { display: none; } }
+/* כמה מילים עלינו במובייל: תווית השם בצד שמאל של התמונה, כך שהיא מכסה פחות מהבגד של רפי (לבקשת צביה) */
+@media (max-width: 900px) { html:not(#_) .who__card { left: -14px; right: auto; } }
+
+/* =====================================================================
+   מובייל, כל האתר: טקסט רץ באותו גודל בכל העמודים (לבקשת צביה: "אחידות, דגש חשוב מאוד").
+   הכלל של דף הבית: כל פסקה, הסבר ופריט ברשימה 18px (--fs-body) בגובה שורה --lh-body.
+   משפט הפתיחה הגדול שאחרי כותרת של אדם (רפי) 20px כמו ב"כמה מילים עלינו". תיאורים קטנים מתחת למספרים 16px
+   ===================================================================== */
+@media (max-width: 900px) {
+  html:not(#_) :is(.sec__lead, .at__lead, .at__firm, .atm__lead, .atm__d, .agt__round, .a5__lead, .a5__body, .a5s__t, .ar__cred, .ar__cred li,
+    .th__ask, .opt__q, .plan__d, .plan__inc, .plan__tag, .row__list li, .tc__lead, .ts__lead, .ts__list li, .tv__quote, .gt__panel p, .cx__info) { font-size: var(--fs-body); line-height: var(--lh-body); }
+  html:not(#_) :is(.who__big, .ar__big) { font-size: 20px; }
+  html:not(#_) .stat__c { font-size: 16px; }
+}

@@ -236,10 +236,13 @@
   if (at) {
     const land = $('.at__land', at), bal = $('.at__balloon', at), str = $('.at__string', at);
     const HX = 1902, HY = 690, KX = 1978, KY = 499;
-    const L = Math.hypot(KX - HX, HY - KY), A0 = Math.atan2(KX - HX, HY - KY);
+    // במובייל הבלון מעל הראש של הילדה (לא ימינה ממנה), כמו בדף הבית: המשפחה ממורכזת וגדולה יותר בלי שהבלון ייחתך
+    const geo = () => { const m = innerWidth <= 900, kx = m ? 1868 : KX, ky = m ? 482 : KY; return { L: Math.hypot(kx - HX, HY - ky), A0: Math.atan2(kx - HX, HY - ky) }; };
+    let G = geo();
+    addEventListener('resize', () => { G = geo(); });
     let on = false;
     const sway = () => {
-      const t = performance.now() / 1000;
+      const t = reduce ? 0 : performance.now() / 1000, { L, A0 } = G;
       const ang = A0 + .075 * Math.sin(t * .62) + .028 * Math.sin(t * 1.7 + 1.1);
       const l = L * (1 + .014 * Math.sin(t * 1.05 + .4));
       const kx = HX + l * Math.sin(ang), ky = HY - l * Math.cos(ang);
@@ -247,6 +250,7 @@
       str.setAttribute('d', 'M' + HX + ' ' + HY + ' Q' + mx.toFixed(1) + ' ' + my.toFixed(1) + ' ' + kx.toFixed(1) + ' ' + ky.toFixed(1));
       bal.setAttribute('transform', 'translate(' + (kx - KX).toFixed(2) + ' ' + (ky - KY).toFixed(2) + ') rotate(' + ((ang - A0) * 57.3 * .7).toFixed(2) + ' ' + KX + ' ' + KY + ')');
     };
+    if (bal && str && reduce) { sway(); addEventListener('resize', sway); }
     if (bal && str && !reduce) new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting && !on) { on = true; gsap.ticker.add(sway); } else if (!e.isIntersecting && on) { on = false; gsap.ticker.remove(sway); } })).observe(land);
   }
   if (at && !reduce) {
@@ -455,7 +459,16 @@
     const parts = steps.map(s => ({ no: $('.gts__no', s), name: splitChars($('.gts__name', s)), words: splitWords($('.gts__lead', s)), dn: $('.gts__do', s) }));
     const all = p => [p.no, ...p.name, ...p.words, p.dn];
     const track = $('.gt__steps', agt);
-    if (car) agt.classList.add('is-car');
+    if (car) {
+      agt.classList.add('is-car');
+      // במובייל בדיוק כמו משולש הזהב בדף הבית: הכותרת והפסל קבועים, והכרטיסים נערמים זה על זה (ה-CSS ב-styles.css).
+      // המשפט על השולחן העגול עובר אל מחוץ לבמה, אחרי הערימה, כדי שהכותרת והפסל ישתחררו יחד עם הכרטיס האחרון
+      const inc = $('.gt__inc', agt), stage = $('.gt__stage', agt), head = $('.gt__head', agt);
+      if (inc && stage) stage.after(inc);
+      const measure = () => { agt.style.setProperty('--gth', head.offsetHeight + 'px'); agt.style.setProperty('--gtc', Math.max(...steps.map(s => s.offsetHeight)) + 'px'); agt.style.setProperty('--gtl', steps[steps.length - 1].offsetHeight + 'px'); };
+      measure(); addEventListener('resize', measure);
+      if (document.fonts) document.fonts.ready.then(measure);
+    }
     if (!reduce && !car) parts.forEach(p => gsap.set(all(p), { autoAlpha: 0 }));
 
     let on = -1;
@@ -485,12 +498,19 @@
     let st = null;
     const AT = [1 / 3, 2 / 3, 1];
     const toY = y => window.lenis ? window.lenis.scrollTo(y, { duration: 1.4 }) : scrollTo({ top: y, behavior: 'smooth' });
-    const slide = k => { const r = track.getBoundingClientRect(), b = steps[k].getBoundingClientRect(), pd = parseFloat(getComputedStyle(track).paddingRight) || 0; track.scrollBy({ left: b.right - (r.right - pd), behavior: reduce ? 'auto' : 'smooth' }); };
+    const fig = $('.gt__fig', agt);
+    // לחיצה על שכבה בפסל: גוללים את העמוד אל הכרטיס שלה. הכרטיסים דבוקים, אז המיקום הטבעי מחושב מראש הרשימה
+    const slide = k => { const sy = window.lenis ? window.lenis.scroll : scrollY, gap = parseFloat(getComputedStyle(track).rowGap) || 0;
+      let top = track.getBoundingClientRect().top + sy + (parseFloat(getComputedStyle(track).paddingTop) || 0);
+      for (let i = 0; i < k; i++) top += steps[i].offsetHeight + gap;
+      const y = top - (parseFloat(getComputedStyle(steps[k]).top) || fig.getBoundingClientRect().bottom) + 1;
+      window.lenis ? window.lenis.scrollTo(y, { duration: .9 }) : scrollTo({ top: y, behavior: reduce ? 'auto' : 'smooth' }); };
     const go = k => { if (car) slide(k); else if (st) toY(st.start + 2 + (st.end - st.start) * AT[k]); else show(k); };
     $$('[data-go]', agt).forEach(b => b.addEventListener('click', () => go(+b.dataset.go)));
     let carReady = reduce;
-    const pick = () => { const r = track.getBoundingClientRect(), c = r.left + r.width / 2; let k = 0, dd = Infinity; steps.forEach((s, i) => { const b = s.getBoundingClientRect(), e = Math.abs(b.left + b.width / 2 - c); if (e < dd) { dd = e; k = i; } }); if (carReady) show(k); };
-    if (car) { let fr = 0; track.addEventListener('scroll', () => { fr = fr || requestAnimationFrame(() => { fr = 0; pick(); }); }, { passive: true }); }
+    // השלב הפעיל: הכרטיס שעבר את הקו שבאמצע השטח מתחת לפסל הדבוק
+    const pick = () => { const fb = fig.getBoundingClientRect().bottom, line = fb + (innerHeight - fb) * .45; let k = 0; steps.forEach((s, i) => { if (s.getBoundingClientRect().top < line) k = i; }); if (carReady) show(k); };
+    if (car) { let fr = 0; addEventListener('scroll', () => { fr = fr || requestAnimationFrame(() => { fr = 0; pick(); }); }, { passive: true }); }
     if (reduce) { show(0); if (!car) bars.forEach(b => { b.style.transform = 'scaleX(1)'; }); }
     else {
       gsap.set(pair(0), { y: 120, autoAlpha: 0 });
