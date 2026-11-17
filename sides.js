@@ -368,6 +368,8 @@
       .to(FLY, { p: 1, duration: 1.4, ease: 'power2.inOut' }, .55)
       // התמונה של המשפחה יורדת בעדינות, כדי שהטקסט שעולה במקום לא יעמוד על הדמויות
       .fromTo('.rat__city', { y: 0 }, { y: () => Math.min(innerWidth, 1920) / 1920 * 50, duration: 1.3, ease: 'power2.inOut' }, .65)
+      // במובייל: המשפחה גדולה מאוד כשהלוגו במרכז, ומתכווצת לתחתית (מהבסיס) כשהכותרת והטקסט מופיעים
+      .fromTo('.rat__city', { scale: 1 }, { scale: () => innerWidth <= 900 ? (parseFloat(getComputedStyle(ratCity).getPropertyValue('--city-s')) || 1) : 1, duration: 1.3, ease: 'power2.inOut' }, .65)
       // 3. במקום: הלוגו מתחלף בלוגו התלת-ממדי (מגניפיק), והמשולש נבלע במשולש שלו
       .to(logo3d, { autoAlpha: 1, duration: .35, ease: 'power1.out' }, 1.95)
       .to(FLY, { out: 1, duration: .35, ease: 'power1.out' }, 1.95)
@@ -377,7 +379,8 @@
       .to({}, linesAt(wordsR), 2.45)
       .to({}, { duration: 1.2 });
     // משולש הזהב עולה מעל הסקשן בזמן שהוא עדיין עומד: עוד מסך אחד של עצירה בסוף, באותה מהירות גלילה
-    const RLEN = 1.4, cover = !!document.querySelector('.gt');
+    // במובייל משולש הזהב לא עולה מעל הסקשן: הגלילה פשוט ממשיכה (לבקשת צביה)
+    const RLEN = 1.4, cover = !!document.querySelector('.gt') && innerWidth > 900;
     if (cover) ratTl.to({}, { duration: ratTl.duration() / RLEN });
     ScrollTrigger.create({
       trigger: rat,
@@ -745,7 +748,7 @@
     const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
     let W = 0, H = 0, dpr = 1, raf = 0, pts = null;
     // בדיוק כמו הנקודות ברקע של ההמלצות: קטנות, עדינות מאוד ושקופות, ומפוזרות באופן שווה על כל הרקע
-    const GAP = 17, SIZE = 2, PROX = 140, PUSH = 10, SWELL = .5, TENSION = .09, DAMP = .78;
+    let GAP = 17; const SIZE = 2, PROX = 140, PUSH = 10, SWELL = .5, TENSION = .09, DAMP = .78;
     const P = { x: -9999, y: -9999, lx: -9999, ly: -9999, vx: 0, vy: 0 };
     const col = light ? '128,126,158' : '212,212,218';   // טיפה כהה יותר מהלבן של ההמלצות
     const AM = light ? .6 : .42;   // השקיפות המקסימלית: רמות השקיפות מתחלקות עד אליה, כך שגם נקודות עדינות מאוד מצוירות מדויק
@@ -754,6 +757,7 @@
     const NB = 16; let bx = null, bn = null, lastKey = '', alive = true;
     const build = () => {
       dpr = Math.min(devicePixelRatio || 1, 1.5); W = canvas.clientWidth; H = canvas.clientHeight;
+      GAP = innerWidth <= 900 ? 11 : 17;   // במובייל הנקודות צפופות יותר (לבקשת צביה)
       canvas.width = Math.round(W * dpr); canvas.height = Math.round(H * dpr);
       const cols = Math.ceil(W / GAP) + 1, rows = Math.ceil(H / GAP) + 1, n = cols * rows;
       pts = { n, rx: new Float32Array(n), ry: new Float32Array(n), ox: new Float32Array(n), oy: new Float32Array(n), vx: new Float32Array(n), vy: new Float32Array(n), e: new Float32Array(n) };
@@ -783,7 +787,9 @@
       // השדה יורד גם אל מתחת למבוך (שם הן היו כהות מדי), ונשאר בהיר על רוב השטח שלו
       // שדה בהיר מתחת למבוך (מאחוריו), שנבלע ברקע בכל הקצוות: הוא נגמר לפני קצה המסך, ולא נחתך בו
       // כמו בהמלצות: אליפסה רכה על כל הרקע של האזור, לא רק סביב המבוך
-      const ex = W * .28, ey = H * .55, erx = W * .42, ery = H * .52;   // שמאלה, מתחת למבוך; נעלם ברכות לפני הקצוות
+      let ex = W * .28, ey = H * .55, erx = W * .42, ery = H * .52;   // שמאלה, מתחת למבוך; נעלם ברכות לפני הקצוות
+      // במובייל המבוך ממורכז מעל הכותרת: שדה קטן יותר, ממורכז מתחת למבוך עצמו (ולא בצד שמאל)
+      if (innerWidth <= 900) { const a = anchor.getBoundingClientRect(), c = canvas.getBoundingClientRect(); ex = a.left - c.left + a.width / 2; ey = a.top - c.top + a.height * .52; erx = Math.min(W * .5, a.width * .6); ery = a.height * .58; }
       const key = ex.toFixed(1) + ',' + ey.toFixed(1) + ',' + erx.toFixed(1) + ',' + ery.toFixed(1);
       if (key === lastKey && !moved && !alive) return;      // שום דבר לא זז: הפריים הקודם עדיין נכון
       lastKey = key; alive = false;

@@ -1013,11 +1013,13 @@
   function fitMobile() {
     mobFit = null;
     if (!PHOTO || innerWidth > 900 || !heroEl) return;
-    const a = heroEl.querySelector('.hero__stat:not(.hero__stat--few)'), b = heroEl.querySelector('.hero__stat--few');
-    if (!a || !b) return;
-    const t = heroEl.getBoundingClientRect().top, ra = a.getBoundingClientRect(), rb = b.getBoundingClientRect();
-    if (!ra.height || !rb.height) return;
-    mobFit = { top: ra.bottom - t + Math.max(22, H * .038), feet: rb.top - t - Math.max(24, H * .045) };
+    // שתי השורות (95% ו-5%) למעלה, והכפתור לסימולטור למטה. הצילום נכנס ביניהם, קטן וממורכז (כ-70% מהגובה הפנוי)
+    const b = heroEl.querySelector('.hero__stat--few'), btn = heroEl.querySelector('.hero__intro .btn');
+    if (!b || !btn) return;
+    const t = heroEl.getBoundingClientRect().top, rb = b.getBoundingClientRect(), rt = btn.getBoundingClientRect();
+    if (!rb.height || !rt.height) return;
+    const top = rb.bottom - t + Math.max(24, H * .035), bot = rt.top - t - Math.max(24, H * .035), h = (bot - top) * .72;
+    mobFit = { top: top + (bot - top - h) / 2, feet: top + (bot - top + h) / 2 };
   }
   if (document.fonts) document.fonts.ready.then(() => { fitMobile(); if (glReady) placeFeet(); });
   function resize() {
@@ -1033,7 +1035,7 @@
     if (calm) drawGL();
   }
 
-  const hero = story.querySelector('.hero'), heroBrand = hero && hero.querySelector('.hero__brand');
+  const hero = story.querySelector('.hero'), heroBrand = hero && hero.querySelector('.hero__brand'), heroIntro = hero && hero.querySelector('.hero__intro');
   function onScroll() {
     const travel = Math.max(1, (hero ? hero.offsetHeight : innerHeight));
     const top = story.getBoundingClientRect().top;
@@ -1044,6 +1046,8 @@
       heroBrand.style.opacity = e > 0 ? (1 - e).toFixed(3) : '';
       heroBrand.style.transform = e > 0 ? 'translateY(' + (-18 * e).toFixed(1) + 'px)' : '';
       heroBrand.style.pointerEvents = e > .9 ? 'none' : '';
+      // גם הכפתור לסימולטור (במובייל הוא תלוי בתחתית ההירו) נעלם יחד עם הטקסט
+      if (heroIntro) { heroIntro.style.opacity = heroBrand.style.opacity; heroIntro.style.pointerEvents = heroBrand.style.pointerEvents; }
     }
     if (calm) { scrollE = scrollP; drawGL(); }
   }

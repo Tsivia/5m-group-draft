@@ -257,7 +257,7 @@
     // (הרגיש תקוע), ומהשלב הראשון אי אפשר היה לחזור למעלה. במקום זה שלושת השלבים הם כרטיסים שמחליקים הצידה,
     // והפסל והמקטעים מעליהם מגיבים לכרטיס שמול העיניים. גם הגלישה האוטומטית בכניסה לאזור כבויה במגע (נלחמה באצבע)
     const car = mobile();
-    if ($('.rat.is-live') && !reduce) { gt.classList.add('is-cover'); if (!car) snapCover(gt); }
+    if ($('.rat.is-live') && !reduce && !car) { gt.classList.add('is-cover'); snapCover(gt); }   // במובייל בלי כיסוי: הגלילה ממשיכה רגיל
     const steps = $$('.gts', gt), sets = $$('.gt__sets .gts__tags', gt), segs = $$('.gt__seg', gt), bars = segs.map(s => $('.gt__bar b', s));
     const pieces = [1, 2, 3].map(n => $('.gt__piece--' + n, gt)), fills = [1, 2, 3].map(n => $('.gt__fill--' + n, gt)), sculpt = $('.gt__sculpt', gt);
     const pair = k => [pieces[k], fills[k]];
@@ -320,13 +320,15 @@
     let st = null;
     const AT = [1 / 3, 2 / 3, 1];   // לחיצה על שלב: המקטע שלו מלא
     // במובייל: לחיצה על מקטע או על שכבה בפסל מחליקה את הכרטיסים אל השלב (רק הצידה, העמוד לא זז)
-    const slide = k => { const r = track.getBoundingClientRect(), b = steps[k].getBoundingClientRect(), pad = parseFloat(getComputedStyle(track).paddingRight) || 0; track.scrollBy({ left: b.right - (r.right - pad), behavior: reduce ? 'auto' : 'smooth' }); };
+    // במובייל השלבים אחד מתחת לשני והפסל דבוק למעלה: לחיצה על שכבה בפסל גוללת את העמוד אל הכרטיס שלה, מתחת לפסל
+    const slide = k => { const y = (window.lenis ? window.lenis.scroll : scrollY) + steps[k].getBoundingClientRect().top - fig.getBoundingClientRect().bottom - 14; window.lenis ? window.lenis.scrollTo(y, { duration: .9 }) : scrollTo({ top: y, behavior: reduce ? 'auto' : 'smooth' }); };
     const go = k => { closeWin(); if (car) slide(k); else if (st) scrollToY(st.start + 2 + (st.end - st.start) * AT[k]); else show(k); };
     $$('[data-go]', gt).forEach(b => b.addEventListener('click', () => go(+b.dataset.go)));
     // במובייל: השלב הפעיל הוא הכרטיס שהכי קרוב למרכז. מחכים לסוף הכניסה של הפסל, כדי שהצבע יעלה אחרי שהוא נבנה
     let carReady = reduce;
-    const pick = () => { const r = track.getBoundingClientRect(), c = r.left + r.width / 2; let k = 0, d = Infinity; steps.forEach((s, i) => { const b = s.getBoundingClientRect(), e = Math.abs(b.left + b.width / 2 - c); if (e < d) { d = e; k = i; } }); if (carReady) show(k); };
-    if (car) { let fr = 0; track.addEventListener('scroll', () => { fr = fr || requestAnimationFrame(() => { fr = 0; pick(); }); }, { passive: true }); }
+    // השלב הפעיל: הכרטיס שעובר את הקו שבאמצע השטח הפנוי מתחת לפסל הדבוק
+    const pick = () => { const line = fig.getBoundingClientRect().bottom + (innerHeight - fig.getBoundingClientRect().bottom) * .45; let k = 0; steps.forEach((s, i) => { if (s.getBoundingClientRect().top < line) k = i; }); if (carReady) show(k); };
+    if (car) { let fr = 0; addEventListener('scroll', () => { fr = fr || requestAnimationFrame(() => { fr = 0; pick(); }); }, { passive: true }); }
     if (reduce) { show(0); if (!car) bars.forEach(b => { b.style.transform = 'scaleX(1)'; }); }
     else {
       // הכניסה: הפסל נבנה. הבסיס עולה, האמצע נוחת עליו, וקודקוד הזהב יורד אחרון ונשאר לרחף בעדינות. המקטעים למטה עולים אחריו

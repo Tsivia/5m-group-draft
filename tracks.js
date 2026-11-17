@@ -348,11 +348,9 @@
     // (גם ההמלצות וגם "מזדהים"), כך שאין רגע שבו רואים כחול ליד בהיר. התוכן של ההמלצות נעלם בזמן הזה, והטקסט כאן מתכהה
     const setTheme = s => { const t = s.progress > .55 ? 'light' : 'dark'; tc.dataset.theme = t; if (tv) tv.dataset.theme = t; };
     const tvOut = tv ? $$(':scope > *:not(.tv__src)', tv) : [];
-    // במובייל ההמלצות לא עולות על המסלולים, ולכן גם בלי הצל העליון (אחרת הוא נראה כמו כתם אפור מעל הכחול)
-    const tvShadow = a => mobile() ? 'none' : '0 -30px 60px rgba(9,7,37,' + a + ')';
     gsap.timeline({ defaults: { ease: 'none' }, scrollTrigger: { trigger: tc, start: 'top 75%', end: 'top 15%', scrub: true, invalidateOnRefresh: true, onUpdate: setTheme, onRefresh: setTheme } })
       .fromTo(tc, { backgroundColor: '#090725', color: '#FBF5F2' }, { backgroundColor: '#FBF5F2', color: '#100E36' }, 0)
-      .fromTo(tv, { backgroundColor: '#090725', boxShadow: () => tvShadow(.25) }, { backgroundColor: '#FBF5F2', boxShadow: () => tvShadow(0) }, 0)
+      .fromTo(tv, { backgroundColor: '#090725' }, { backgroundColor: '#FBF5F2' }, 0)
       .fromTo(tvOut, { opacity: 1 }, { opacity: 0, duration: .6 }, 0);
     const tcLight = $('.light', tc);
     // אור החלון: בטלפון חלש יותר, כדי שהנייר יישאר נקי
