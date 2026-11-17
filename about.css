@@ -319,3 +319,29 @@
   .agt.is-car .gts__do { margin-top: 16px; }
   .agt.is-car .gt__inc { display: block; order: 4; margin: 28px 20px 0; }
 }
+
+/* מובייל: ההירו של "מי אנחנו" ממורכז (לבקשת צביה): העין-כותרת, הכותרת ו"ואתם?" באמצע */
+@media (max-width: 900px) {
+  html:not(#_) .hx1__r { left: 20px; right: 20px; text-align: center; }
+  html:not(#_) .hx1__r .hx__l { margin-inline: auto; }
+  html:not(#_) .hx1__q { left: 0; right: 0; text-align: center; }
+}
+
+/* =====================================================================
+   רפי במובייל: בדיוק כמו "כמה מילים עלינו" בדף הבית (לבקשת צביה). הכול ממורכז, התמונה אחרי הכותרת ולפני הטקסטים,
+   בלי הטקסט הרץ ברקע, והמסגרת הכתומה בתוך הרוחב של התמונה (בולטת רק למעלה). ar__text שקוף לפריסה (contents)
+   ===================================================================== */
+@media (max-width: 900px) {
+  html:not(#_) .ar { row-gap: 0; padding: 80px 20px 96px; text-align: center; justify-items: center; }
+  html:not(#_) .ar__text { display: contents; }
+  html:not(#_) .ar__text > * { order: 3; max-width: 600px; }
+  html:not(#_) .ar__text > .eyebrow, html:not(#_) .ar__text > .sec__title { order: 1; }
+  html:not(#_) .ar__text > .sec__title { margin-bottom: 34px; }
+  html:not(#_) .ar__photo { order: 2; width: 100%; max-width: 340px; margin: 0 auto 30px; }
+  html:not(#_) .ar__photo::before { inset: -16px 16px 16px 16px; border-width: 2.5px; }
+  html:not(#_) .ar__card { right: -10px; top: 44%; bottom: auto; padding: 10px 16px 12px; text-align: right; }
+  html:not(#_) .ar__big { margin-top: 0; }
+  html:not(#_) .ar__cred { padding: 0; }
+  html:not(#_) .ar__text .btn { justify-self: center; margin-top: 8px; }
+  html:not(#_) .ar__giant { display: none; }
+}
