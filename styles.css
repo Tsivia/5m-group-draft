@@ -2055,10 +2055,10 @@ html[data-hero-text="dark"] .site-header:not(.is-solid):not(.is-light) .site-hea
 
 /* =====================================================================
    כפתור וואטסאפ צף (לבקשת צביה): בצד ימין למטה, לאורך כל האתר ובכל העמודים.
-   ריבוע כתום כמו כל הכפתורים באתר, עם סמל הוואטסאפ בלבן. נעלם כשתפריט המובייל פתוח
+   עיגול כתום (לבקשת צביה), עם סמל הוואטסאפ בלבן. נעלם כשתפריט המובייל פתוח
    ===================================================================== */
 .wa-float { position: fixed; right: max(20px, calc(32 * var(--u))); bottom: calc(max(20px, calc(32 * var(--u))) + env(safe-area-inset-bottom)); z-index: 9;
-  display: grid; place-items: center; width: 60px; height: 60px; background: var(--orange); color: #fff;
+  display: grid; place-items: center; width: 60px; height: 60px; border-radius: 50%; background: var(--orange); color: #fff;
   box-shadow: 0 10px 28px rgb(9 7 37 / .28), inset 0 0 0 1px rgb(255 255 255 / .14); transition: background-color .3s ease, transform .5s cubic-bezier(.16, 1, .3, 1); }
 .wa-float svg { width: 30px; height: 30px; fill: currentColor; transition: transform .5s cubic-bezier(.16, 1, .3, 1); }
 .wa-float:hover, .wa-float:focus-visible { background: var(--orange-deep); transform: translateY(-3px); }
