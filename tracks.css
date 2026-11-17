@@ -367,3 +367,7 @@
   .opt__face, .opt__face img, .plan, .plan__img img { transition: none; }
   .th__hint::after { animation: none; }
 }
+
+/* המעברים בין אזור בהיר לכחול-כהה: קו ישר ונקי, בלי מעבר מטושטש (הכלל של צביה מ-17.11: "מטושטש ומכוער").
+   מבטל את הקצוות הרכים שנוספו מעל ההמלצות, מעל "התחילו בקטן" ומתחת להמלצות. tracks.js קורא את גובה ה-::before, ובלעדיו הוא 0 */
+.tv::before, .ts::before, .tv::after { content: none; }

@@ -236,9 +236,11 @@
   const mapZones = () => {
     hh = header ? header.offsetHeight : 64;
     // אזור נעוץ יושב בתוך pin-spacer, ולכן מודדים את העוטף שלו. הפוטר שעולה מעליו מנצח (הוא האחרון ברשימה)
-    // אזור בהיר שנמס לנייבי בתחתיתו (.kh::after, .km::after): החצי התחתון של המעבר כבר כהה, ולכן ההדר מתחלף לכהה שם.
-    // כך ההדר נהיה כהה מעל הפוטר גם במסכים שבהם הפוטר נמוך מהמסך (אחרת קו ההדר לא מגיע אליו לעולם, ונשאר בהיר עד הסוף)
-    zones = $$('main > [data-theme], main > .pin-spacer > [data-theme]').map(sec => { const box = sec.parentElement.classList.contains('pin-spacer') ? sec.parentElement : sec; const r = box.getBoundingClientRect(), top = r.top + scrollY, light = sec.dataset.theme === 'light', fade = light ? parseFloat(getComputedStyle(sec, '::after').height) || 0 : 0; return { top, bottom: top + r.height - fade / 2, light, glass: sec.dataset.header === 'glass' }; });
+    zones = $$('main > [data-theme], main > .pin-spacer > [data-theme]').map(sec => { const box = sec.parentElement.classList.contains('pin-spacer') ? sec.parentElement : sec; const r = box.getBoundingClientRect(), top = r.top + scrollY; return { top, bottom: top + r.height, light: sec.dataset.theme === 'light', glass: sec.dataset.header === 'glass' }; });
+    // בהרבה מסכים (למשל 1440×900) הפוטר נמוך מגובה המסך, וקו ההדר לא מגיע אליו גם בסוף הגלילה, ולכן ההדר נשאר בהיר מעל הפוטר.
+    // במקרה כזה האזור הכהה האחרון (הפוטר) מתחיל קצת לפני סוף הגלילה, כך שבסוף העמוד ההדר תמיד כהה
+    const end = zones[zones.length - 1], reach = document.documentElement.scrollHeight - innerHeight + hh + 4;
+    if (end && !end.light && end.top > reach - 60) end.top = reach - 60;
   };
   ScrollTrigger.addEventListener('refresh', mapZones);
   // גובה התוכן משתנה גם בלי refresh (פונטים שנטענים, סינון המאמרים): מודדים את האזורים מחדש
