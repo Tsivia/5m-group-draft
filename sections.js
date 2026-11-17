@@ -338,7 +338,9 @@
     let carReady = reduce;
     // השלב הפעיל: הכרטיס שעובר את הקו שבאמצע השטח הפנוי מתחת לפסל הדבוק
     const pick = () => { const line = fig.getBoundingClientRect().bottom + (innerHeight - fig.getBoundingClientRect().bottom) * .45; let k = 0; steps.forEach((s, i) => { if (s.getBoundingClientRect().top < line) k = i; }); if (carReady) show(k); };
-    if (car) { let fr = 0; addEventListener('scroll', () => { fr = fr || requestAnimationFrame(() => { fr = 0; pick(); }); }, { passive: true }); }
+    // הכרטיס שמתחת נחתך בדיוק בקצה העליון של הכרטיס שעולה עליו: כשהחדש נעצר, הקודם נעלם לגמרי (גם אם הוא גבוה יותר)
+    const cover = () => steps.forEach((s, i) => { const n = steps[i + 1]; const d = n ? s.getBoundingClientRect().bottom - n.getBoundingClientRect().top : 0; s.style.clipPath = d > 0 ? 'inset(0 0 ' + d.toFixed(1) + 'px 0)' : ''; });
+    if (car) { let fr = 0; addEventListener('scroll', () => { fr = fr || requestAnimationFrame(() => { fr = 0; pick(); cover(); }); }, { passive: true }); }
     if (reduce) { show(0); if (!car) bars.forEach(b => { b.style.transform = 'scaleX(1)'; }); }
     else {
       // הכניסה: הפסל נבנה. הבסיס עולה, האמצע נוחת עליו, וקודקוד הזהב יורד אחרון ונשאר לרחף בעדינות. המקטעים למטה עולים אחריו

@@ -35,86 +35,90 @@
 
   <main id="top">
 
-    <!-- ===================== דברו איתנו (כהה, מסך אחד בדיוק) =====================
-         מימין: רק הכותרת, בגדול, ומתחתיה שורה שקטה עם הטלפון, המייל והכתובת.
-         משמאל: הטופס (שם וטלפון זה לצד זה, המייל מתחת), ומתחתיו ארבעה עיגולים עם אייקון כתום.
-         במעבר עכבר העיגול מתמלא בכתום ומעליו צץ הערך. -->
+    <!-- ===================== דברו איתנו (כהה, מסך אחד בדיוק) · גרסה 4 "נוף בערב" =====================
+         ברקע: הבית על הצוק בשקיעה (בלי אנשים), מוחשך מאוד, והשמיים למעלה נמסים לנייבי של האתר.
+         מימין: הכותרת, ומתחתיה הטלפון, המייל והכתובת, מיושרים לתחתית לוח הטופס.
+         משמאל: הטופס בלוח זכוכית מרובע אחד. למטה במרכז: ארבעה עיגולים עם אייקון כתום (הערך צץ במעבר עכבר). -->
     <section class="cx" data-theme="dark" aria-labelledby="cx-title">
+      <div class="cx__bg" aria-hidden="true"><img src="assets/sunrise2.webp" alt="" width="1920" height="1072" fetchpriority="high" decoding="async"></div>
 
       <div class="cx__in">
+        <div class="cx__main">
+          <div class="cx__head">
+            <h1 class="cx__title" id="cx-title"><span class="cx__l1">בואו נדבר על</span> <span class="cx__l2">העצמאות<br>הכלכלית שלכם!</span></h1>
 
-        <h1 class="cx__title" id="cx-title"><span class="cx__l1">בואו נדבר על</span> <span class="cx__l2">העצמאות<br>הכלכלית שלכם!</span></h1>
-
-        <div class="cx__side">
-          <!-- הטופס: שדות עם קו תחתון בלבד -->
-          <div class="cx__formwrap" id="form">
-            <form class="cx__form" action="#" method="post" novalidate aria-labelledby="cx-form-title">
-              <h2 class="cx__ft" id="cx-form-title">השאירו פרטים <em>ונדבר</em></h2>
-              <div class="cx__fields">
-                <div class="cx__pair">
-                  <div class="fld">
-                    <label class="fld__l" for="cx-name">שם</label>
-                    <input class="fld__in" id="cx-name" name="name" placeholder="שם" type="text" autocomplete="name" required aria-describedby="cx-name-err">
-                    <span class="fld__err" id="cx-name-err" aria-live="polite"></span>
-                  </div>
-                  <div class="fld">
-                    <label class="fld__l" for="cx-tel">טלפון</label>
-                    <input class="fld__in" id="cx-tel" name="phone" placeholder="טלפון" type="tel" inputmode="tel" autocomplete="tel" dir="ltr" required aria-describedby="cx-tel-err">
-                    <span class="fld__err" id="cx-tel-err" aria-live="polite"></span>
-                  </div>
-                </div>
-                <div class="fld">
-                  <label class="fld__l" for="cx-mail">מייל</label>
-                  <input class="fld__in" id="cx-mail" name="email" placeholder="מייל" type="email" inputmode="email" autocomplete="email" dir="ltr" aria-describedby="cx-mail-err">
-                  <span class="fld__err" id="cx-mail-err" aria-live="polite"></span>
-                </div>
-                <!-- אישור מדיניות הפרטיות: חובה לפני השליחה -->
-                <div class="fld fld--ok">
-                  <label class="ok">
-                    <input class="ok__in" id="cx-ok" name="privacy" type="checkbox" required aria-describedby="cx-ok-err">
-                    <span class="ok__box" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5" pathLength="30"/></svg></span>
-                    <span class="ok__t">קראתי ואני מאשר/ת את <a class="ok__a" href="#contact">מדיניות הפרטיות</a></span>
-                  </label>
-                  <span class="fld__err" id="cx-ok-err" aria-live="polite"></span>
-                </div>
-                <button class="btn cx__send" type="submit"><i class="hz" aria-hidden="true"></i>קליק אחד ואנחנו איתכם<span class="arr">&gt;&gt;</span></button>
-              </div>
-            </form>
-            <!-- אחרי השליחה: הטופס מתחלף בהודעה במקום -->
-            <div class="cx__done" role="status" aria-live="polite" hidden>
-              <span class="cx__done-chk" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5" pathLength="30"/></svg></span>
-              <p class="cx__done-t">תודה<span class="cx__done-n"></span>! הפרטים אצלנו, ונחזור אליכם בהקדם.</p>
-            </div>
+            <!-- הטלפון, המייל והכתובת: מתחת לכותרת, מיושרים לתחתית לוח הטופס -->
+            <p class="cx__info">
+              <a class="cx__il" href="tel:+97225810740">טלפון <bdi dir="ltr">02-581-0740</bdi></a><i class="cx__sep" aria-hidden="true">·</i><a class="cx__il" href="mailto:office@5MGroup.com"><bdi dir="ltr">office@5MGroup.com</bdi></a><i class="cx__sep" aria-hidden="true">·</i><a class="cx__il" href="https://www.google.com/maps/search/?api=1&amp;query=%D7%9B%D7%A0%D7%A4%D7%99%20%D7%A0%D7%A9%D7%A8%D7%99%D7%9D%2010%20%D7%99%D7%A8%D7%95%D7%A9%D7%9C%D7%99%D7%9D" target="_blank" rel="noopener">כנפי נשרים 10, י-ם</a>
+            </p>
           </div>
 
-          <!-- ארבע הדרכים: עיגול דק, אייקון כתום ומילה אחת. הערך צץ במעבר עכבר -->
-          <div class="cx__ways">
-            <h2 class="cx__wt" id="cx-ways">או פנו אלינו בדרך <em>הנוחה לכם</em></h2>
-            <ul class="dots" aria-labelledby="cx-ways">
-              <li><a class="dot" href="tel:+97225810740" aria-label="בטלפון: 02-581-0740, א-ה 8:00-17:00">
-                <span class="dot__tip" aria-hidden="true"><bdi dir="ltr">02-581-0740</bdi><small>א-ה <bdi dir="ltr">8:00-17:00</bdi></small></span>
-                <span class="dot__c" aria-hidden="true"><svg class="ic" viewBox="0 0 24 24"><path d="M6.2 3.5h3l1.6 4.3-2.2 1.5a11.5 11.5 0 0 0 6.1 6.1l1.5-2.2 4.3 1.6v3a2 2 0 0 1-2.1 2A16.5 16.5 0 0 1 4.2 5.6a2 2 0 0 1 2-2.1z"/></svg></span>
-                <span class="dot__k" aria-hidden="true">טלפון</span></a></li>
-              <li><a class="dot" href="https://wa.me/972532263339" target="_blank" rel="noopener" aria-label="בווטסאפ: 053-226-3339, א-ה 9:00-17:00 (נפתח בחלון חדש)">
-                <span class="dot__tip" aria-hidden="true"><bdi dir="ltr">053-226-3339</bdi><small>א-ה <bdi dir="ltr">9:00-17:00</bdi></small></span>
-                <span class="dot__c" aria-hidden="true"><svg class="ic" viewBox="0 0 24 24"><path d="M12 3.6a8.4 8.4 0 0 0-7.3 12.6L3.5 20.5l4.4-1.2A8.4 8.4 0 1 0 12 3.6z"/></svg></span>
-                <span class="dot__k" aria-hidden="true">ווטסאפ</span></a></li>
-              <li><a class="dot" href="mailto:office@5MGroup.com" aria-label="במייל: office@5MGroup.com, שלחו הודעה ונענה מיד כשנוכל">
-                <span class="dot__tip" aria-hidden="true"><bdi dir="ltr">office@5MGroup.com</bdi><small>שלחו הודעה ונענה מיד כשנוכל 🙂</small></span>
-                <span class="dot__c" aria-hidden="true"><svg class="ic" viewBox="0 0 24 24"><path d="M3.5 6h17v12.5h-17z"/><path d="M3.8 6.4l8.2 6.6 8.2-6.6"/></svg></span>
-                <span class="dot__k" aria-hidden="true">מייל</span></a></li>
-              <li><a class="dot" href="https://www.google.com/maps/search/?api=1&amp;query=%D7%9B%D7%A0%D7%A4%D7%99%20%D7%A0%D7%A9%D7%A8%D7%99%D7%9D%2010%20%D7%99%D7%A8%D7%95%D7%A9%D7%9C%D7%99%D7%9D" target="_blank" rel="noopener" aria-label="במשרד: כנפי נשרים 10, ירושלים, בתיאום מראש (מפה בחלון חדש)">
-                <span class="dot__tip" aria-hidden="true">כנפי נשרים 10, י-ם<small>בתיאום מראש</small></span>
-                <span class="dot__c" aria-hidden="true"><svg class="ic" viewBox="0 0 24 24"><path d="M12 20.8s-6.4-5.5-6.4-10.9a6.4 6.4 0 0 1 12.8 0c0 5.4-6.4 10.9-6.4 10.9z"/><path d="M14.3 9.9a2.3 2.3 0 1 1-4.6 0 2.3 2.3 0 0 1 4.6 0z"/></svg></span>
-                <span class="dot__k" aria-hidden="true">משרד</span></a></li>
-            </ul>
+          <!-- הטופס: לוח זכוכית מרובע, שדות עם קו תחתון בלבד -->
+          <div class="cx__panel">
+            <div class="cx__formwrap" id="form">
+              <form class="cx__form" action="#" method="post" novalidate aria-labelledby="cx-form-title">
+                <h2 class="cx__ft" id="cx-form-title">השאירו פרטים <em>ונדבר</em></h2>
+                <div class="cx__fields">
+                  <div class="cx__pair">
+                    <div class="fld">
+                      <label class="fld__l" for="cx-name">שם</label>
+                      <input class="fld__in" id="cx-name" name="name" placeholder="שם" type="text" autocomplete="name" required aria-describedby="cx-name-err">
+                      <span class="fld__err" id="cx-name-err" aria-live="polite"></span>
+                    </div>
+                    <div class="fld">
+                      <label class="fld__l" for="cx-tel">טלפון</label>
+                      <input class="fld__in" id="cx-tel" name="phone" placeholder="טלפון" type="tel" inputmode="tel" autocomplete="tel" dir="ltr" required aria-describedby="cx-tel-err">
+                      <span class="fld__err" id="cx-tel-err" aria-live="polite"></span>
+                    </div>
+                  </div>
+                  <div class="fld">
+                    <label class="fld__l" for="cx-mail">מייל</label>
+                    <input class="fld__in" id="cx-mail" name="email" placeholder="מייל" type="email" inputmode="email" autocomplete="email" dir="ltr" aria-describedby="cx-mail-err">
+                    <span class="fld__err" id="cx-mail-err" aria-live="polite"></span>
+                  </div>
+                  <!-- אישור מדיניות הפרטיות: חובה לפני השליחה -->
+                  <div class="fld fld--ok">
+                    <label class="ok">
+                      <input class="ok__in" id="cx-ok" name="privacy" type="checkbox" required aria-describedby="cx-ok-err">
+                      <span class="ok__box" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5" pathLength="30"/></svg></span>
+                      <span class="ok__t">קראתי ואני מאשר/ת את <a class="ok__a" href="#contact">מדיניות הפרטיות</a></span>
+                    </label>
+                    <span class="fld__err" id="cx-ok-err" aria-live="polite"></span>
+                  </div>
+                  <button class="btn cx__send" type="submit"><i class="hz" aria-hidden="true"></i>קליק אחד ואנחנו איתכם<span class="arr">&gt;&gt;</span></button>
+                </div>
+              </form>
+              <!-- אחרי השליחה: הטופס מתחלף בהודעה במקום -->
+              <div class="cx__done" role="status" aria-live="polite" hidden>
+                <span class="cx__done-chk" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5" pathLength="30"/></svg></span>
+                <p class="cx__done-t">תודה<span class="cx__done-n"></span>! הפרטים אצלנו, ונחזור אליכם בהקדם.</p>
+              </div>
+            </div>
           </div>
         </div>
 
-        <!-- שורה שקטה מימין, מתחת לכותרת: הטלפון, המייל והכתובת -->
-        <p class="cx__info">
-          <a class="cx__il" href="tel:+97225810740">טלפון <bdi dir="ltr">02-581-0740</bdi></a><i class="cx__sep" aria-hidden="true">·</i><a class="cx__il" href="mailto:office@5MGroup.com"><bdi dir="ltr">office@5MGroup.com</bdi></a><i class="cx__sep" aria-hidden="true">·</i><a class="cx__il" href="https://www.google.com/maps/search/?api=1&amp;query=%D7%9B%D7%A0%D7%A4%D7%99%20%D7%A0%D7%A9%D7%A8%D7%99%D7%9D%2010%20%D7%99%D7%A8%D7%95%D7%A9%D7%9C%D7%99%D7%9D" target="_blank" rel="noopener">כנפי נשרים 10, י-ם</a>
-        </p>
+        <!-- ארבע הדרכים: למטה במרכז. עיגול דק, אייקון כתום ומילה אחת. הערך צץ במעבר עכבר -->
+        <div class="cx__ways">
+          <h2 class="cx__wt visually-hidden" id="cx-ways">או פנו אלינו בדרך <em>הנוחה לכם</em></h2>
+          <ul class="dots" aria-labelledby="cx-ways">
+            <li><a class="dot" href="tel:+97225810740" aria-label="בטלפון: 02-581-0740, א-ה 8:00-17:00">
+              <span class="dot__tip" aria-hidden="true"><bdi dir="ltr">02-581-0740</bdi><small>א-ה <bdi dir="ltr">8:00-17:00</bdi></small></span>
+              <span class="dot__c" aria-hidden="true"><svg class="ic" viewBox="0 0 24 24"><path d="M6.2 3.5h3l1.6 4.3-2.2 1.5a11.5 11.5 0 0 0 6.1 6.1l1.5-2.2 4.3 1.6v3a2 2 0 0 1-2.1 2A16.5 16.5 0 0 1 4.2 5.6a2 2 0 0 1 2-2.1z"/></svg></span>
+              <span class="dot__k" aria-hidden="true">טלפון</span></a></li>
+            <li><a class="dot" href="https://wa.me/972532263339" target="_blank" rel="noopener" aria-label="בווטסאפ: 053-226-3339, א-ה 9:00-17:00 (נפתח בחלון חדש)">
+              <span class="dot__tip" aria-hidden="true"><bdi dir="ltr">053-226-3339</bdi><small>א-ה <bdi dir="ltr">9:00-17:00</bdi></small></span>
+              <span class="dot__c" aria-hidden="true"><svg class="ic" viewBox="0 0 24 24"><path d="M12 3.6a8.4 8.4 0 0 0-7.3 12.6L3.5 20.5l4.4-1.2A8.4 8.4 0 1 0 12 3.6z"/></svg></span>
+              <span class="dot__k" aria-hidden="true">ווטסאפ</span></a></li>
+            <li><a class="dot" href="mailto:office@5MGroup.com" aria-label="במייל: office@5MGroup.com, שלחו הודעה ונענה מיד כשנוכל">
+              <span class="dot__tip" aria-hidden="true"><bdi dir="ltr">office@5MGroup.com</bdi><small>שלחו הודעה ונענה מיד כשנוכל 🙂</small></span>
+              <span class="dot__c" aria-hidden="true"><svg class="ic" viewBox="0 0 24 24"><path d="M3.5 6h17v12.5h-17z"/><path d="M3.8 6.4l8.2 6.6 8.2-6.6"/></svg></span>
+              <span class="dot__k" aria-hidden="true">מייל</span></a></li>
+            <li><a class="dot" href="https://www.google.com/maps/search/?api=1&amp;query=%D7%9B%D7%A0%D7%A4%D7%99%20%D7%A0%D7%A9%D7%A8%D7%99%D7%9D%2010%20%D7%99%D7%A8%D7%95%D7%A9%D7%9C%D7%99%D7%9D" target="_blank" rel="noopener" aria-label="במשרד: כנפי נשרים 10, ירושלים, בתיאום מראש (מפה בחלון חדש)">
+              <span class="dot__tip" aria-hidden="true">כנפי נשרים 10, י-ם<small>בתיאום מראש</small></span>
+              <span class="dot__c" aria-hidden="true"><svg class="ic" viewBox="0 0 24 24"><path d="M12 20.8s-6.4-5.5-6.4-10.9a6.4 6.4 0 0 1 12.8 0c0 5.4-6.4 10.9-6.4 10.9z"/><path d="M14.3 9.9a2.3 2.3 0 1 1-4.6 0 2.3 2.3 0 0 1 4.6 0z"/></svg></span>
+              <span class="dot__k" aria-hidden="true">משרד</span></a></li>
+          </ul>
+        </div>
       </div>
     </section>
 

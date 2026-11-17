@@ -196,15 +196,18 @@
     const l1 = splitChars($('.cx__l1', cx)), l2 = splitChars($('.cx__l2', cx));
     $('.cx__title', cx).setAttribute('aria-label', 'בואו נדבר על העצמאות הכלכלית שלכם!');
     $$('.cx__l1, .cx__l2', cx).forEach(s => s.removeAttribute('aria-label'));
-    // הכותרת אות אחרי אות, השדות נכנסים אחד אחרי השני, והעיגולים "צצים" בסוף
-    const info = $('.cx__info', cx);
-    const inner = $$('.cx__ft, .fld, .cx__send, .cx__wt', cx), dots = $$('.dots > li', cx);
+    // הנוף מתקרב לאט למקומו, הכותרת אות אחרי אות, לוח הטופס עולה והשדות אחריו, והעיגולים "צצים" בסוף
+    const info = $('.cx__info', cx), panel = $('.cx__panel', cx), bg = $('.cx__bg img', cx);
+    const inner = $$('.cx__ft, .fld, .cx__send', cx), dots = $$('.dots > li', cx);
     gsap.set([...l1, ...l2], LETTER);
+    gsap.set(panel, { autoAlpha: 0, y: 30 });
     gsap.set([...inner, info], { autoAlpha: 0, y: 18 });
     gsap.set(dots, { autoAlpha: 0, y: 20, scale: .85 });
     gsap.timeline({ delay: .1 })
+      .fromTo(bg, { scale: 1.08, autoAlpha: 0 }, { scale: 1, autoAlpha: 1, duration: 2.4, ease: 'power2.out', clearProps: 'transform' }, 0)
       .add(() => playChars(l1), .1)
       .add(() => playChars(l2), .4)
+      .to(panel, { autoAlpha: 1, y: 0, duration: 1, ease: 'power3.out', clearProps: 'transform' }, .6)
       .to(inner, { autoAlpha: 1, y: 0, duration: .8, stagger: .07, ease: 'power3.out', clearProps: 'transform' }, .9)
       .to(dots, { autoAlpha: 1, y: 0, scale: 1, duration: .8, stagger: .08, ease: 'back.out(1.6)', clearProps: 'transform' }, 1.5)
       .to(info, { autoAlpha: 1, y: 0, duration: .8, ease: 'power3.out', clearProps: 'transform' }, 1.7);

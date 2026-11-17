@@ -1,9 +1,11 @@
 /* =====================================================================
-   5M GROUP · עמוד "דברו איתנו" (17.11, כיוון 3 מהלוח, בגרסה של צביה)
+   5M GROUP · עמוד "דברו איתנו" · גרסה 4 "נוף בערב" (17.11)
    נשען על styles.css: הטוקנים, הפונטים, ההדר, הכפתור והפוטר.
-   - רק כותרת העמוד הגדולה ב-Cooperative. כל השאר (כותרות משנה, כיתובים, ערכים) ב-Talent FS במשקל דק (300).
-   - מימין: הכותרת בלבד, בגדול, ומתחתיה שורה שקטה עם הטלפון, המייל והכתובת.
-   - משמאל: הטופס (שם וטלפון זה לצד זה, המייל מתחת), ומתחתיו ארבעה עיגולים עם אייקון כתום.
+   - ברקע: הבית על הצוק בשקיעה (sunrise2, בלי אנשים), מוחשך מאוד. השמיים למעלה נמסים לנייבי של האתר.
+   - רק כותרת העמוד הגדולה ב-Cooperative. כל השאר ב-Talent FS במשקל דק (300).
+   - מימין: הכותרת, ומתחתיה הטלפון, המייל והכתובת, מיושרים לתחתית לוח הטופס.
+   - משמאל: הטופס בלוח זכוכית מרובע אחד (באתר אין פינות עגולות).
+   - למטה במרכז: ארבעה עיגולים עם אייקון כתום.
    - כל המידות לפי --cu: הקטן מבין רוחב המסך וגובהו, ולכן האזור תמיד נכנס במסך אחד.
    ===================================================================== */
 
@@ -12,42 +14,53 @@
 
 /* ---------- האזור: מסך אחד ---------- */
 .cx { --cu: min(var(--u), calc((100svh - var(--hh)) / 920)); --font-thin: "Talent FS", var(--font-text);
-  position: relative; isolation: isolate; overflow: hidden; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100svh; min-height: calc(var(--hh) + 600px);
-  padding: calc(var(--hh) + 100 * var(--cu)) calc(216 * var(--u)) calc(44 * var(--cu)); background: var(--navy); color: var(--paper); box-shadow: 0 4px 0 var(--navy); }
+  position: relative; isolation: isolate; overflow: hidden; display: flex; flex-direction: column; align-items: center; height: 100svh; min-height: calc(var(--hh) + 600px);
+  padding: calc(var(--hh) + 40 * var(--cu)) calc(216 * var(--u)) calc(44 * var(--cu)); background: var(--navy); color: var(--paper); box-shadow: 0 4px 0 var(--navy); }
 
-/* שתי עמודות: הכותרת מימין, הטופס והעיגולים משמאל. השורה השקטה יושבת בתחתית הצד הימני, בגובה העיגולים */
-.cx__in { position: relative; flex: 1; display: grid; width: min(100%, calc(1480 * var(--cu)));
-  grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); grid-template-rows: 1fr auto; grid-template-areas: "head side" "info side"; }
+/* הרקע: הנוף, מוחשך מאוד. למעלה נייבי מלא, באמצע הנוף מבצבץ, ולמטה כהה שוב כדי שהעיגולים יבלטו ויימסו לפוטר */
+.cx__bg { position: absolute; inset: 0; z-index: -1; pointer-events: none; }
+.cx__bg img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 50% 72%; filter: brightness(.62) saturate(.95); }
+.cx__bg::after { content: ""; position: absolute; inset: 0; background:
+    linear-gradient(180deg, var(--navy) 0%, rgb(9 7 37 / .92) 20%, rgb(9 7 37 / .55) 50%, rgb(9 7 37 / .6) 72%, rgb(9 7 37 / .92) 100%),
+    linear-gradient(90deg, rgb(9 7 37 / .45), transparent 45%); }
 
-/* הכותרת: שורה קטנה ב-Futurism, ומתחתיה השורה הגדולה ב-Cooperative בכתום */
-.cx__title { grid-area: head; align-self: start; margin: 0; padding-inline-end: calc(90 * var(--cu)); font-weight: 400; text-align: right; }
+.cx__in { position: relative; flex: 1; display: flex; flex-direction: column; width: min(100%, calc(1480 * var(--cu))); }
+
+/* שתי עמודות: הכותרת מימין והטופס משמאל. הטור הימני נמתח לגובה הלוח, ולכן שורת הפרטים יושבת בדיוק בגובה תחתית הלוח.
+   האזור ממלא את כל הגובה שבין ההדר לעיגולים, והתוכן שלו ממורכז בו: אותו רווח מעל ומתחת */
+.cx__main { flex: 1; display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); align-items: stretch; align-content: center; }
+.cx__head { display: flex; flex-direction: column; justify-content: space-between; padding-inline-end: calc(90 * var(--cu)); text-shadow: 0 2px 30px rgb(9 7 37 / .5); }
+
+/* הכותרת: שורה קטנה ב-Talent דק, ומתחתיה השורה הגדולה ב-Cooperative בכתום */
+.cx__title { margin: 0; font-weight: 400; text-align: right; }
 .cx__l1 { display: block; font-family: var(--font-thin); font-weight: 300; font-size: calc(50 * var(--cu)); line-height: 1.1; }
 .cx__l2 { display: block; margin-top: calc(8 * var(--cu)); font-family: var(--font-display); font-size: calc(124 * var(--cu)); line-height: .95; letter-spacing: -.005em; color: var(--orange); }
 
-/* השורה השקטה: טלפון · מייל · כתובת */
-.cx__info { grid-area: info; align-self: end; display: flex; flex-wrap: wrap; align-items: baseline; gap: calc(6 * var(--cu)) calc(12 * var(--cu)); margin: 0; padding-inline-end: calc(90 * var(--cu));
+/* הטלפון, המייל והכתובת */
+.cx__info { display: flex; flex-wrap: wrap; align-items: baseline; gap: calc(6 * var(--cu)) calc(12 * var(--cu)); margin: calc(30 * var(--cu)) 0 0;
   font-family: var(--font-thin); font-weight: 300; font-size: max(15px, calc(23 * var(--cu))); line-height: 1.4; color: rgb(245 245 245 / .55); }
 .cx__il { white-space: nowrap; color: rgb(245 245 245 / .88); background: linear-gradient(var(--orange), var(--orange)) 100% 100% / 0 1px no-repeat; transition: color .3s ease, background-size .5s cubic-bezier(.16, 1, .3, 1); }
 .cx__il:hover, .cx__il:focus-visible { color: var(--paper); background-size: 100% 1px; }
 .cx__sep { font-style: normal; color: var(--orange); }
 
-/* הצד השמאלי: הטופס, ומתחתיו העיגולים */
-.cx__side { grid-area: side; display: flex; flex-direction: column; padding-inline-start: calc(90 * var(--cu)); }
+/* לוח הטופס: זכוכית כהה ורכה, פינות ישרות */
+.cx__panel { padding: calc(54 * var(--cu)) calc(56 * var(--cu)) calc(56 * var(--cu)); background: rgb(14 12 44 / .5); -webkit-backdrop-filter: blur(22px) saturate(1.2); backdrop-filter: blur(22px) saturate(1.2);
+  box-shadow: inset 0 0 0 1px rgb(255 255 255 / .12), 0 30px 80px rgb(0 0 0 / .3); }
 .cx__formwrap { position: relative; display: flex; flex-direction: column; }
 .cx__ft, .cx__wt { margin: 0; font-family: var(--font-thin); font-weight: 300; font-size: max(20px, calc(34 * var(--cu))); line-height: 1.15; }
 .cx__ft em, .cx__wt em { font-style: normal; color: var(--orange); }
 
 /* ---------- הטופס: שדות עם קו תחתון בלבד, שמתמלא בכתום בפוקוס ---------- */
 .cx__form { display: flex; flex-direction: column; margin: 0; }
-.cx__fields { display: flex; flex-direction: column; gap: calc(18 * var(--cu)); margin-top: calc(18 * var(--cu)); }
-.cx__pair { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: calc(32 * var(--cu)); }
+.cx__fields { display: flex; flex-direction: column; gap: calc(28 * var(--cu)); margin-top: calc(28 * var(--cu)); }
+.cx__pair { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: calc(36 * var(--cu)); }
 .fld { position: relative; display: flex; flex-direction: column; }
 /* הכיתוב (שם, טלפון, מייל) כתוב בתוך השדה עצמו, באופסיטי נמוכה. התווית נשארת לקוראי מסך בלבד */
 .fld__l { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
 .fld__in::placeholder { color: rgb(245 245 245 / .38); opacity: 1; transition: color .3s ease; }
 .fld__in:focus::placeholder { color: rgb(245 245 245 / .2); }
 .fld.is-bad .fld__in::placeholder { color: rgb(241 90 59 / .7); }
-.fld__in { width: 100%; height: calc(40 * var(--cu)); min-height: 34px; margin: 0; padding: 0; border: 0; border-bottom: 1px solid rgb(255 255 255 / .3); border-radius: 0;
+.fld__in { width: 100%; height: calc(50 * var(--cu)); min-height: 38px; margin: 0; padding: 0; border: 0; border-bottom: 1px solid rgb(255 255 255 / .3); border-radius: 0;
   background: linear-gradient(var(--orange), var(--orange)) 100% 100% / 0 2px no-repeat; color: var(--paper); font-family: var(--font-thin); font-weight: 300; font-size: max(13px, calc(16 * var(--cu))); line-height: 1.2; text-align: right;
   outline: 0; -webkit-appearance: none; appearance: none; transition: background-size .6s cubic-bezier(.16, 1, .3, 1), border-color .35s ease; }
 .fld__in:hover { border-bottom-color: rgb(255 255 255 / .5); }
@@ -87,11 +100,12 @@
 .cx__done-t { margin: 0; font-family: var(--font-thin); font-weight: 300; font-size: calc(36 * var(--cu)); line-height: 1.25; }
 
 /* ---------- ארבעת העיגולים ---------- */
-/* העיגולים יושבים בתחתית האזור, והשורה השקטה מימין יורדת איתם */
-.cx__ways { margin-top: auto; padding-top: calc(60 * var(--cu)); }
-.dots { display: flex; gap: calc(54 * var(--cu)); margin: calc(30 * var(--cu)) 0 0; padding: 0; list-style: none; }
+/* העיגולים: למטה במרכז האזור */
+.cx__ways { padding-top: calc(40 * var(--cu)); }
+.dots { display: flex; justify-content: center; gap: calc(54 * var(--cu)); margin: 0; padding: 0; list-style: none; }
 .dot { position: relative; display: flex; flex-direction: column; align-items: center; gap: calc(14 * var(--cu)); color: var(--paper); }
-.dot__c { display: grid; place-items: center; width: calc(104 * var(--cu)); height: calc(104 * var(--cu)); min-width: 56px; min-height: 56px; border-radius: 50%; border: 1px solid rgb(255 255 255 / .24);
+.dot__c { display: grid; place-items: center; width: calc(96 * var(--cu)); height: calc(96 * var(--cu)); min-width: 56px; min-height: 56px; border-radius: 50%; border: 1px solid rgb(255 255 255 / .3);
+  background: rgb(9 7 37 / .35); -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px);
   transition: background-color .45s cubic-bezier(.16, 1, .3, 1), border-color .45s ease, transform .5s cubic-bezier(.16, 1, .3, 1); }
 .ic { display: block; width: calc(36 * var(--cu)); height: calc(36 * var(--cu)); min-width: 22px; min-height: 22px; overflow: visible; fill: none; stroke: var(--orange); stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; transition: stroke .35s ease; }
 .dot__k { font-family: var(--font-thin); font-weight: 300; font-size: max(14px, calc(20 * var(--cu))); line-height: 1.2; color: rgb(245 245 245 / .78); transition: color .3s ease; }
@@ -112,27 +126,29 @@
    ===================================================================== */
 @media (max-width: 1280px) and (min-width: 901px) {
   .cx { --cu: min(calc(100vw / 1500), calc((100svh - var(--hh)) / 920)); padding-inline: var(--gutter); }
-  .cx__title { padding-inline-end: 48px; }
-  .cx__info { padding-inline-end: 0; column-gap: 10px; }
-  .cx__side { padding-inline-start: 48px; }
+  .cx__head { padding-inline-end: 24px; }
+  .cx__info { column-gap: 10px; font-size: max(15px, calc(22 * var(--cu))); }
+  .cx__panel { padding: 40px 40px 42px; }
   .dots { gap: calc(40 * var(--cu)); }
 }
 
 /* =====================================================================
-   מובייל: כותרת, הטופס, העיגולים, והשורה השקטה בסוף
+   מובייל: כותרת ופרטי הקשר, לוח הטופס, והעיגולים בסוף
    ===================================================================== */
 @media (max-width: 900px) {
   .cx { height: auto; min-height: 0; justify-content: flex-start; padding: calc(var(--hh) + 40px) var(--gutter) 48px; }
   /* רוחב מלא בין השוליים (--gutter), ולא רוחב לפי יחידת הפיגמה שבטלפון היא זעירה */
-  .cx__in { flex: none; width: 100%; grid-template-columns: 1fr; grid-template-rows: auto; grid-template-areas: "head" "side" "info"; }
+  .cx__in { flex: none; width: 100%; }
+  .cx__main { grid-template-columns: 1fr; }
+  .cx__head { padding: 0; }
+  .cx__bg img { object-position: 70% 100%; }
 
-  .cx__title { padding: 0; }
   .cx__l1 { font-size: min(8.4vw, 34px); }
   .cx__l2 { margin-top: 6px; font-size: var(--fs-h1); line-height: 1.02; }
-  .cx__side { margin-top: 32px; padding: 32px 0 0; border-top: 1px solid rgb(255 255 255 / .2); }
+  .cx__panel { margin-top: 32px; padding: 28px 22px 30px; }
   .cx__ft, .cx__wt { font-size: 24px; }
 
-  .cx__fields { gap: 16px; margin-top: 14px; }
+  .cx__fields { gap: 20px; margin-top: 18px; }
   .cx__pair { gap: 20px; }
   .fld__l { font-size: 15px; }
   /* בנייד הטקסט שמקלידים נשאר 16px (אחרת האייפון מגדיל את המסך), והכיתוב בתוך השדה קטן */
@@ -152,7 +168,7 @@
   .cx__done-chk { width: 44px; height: 44px; }
   .cx__done-t { font-size: 22px; }
 
-  .cx__ways { margin-top: 44px; padding-top: 0; }
+  .cx__ways { margin-top: 40px; padding-top: 0; }
   .dots { justify-content: space-between; gap: 8px; margin-top: 20px; }
   .dot { gap: 10px; }
   .dot__c { width: 64px; height: 64px; min-width: 0; min-height: 0; }
@@ -161,7 +177,7 @@
   .dot__tip { display: none; }
   .dot:hover .dot__c { transform: none; }
 
-  .cx__info { flex-direction: column; align-items: flex-start; gap: 6px; margin-top: 36px; padding: 0; font-size: 17px; }
+  .cx__info { flex-direction: column; align-items: flex-start; gap: 6px; margin-top: 22px; font-size: 17px; }
   .cx__sep { display: none; }
 }
 @media (max-width: 360px) {
@@ -178,4 +194,9 @@
 @media (prefers-reduced-motion: reduce) {
   .fld__in, .dot__c, .dot__tip, .ic, .cx__il { transition: none; }
   .cx__done-chk svg { animation: none; stroke-dashoffset: 0; }
+}
+/* מובייל: הכותרת והטלפון, המייל והכתובת ממורכזים (לבקשת צביה) */
+@media (max-width: 900px) {
+  html:not(#_) .cx__head, html:not(#_) .cx__title { text-align: center; }
+  html:not(#_) .cx__info { align-items: center; text-align: center; }
 }

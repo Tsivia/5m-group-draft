@@ -1074,7 +1074,7 @@ html.has-loader.is-landed .site-header__logo { opacity: 1; }
   .hero__motto { display: grid; grid-template-columns: 1fr 1fr; align-items: start; gap: 0; white-space: normal; }
   .hero__stat { display: flex; flex-direction: column; align-items: center; gap: 6px; text-align: center; padding-inline: 10px; }
   .hero__stat--few { border-inline-start: 1px solid rgb(245 245 245 / .28); }
-  .hero__stat--few .hero__stat-n, .hero__stat--few .hero__stat-t b { color: var(--white); }   /* במובייל ה-5% והטקסט שלו בלבן (לבקשת צביה) */
+  .hero__stat--few .hero__stat-t b { color: var(--white); }   /* במובייל הטקסט של ה-5% בלבן, והמספר עצמו נשאר כתום (לבקשת צביה) */
   .hero__stat-t { text-align: center; }
   .hero__stat-n { justify-self: start; }
   .hero__stat-t { font-size: 16px; line-height: 1.3; }
@@ -1234,7 +1234,10 @@ html.has-loader.is-landed .site-header__logo { opacity: 1; }
 .sum2 { position: relative; background: var(--paper); color: var(--ink); }
 .sum2__stage { position: relative; height: 100svh; min-height: calc(860 * var(--u)); overflow: hidden; display: flex; align-items: center; justify-content: center; padding-top: var(--hh); box-sizing: border-box; }
 /* אור חלון על קיר (כמו בעמוד המסלולים), מוחלש קצת לנייר כדי שהטקסט יהיה הכי קריא */
-.sum2__bg { position: absolute; inset: 0; z-index: 0; pointer-events: none; }
+/* הקצוות למעלה ולמטה נמסים לנייר של האזורים שלפני ואחרי, כך שאין פס */
+.sum2__bg { position: absolute; inset: 0; z-index: 0; pointer-events: none;
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0%, #000 24%, #000 74%, transparent 100%);
+          mask-image: linear-gradient(to bottom, transparent 0%, #000 24%, #000 74%, transparent 100%); }
 .sum2__bg img { width: 100%; height: 100%; object-fit: cover; }
 .sum2__bg::after { content: ""; position: absolute; inset: 0; background: rgb(251 245 242 / .38); }
 .sum2__in { position: relative; z-index: 1; display: flex; flex-direction: column; align-items: center; text-align: center; }
@@ -1247,9 +1250,10 @@ html.has-loader.is-landed .site-header__logo { opacity: 1; }
 .sum2__res { margin: 0; display: flex; flex-direction: column; align-items: center; }
 .sum2__big { display: block; font-family: var(--font-display); font-weight: 400; font-size: calc(132 * var(--u)); line-height: 1.02; color: var(--ink); white-space: nowrap; }
 .sum2__w { display: inline-block; }
-/* חלון התמונה בתוך המשפט: בגובה האותיות, יושב על קו הבסיס */
-.sum2__pic { display: inline-block; width: calc(300 * var(--u)); height: .7em; margin: 0 .04em; overflow: hidden; vertical-align: baseline; }
-.sum2__pic img { width: 100%; height: 100%; object-fit: cover; object-position: 40% 40%; }
+/* חלון התמונה בתוך המשפט: בדיוק בגובה האותיות (ב-Cooperative האותיות ת/ד/ע/ר גבוהות 0.77 מהגופן), יושב על קו הבסיס.
+   התמונה: המשפחה הולכת אל הבית בזריחה, שלמה מהראש עד הרגליים */
+.sum2__pic { display: inline-block; width: calc(400 * var(--u)); height: .77em; margin: 0 .04em; overflow: hidden; vertical-align: baseline; }
+.sum2__pic img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 72%; filter: saturate(2) contrast(1.5) brightness(.86); }
 .sum2__sub { display: block; margin-top: calc(20 * var(--u)); font-family: var(--font-display); font-weight: 400; font-size: calc(86 * var(--u)); line-height: 1.05; color: var(--ink); white-space: nowrap; }
 .sum2 .aosh > i { color: var(--orange); }
 @media (min-width: 901px) { .sum2 { --u: min(calc(min(100vw, 1920px) / 1920), calc(100svh / 1060)); } }
@@ -1261,7 +1265,7 @@ html.has-loader.is-landed .site-header__logo { opacity: 1; }
   .sum2__row { font-size: clamp(22px, 6.4vw, 30px); }
   .sum2__eq { margin: 12px 0 6px; font-size: 46px; }
   .sum2__big { font-size: clamp(50px, 15vw, 76px); white-space: normal; text-wrap: balance; }
-  .sum2__pic { width: 30vw; }
+  .sum2__pic { width: 36vw; }
   .sum2__sub { margin-top: 14px; font-size: clamp(32px, 9vw, 46px); white-space: normal; text-wrap: balance; }
 }
 
@@ -2014,14 +2018,14 @@ html[data-hero-text="dark"] .site-header:not(.is-solid):not(.is-light) .site-hea
    מגיעים לסוף הסקשן באותו רגע ויוצאים יחד, בלי שאחד נשאר תקוע מעל מקום ריק
    ===================================================================== */
 @media (max-width: 900px) {
-  html:not(#_) .gt.is-car { --gtf: clamp(130px, calc(100svh - var(--hh) - var(--gth, 150px) - var(--gtc, 300px) - 36px), 340px); --gtr: calc(20px + var(--gtl, 260px)); }
+  html:not(#_) .gt.is-car { --gtf: clamp(130px, calc(100svh - var(--hh) - var(--gth, 150px) - var(--gtc, 300px) - 16px), 340px); --gtr: var(--gtl, 260px); }
   html:not(#_) .gt.is-car .gt__stage { padding-top: calc(var(--hh) + 24px); padding-bottom: 48px; }
-  html:not(#_) .gt.is-car .gt__head { position: sticky; top: calc(var(--hh) - 1px); z-index: 4; padding-top: 14px; margin-bottom: calc(var(--gtf) + var(--gtr)); background: var(--paper); }
+  html:not(#_) .gt.is-car .gt__head { position: sticky; top: calc(var(--hh) - 1px); z-index: 4; padding: 14px 0 14px; margin-bottom: calc(var(--gtf) + var(--gtr)); background: var(--paper); }
   html:not(#_) .gt.is-car .gt__head .eyebrow { font-size: 19px; }
   html:not(#_) .gt.is-car .gt__fig { top: calc(var(--hh) - 1px + var(--gth, 150px)); height: var(--gtf); margin: calc(-1 * (var(--gtf) + var(--gtr))) 0 var(--gtr); padding: 4px 0 8px; background: var(--paper); }
   html:not(#_) .gt.is-car .gt__now { margin-top: calc(-1 * var(--gtr)); }
-  html:not(#_) .gt.is-car .gt__steps { gap: 28px; padding-bottom: 0; }
-  html:not(#_) .gt.is-car .gts { position: sticky; top: calc(var(--hh) - 1px + var(--gth, 150px) + var(--gtf) + var(--k) * 10px); opacity: 1; padding: 22px 22px 20px; box-shadow: none; }
+  html:not(#_) .gt.is-car .gt__steps { gap: 64px; padding-bottom: 0; }   /* הכרטיס הבא מתחת למסך: בהתחלה רואים כרטיס אחד */
+  html:not(#_) .gt.is-car .gts { position: sticky; top: calc(var(--hh) - 1px + var(--gth, 150px) + var(--gtf)); opacity: 1; padding: 22px 22px 20px; box-shadow: none; }
   html:not(#_) .gt.is-car .gts:nth-child(1) { --k: 0; } html:not(#_) .gt.is-car .gts:nth-child(2) { --k: 1; } html:not(#_) .gt.is-car .gts:nth-child(3) { --k: 2; }
   html:not(#_) .gt.is-car .gts__lead { margin: 8px 0 18px; }
   html:not(#_) .gt.is-car .gts .btn { margin-top: 0; min-height: 46px; }
@@ -2042,3 +2046,8 @@ html[data-hero-text="dark"] .site-header:not(.is-solid):not(.is-light) .site-hea
   html:not(#_) :is(.who__big, .ar__big) { font-size: 20px; }
   html:not(#_) .stat__c { font-size: 16px; }
 }
+/* משולש הזהב במובייל: כל כרטיס עולה ומחליף לגמרי את הקודם (באותו מקום, בלי שוליים מציצים). הכרטיס הקודם נחתך
+   בדיוק בקצה העליון של הכרטיס שעולה עליו (sections.js / about.js), כך שגם כרטיס גבוה לא מציץ מתחת לכרטיס נמוך */
+/* מובייל: במעבר ללוגו של 5M GROUP השכבה הלבנה הייתה בגובה המסך הקטן (svh). כשסרגל הכתובת מתקפל המסך גדל,
+   ולמטה נשאר מלבן כחול עד שהתמונה של המשפחה הגיעה. השכבה הלבנה יורדת עד לתחתית המסך הגדול (lvh) */
+@media (max-width: 900px) { @supports (height: 100lvh) { html:not(#_) .sides.is-live .sides__white { bottom: calc(100svh - 100lvh); } } }
