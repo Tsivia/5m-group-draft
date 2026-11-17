@@ -19,7 +19,7 @@
   let stepLock = 0;   // עד מתי מעבר כלשהו רץ: בזמן הזה שום גלילה לא דולפת לגלילה הרגילה (גם במעבר בין שני אזורים)
   const stepEase = t => t < .5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
   const stepper = (st, count, prevY, nextY) => {
-    const stops = () => Array.from({ length: count }, (_, k) => st.start + (st.end - st.start) * k / (count - 1));
+    const stops = () => Array.from({ length: count }, (_, k) => st.start + (count > 1 ? (st.end - st.start) * k / (count - 1) : 0));
     const curY = () => window.lenis ? window.lenis.scroll : scrollY;
     const inZone = () => { const y = curY(); return y >= st.start - 4 && y <= st.end + 4; };
     const nearest = () => { const y = curY(), S = stops(); let k = 0; S.forEach((v, i) => { if (Math.abs(v - y) < Math.abs(S[k] - y)) k = i; }); return k; };
@@ -267,9 +267,10 @@
     const track = $('.gt__steps', gt);
     if (car) {
       gt.classList.add('is-car');
-      // התוויות של כל שלב ("מה כולל השלב") עוברות לתוך הכרטיס שלו, מעל הכפתור
+      // התוויות של כל שלב ("מה כולל השלב") עוברות לתוך החלונית של "לפרטים נוספים" שלו (לבקשת צביה):
+      // בכרטיס נשארים רק המספר, השם, ההסבר והכפתור, וכך יש מקום לפסל גדול יותר
       const incH = $('.gt__inc-h', gt);
-      steps.forEach((s, k) => { s.insertBefore(incH.cloneNode(true), parts[k].btn); s.insertBefore(sets[k], parts[k].btn); });
+      steps.forEach((s, k) => { const pn = panels[k]; if (!pn) return; pn.appendChild(incH.cloneNode(true)); pn.appendChild(sets[k]); });
     }
     if (!reduce && !car) parts.forEach(p => gsap.set(all(p), { autoAlpha: 0 }));
     // במובייל המגירה קבועה על המסך: בזמן שהיא פתוחה העמוד מאחוריה לא נגלל
@@ -350,51 +351,49 @@
           onUpdate: s => { const p = s.progress; bars.forEach((b, k) => { b.style.transform = 'scaleX(' + clamp(p * 2 + 1 - k).toFixed(3) + ')'; }); if (on >= 0 || p > 0) show(p < .25 ? 0 : p < .75 ? 1 : 2); } });
         // גלילה אחת = שלב אחד. כשמגיעים לאזור כבר רואים את שלב 1, ולכן הגלילה הראשונה עוברת לשלב 2.
         // אחרי השלישי, עוד גלילה אחת עוברת ל"שורה תחתונה"
-        stepper(st, 3, null, () => { const nx = ScrollTrigger.getAll().find(s => s.pin && s.trigger === $('.sum2')); return nx ? nx.start + 2 : st.end + innerHeight; });
+        stepper(st, 3, null, () => { const nx = ScrollTrigger.getById('sum2'); return nx ? nx.start : st.end + innerHeight; });
       }
     }
   }
 
-  // ================= 2. שורה תחתונה: דף חשבון בתוך משולש הלוגו. גלילה אחת = שורה אחת (כמו משולש הזהב):
-  //                   רצועה של התמונה נמלאת במשולש, הקו שלה נמתח מהצלע, והשורה עולה. בסוף הקו הכתום נמתח והתוצאה עולה מתחתיו =================
+  // ================= 2. שורה תחתונה (גרסה 17): החשבון נסגר =================
+  // מגיעים לאזור והחשבון נסגר לבד: השורות מתמלאות בדיו אחת אחרי השנייה, הקו הכתום נמתח, והתוצאה יוצאת מתוכו.
+  // עצירה אחת בלבד (לא שלב לכל שורה כמו במשולש הזהב): גלילה למטה ממשיכה לרפי, גלילה למעלה חוזרת למשולש
   const sum2 = $('.sum2');
   if (sum2) {
-    const tri = $('.sum2__tri', sum2), bands = $$('.sum2__band img', sum2), rules = $$('.sum2__rules i', sum2), rows = $$('.sum2__row', sum2),
-      res = $('.sum2__res', sum2), stage = $('.sum2__stage', sum2);
-    if (!reduce) {
-      // בהתחלה רואים רק את הקודקוד (הרצועה שליד הכותרת). הרצועות נפרדות ברווח, ומתאחדות רק בסוף
-      const GAP = { g: 1.5 }, putGap = () => tri.style.setProperty('--g', GAP.g.toFixed(3) + '%'); putGap();
-      gsap.set(bands.slice(1), { autoAlpha: 0, y: -16 * U() });
-      gsap.set(rules, { scaleX: 0 });
-      gsap.set(rows, { autoAlpha: 0, y: 34 * U() });
-      gsap.set(res, { autoAlpha: 0, y: 30 * U() });
+    const inks = $$('.sum2__ink', sum2), hots = $$('.sum2__hot', sum2), line = $('.sum2__line', sum2), big = $('.sum2__big', sum2), sub = $('.sum2__sub', sum2), stage = $('.sum2__stage', sum2);
+    // הקו ברוחב התוצאה
+    const fitLine = () => sum2.style.setProperty('--res-w', mobile() ? '' : Math.round(big.offsetWidth) + 'px');
+    fitLine(); addEventListener('resize', () => requestAnimationFrame(fitLine)); document.fonts && document.fonts.ready.then(fitLine);
+    // השמש שמאחורי התוצאה: בגובה האותיות הגדולות
+    const sunAt = () => { const r = stage.getBoundingClientRect(), b = big.getBoundingClientRect(); if (r.height) stage.style.setProperty('--sun-y', ((b.top + b.height / 2 - r.top) / r.height * 100).toFixed(1) + '%'); };
+    sunAt(); addEventListener('resize', () => requestAnimationFrame(sunAt)); document.fonts && document.fonts.ready.then(sunAt);
+    if (reduce) { sum2.classList.add('is-done'); gsap.set(stage, { '--sun': 1 }); }
+    else {
+      gsap.set([...inks, ...hots], { '--p': 0 });
+      gsap.set(line, { scaleX: 0 });
+      // השמש עולה בתוך האותיות: התמונה מתחילה נמוכה (השמש מתחת לשורה, שמיים של לפני הזריחה) ועולה למקום
+      gsap.set(big, { clipPath: 'inset(0% 0% 100% 0%)', yPercent: -34, backgroundPosition: '50% 22%' });
+      gsap.set(sub, { autoAlpha: 0, y: 22 * U() });
       gsap.set(stage, { '--sun': 0 });
-      // ציר זמן של 4 יחידות: בכל יחידה שלמה שלב אחד גמור (0 = הכותרת והקודקוד, 4 = הכול)
-      const tl = gsap.timeline({ defaults: { ease: 'power3.out' } });
-      // כל שלב: הרצועה שלו נכנסת (צורה נפרדת), השורה עולה, והקו הדק שמתחתיה נמתח מהנקודה שעל הצלע
-      rows.forEach((r, k) => {
-        tl.to(bands[k + 1], { autoAlpha: 1, y: 0, duration: .7, ease: 'power2.out' }, k + .05)
-          .to(r, { autoAlpha: 1, y: 0, duration: .6 }, k + .2)
-          .to(rules[k], { scaleX: 1, duration: .75, ease: 'power2.inOut' }, k + .3);
-      });
-      // בסוף: הרווחים נסגרים ושלוש הצורות מתאחדות למשולש אחד, ואז התוצאה
-      tl.to(GAP, { g: 0, duration: .8, ease: 'power2.inOut', onUpdate: putGap }, 3.05)
-        .to(stage, { '--sun': 1, duration: .8, ease: 'power1.inOut' }, 3.1)
-        .to(res, { autoAlpha: 1, y: 0, duration: .65 }, 3.35)
-        .to({}, { duration: .1 }, 3.9);
+      const tl = gsap.timeline({ paused: true, onComplete: () => sum2.classList.add('is-done') });
+      inks.forEach((el, k) => tl.to([el, hots[k]], { '--p': 1, duration: .95, ease: 'power2.inOut' }, k * .62));
+      tl.to(line, { scaleX: 1, duration: .75, ease: 'power3.inOut' }, 1.75)
+        .to(big, { clipPath: 'inset(0% 0% 0% 0%)', yPercent: 0, duration: 1.05, ease: 'expo.out' }, 2.3)
+        .to(big, { backgroundPosition: '50% 50%', duration: 2.2, ease: 'power2.out' }, 2.4)
+        .to(stage, { '--sun': 1, duration: 1.4, ease: 'power1.inOut' }, 2.3)
+        .to(sub, { autoAlpha: 1, y: 0, duration: .8, ease: 'power3.out' }, 2.75);
+      // החשבון נסגר כשהאזור כמעט כולו במסך (גם כשמגיעים בגלילה רגילה)
+      ScrollTrigger.create({ trigger: sum2, start: mobile() ? 'top 60%' : 'top 30%', once: true, onEnter: () => tl.play() });
       if (!mobile()) {
-        const st = ScrollTrigger.create({ trigger: sum2, start: 'top top', end: () => '+=' + Math.round(innerHeight * 2), pin: true, scrub: .2, animation: tl, invalidateOnRefresh: true });
-        // גלילה אחת = שלב אחד (כמו במשולש הזהב). מעל השלב הראשון חוזרים לשלב האחרון של משולש הזהב,
-        // ואחרי האחרון גלילה אחת מעלה את כל האזור של רפי למסך (ממורכז מתחת להדר), ומשם הגלילה רגילה
-        const pinOf = sel => ScrollTrigger.getAll().find(s => s.pin && s.trigger === $(sel));
-        stepper(st, 5, () => { const g = pinOf('.gt'); return g ? g.end : st.start - innerHeight; }, () => {
-          const w = $('.who'); if (!w) return st.end + innerHeight;
+        const st = ScrollTrigger.create({ id: 'sum2', trigger: sum2, start: 'top top', end: 'top top' });
+        // גלילה למטה לפני שהחשבון נסגר: רק מזרזת אותו (כדי שלא יפספסו את התוצאה). אחרי שנסגר: עוברת לרפי, ממורכז מתחת להדר
+        stepper(st, 1, () => { const g = ScrollTrigger.getAll().find(s => s.pin && s.trigger === $('.gt')); return g ? g.end : st.start - innerHeight; }, () => {
+          if (tl.progress() < .8) { tl.play(); tl.timeScale(2.6); return null; }
+          const w = $('.who'); if (!w) return st.start + innerHeight;
           const y = window.lenis ? window.lenis.scroll : scrollY, r = w.getBoundingClientRect(), hh = $('.site-header')?.offsetHeight || 0, room = innerHeight - hh;
           return Math.round(r.height < room ? y + r.top - hh - (room - r.height) / 2 : y + r.top - hh);
         });
-      } else {
-        // במובייל: בלי עצירה. השלבים נכנסים ברצף כשהאזור מגיע למסך
-        tl.pause(); ScrollTrigger.create({ trigger: sum2, start: 'top 65%', once: true, onEnter: () => tl.timeScale(1.6).play() });
       }
     }
   }

@@ -110,6 +110,8 @@
           <span class="visually-hidden" lang="en">5M GROUP: </span>
           <span class="visually-hidden">ממשכורת לתיק נכסים</span>
         </h1>
+        <!-- כותרת גדולה למובייל בלבד (בדסקטופ מוסתרת): קוראי מסך כבר מקבלים את הטקסט מה-h1 -->
+        <p class="hero__mtitle" aria-hidden="true">ממשכורת <em>לתיק נכסים</em></p>
         <p class="hero__motto">
           <span class="hero__stat"><bdi class="hero__stat-n"><span class="hero__num">95</span><span class="hero__pct">%</span></bdi><span class="hero__stat-t">מהאוכלוסייה<br><b>חושבים מה עושים</b></span></span>
           <span class="hero__stat hero__stat--few"><bdi class="hero__stat-n"><span class="hero__num">5</span><span class="hero__pct">%</span></bdi><span class="hero__stat-t">מהאוכלוסייה <b>עושים</b><br><b>את מה שהם חושבים</b></span></span>
@@ -258,29 +260,24 @@
       </div>
     </section>
 
-    <!-- ===================== 2. שורה תחתונה (בהיר): שורה אחרי שורה =====================
-         ברוח משולש הזהב (לבקשת הלקוחות): האזור נעצר, וכל גלילה מכניסה שורה: תזרים, חיסכון, תיק נכסים, ובסוף התוצאה.
-         השורות נשארות אחת מתחת לשנייה, עד שכל המשוואה מול העיניים -->
+    <!-- ===================== 2. שורה תחתונה (בהיר, גרסה 17): החשבון נסגר =====================
+         תרגיל חיבור במאונך, באמצע המסך: שלוש השורות כתובות בעדינות, ומתמלאות בדיו אחת אחרי השנייה.
+         מתחתן נמתח קו כתום (השורה התחתונה, פשוטו כמשמעו), והתוצאה יוצאת ממנו: "עתיד כלכלי רגוע", באותיות ענקיות שבתוכן הזריחה.
+         מגיעים לאזור והחשבון נסגר לבד, וגלילה אחת ממשיכה הלאה (sections.js) -->
     <section class="sum2" id="bottom-line" data-theme="light" aria-labelledby="sum2-title">
       <div class="sum2__stage">
-        <div class="sum2__grid">
-          <!-- משולש פיתגורס (3:4:5) בזווית של הלוגו: ישרה למטה משמאל. ארבע רצועות: הקודקוד ליד הכותרת, ואז רצועה לכל שורה.
-               כל רצועה היא צורה נפרדת (אותה תמונה, חתוכה לרצועה שלה), עם רווח ביניהן. בסוף הרווחים נסגרים והן מתאחדות למשולש אחד -->
-          <div class="sum2__tri" aria-hidden="true">
-            <div class="sum2__band" style="--k:0;--gt:0;--gb:1"><img src="assets/sum-tri.jpg" alt="" loading="lazy" decoding="async" width="1700" height="1196"></div>
-            <div class="sum2__band" style="--k:1;--gt:1;--gb:1"><img src="assets/sum-tri.jpg" alt="" loading="lazy" decoding="async" width="1700" height="1196"></div>
-            <div class="sum2__band" style="--k:2;--gt:1;--gb:1"><img src="assets/sum-tri.jpg" alt="" loading="lazy" decoding="async" width="1700" height="1196"></div>
-            <div class="sum2__band" style="--k:3;--gt:1;--gb:0"><img src="assets/sum-tri.jpg" alt="" loading="lazy" decoding="async" width="1700" height="1196"></div>
-          </div>
-          <h2 class="sec__title sum2__title" id="sum2-title">שורה תחתונה?</h2>
-          <!-- קווי דף החשבון: כל קו יוצא מהצלע של המשולש (נקודה כתומה) ורץ עד סוף השורה שלו -->
-          <div class="sum2__rules" aria-hidden="true"><i style="--k:2"></i><i style="--k:3"></i><i style="--k:4"></i></div>
+        <div class="sum2__in">
+          <h2 class="sec__title sum2__title" id="sum2-title" data-title>שורה <em>תחתונה?</em></h2>
           <ol class="sum2__rows">
-            <li class="sum2__row" style="--k:1"><span class="sum2__tag"><b>01</b>כלכלת המשפחה</span><span class="sum2__w">תזרים מנוהל ויעיל</span></li>
-            <li class="sum2__row" style="--k:2"><span class="sum2__tag"><b>02</b>נכסים פיננסיים</span><span class="sum2__w">חיסכון מושקע בשוטף</span></li>
-            <li class="sum2__row" style="--k:3"><span class="sum2__tag"><b>03</b>תיק נכסים נדלנ״י</span><span class="sum2__w">תיק נכסים מניב וצומח</span></li>
+            <li class="sum2__row"><span class="sum2__ghost" aria-hidden="true">תזרים מנוהל ויעיל</span><span class="sum2__ink">תזרים מנוהל ויעיל</span><span class="sum2__hot" aria-hidden="true">תזרים מנוהל ויעיל</span></li>
+            <li class="sum2__row"><span class="sum2__ghost" aria-hidden="true">חיסכון מושקע בשוטף</span><span class="sum2__ink">חיסכון מושקע בשוטף</span><span class="sum2__hot" aria-hidden="true">חיסכון מושקע בשוטף</span></li>
+            <li class="sum2__row"><span class="sum2__ghost" aria-hidden="true">תיק נכסים מניב וצומח</span><span class="sum2__ink">תיק נכסים מניב וצומח</span><span class="sum2__hot" aria-hidden="true">תיק נכסים מניב וצומח</span></li>
           </ol>
-          <p class="sum2__res"><span class="sum2__eq" aria-hidden="true">=</span> עתיד כלכלי רגוע <span class="visually-hidden">ואושר (ועושר)</span><span class="sum2__aw" aria-hidden="true">ו<span class="aosh"><i>א</i><i>ע</i></span>ושר</span> משפחתי שהולך וגדל</p>
+          <i class="sum2__line" aria-hidden="true"></i>
+          <p class="sum2__res">
+            <span class="sum2__big">עתיד כלכלי רגוע</span>
+            <span class="sum2__sub"><span class="visually-hidden">ואושר (ועושר)</span><span aria-hidden="true">ו<span class="aosh"><i>א</i><i>ע</i></span>ושר</span> משפחתי שהולך וגדל</span>
+          </p>
         </div>
       </div>
     </section>
@@ -374,7 +371,7 @@
     <section class="gain" id="gains" data-theme="dark" data-header="glass" aria-labelledby="gain-title">
       <div class="gain__bg" aria-hidden="true"><img src="assets/art-sunrise.webp" alt="" loading="lazy" decoding="async"></div>
       <div class="gain__in">
-        <h2 class="sec__title gain__turn" id="gain-title" data-title>עד שהן החליטו לקחת אחריות ולסדר את החיים הפיננסים<br>וכל אחת מהן יצאה עם:</h2>
+        <h2 class="sec__title gain__turn" id="gain-title" data-title>עד שהן החליטו לקחת אחריות ולסדר את החיים הפיננסים<br><span class="gain__with">וכל אחת מהן יצאה עם:</span></h2>
         <ul class="gain__tags">
           <li class="gtag"><span class="gtag__n" aria-hidden="true">01</span>נכסי נדל"ן מניבים</li>
           <li class="gtag"><span class="gtag__n" aria-hidden="true">02</span>תיק פיננסי צומח</li>

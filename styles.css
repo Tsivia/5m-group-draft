@@ -448,7 +448,7 @@ html { overflow-x: clip; }
 /* הלוגו בתלת-ממד: אותו מקום ואותו גודל של הלוגו השטוח, עם צל בהיר ורך */
 .rat__logo3d { position: absolute; left: 8.94%; top: -7.54%; width: 82.12%; height: 119%; max-width: none; visibility: hidden; opacity: 0; pointer-events: none;
   filter: drop-shadow(0 calc(3 * var(--u)) calc(6 * var(--u)) rgb(16 14 54 / .06)); }
-@media (max-width: 900px) { .rat .rat__city { --city-s: .633; left: 50%; top: auto; bottom: 0; width: 300vw; translate: -50% 0; transform-origin: 50% 100%;
+@media (max-width: 900px) { .rat .rat__city { --city-s: .833; left: calc(50% - 9vw); top: auto; bottom: 0; width: 360vw; translate: -50% 0; transform-origin: 50% 100%;
   -webkit-mask-image: linear-gradient(to bottom, transparent, #000 24%, #000 95%, transparent); mask-image: linear-gradient(to bottom, transparent, #000 24%, #000 95%, transparent); } }   /* הדשא כמעט עד הקצה, והרגליים לא נמסות */
 /* התמונה הרחבה לא מרחיבה את העמוד בזמן הטעינה (לפני ש-sides.js חותך את הסקשן): אחרת הטלפון מקטין את כל העמוד והמנסרה נבנית בגודל לא נכון */
 @media (max-width: 900px) { .rat { overflow-x: clip; } }
@@ -498,7 +498,7 @@ html { overflow-x: clip; }
 @media (max-width: 900px) and (max-height: 700px) {
   .rat__stage { gap: 18px; }
   .rat__logo-wrap { width: min(26vw, 96px); margin-bottom: calc(min(26vw, 96px) * .6); }
-  .rat .rat__city { --city-s: .625; width: 240vw; }
+  .rat .rat__city { --city-s: .8; width: 300vw; }
   .rat.is-live .rat__stage { padding-block: 72px calc(31vw + 6px); }
   .rat__text { font-size: 15px; }
 }
@@ -506,7 +506,7 @@ html { overflow-x: clip; }
 @media (min-width: 600px) and (max-width: 900px) {
   .rat__logo-wrap { width: 150px; margin-bottom: 93px; }
   .rat__text { font-size: 18px; }
-  .rat .rat__city { --city-s: .675; width: 200vw; }
+  .rat .rat__city { --city-s: .833; width: 240vw; }
   .rat.is-live .rat__stage { padding-bottom: calc(29vw + 8px); }
 }
 /* אותו בית בדיוק, רק החלון המשולש כבוי: מופיע מעל כשהמשולש יוצא מהחלון */
@@ -1044,6 +1044,7 @@ html.has-loader.is-landed .site-header__logo { opacity: 1; }
    (hero-scene.js מודד את שני הבלוקים ומכניס את הצילום בדיוק ביניהם, כך שהטקסט אף פעם לא על המשפחה).
    שם החברה, הפסקה והכפתור יורדים: הלוגו כבר בהדר
    ========================================================= */
+.hero__mtitle { display: none; }   /* הכותרת הגדולה של ההירו מופיעה רק במובייל */
 @media (max-width: 900px) {
   .hero { display: block; height: 100svh; min-height: 0; padding: 0; }
   /* בגלילה הטקסט נשאר במקום יחד עם התמונה ונעלם מהר (hero-scene.js), כך שהוא לא עובר מעל המשפחה */
@@ -1052,17 +1053,25 @@ html.has-loader.is-landed .site-header__logo { opacity: 1; }
   .hero__intro { position: absolute; inset: auto 24px calc(clamp(24px, 4.6svh, 48px) + env(safe-area-inset-bottom)); width: auto; display: flex; justify-content: center; text-shadow: none; }
   .hero__intro .hero__lead, .hero__intro .hero__body { display: none; }
   .hero__intro .btn { margin: 0; min-height: 52px; padding-inline: 34px; font-size: 16px; }
+  /* מלמעלה כותרת גדולה "ממשכורת לתיק נכסים", באמצע הצילום, ומתחתיו 95% מול 5%: שני חצאים עם קו דק ביניהם.
+     למטה הכפתור לסימולטור */
   .hero__brand {
-    --stat-size: clamp(56px, min(19vw, 9svh), 110px);
+    --stat-size: clamp(48px, min(15vw, 7.4svh), 92px);
     position: absolute;
-    inset: 0 0 auto;
+    inset: 0;
     width: auto;
     place-self: stretch;   /* הטאבלט מיישר אותו ל-flex-end, ובכרום זה חל גם על אלמנט ממוקם */
-    padding: calc(64px + clamp(16px, 3.2svh, 36px)) 24px 0;
+    display: flex; flex-direction: column; justify-content: space-between; align-items: stretch;
+    padding: calc(64px + clamp(14px, 2.6svh, 32px)) 22px calc(52px + clamp(40px, 7svh, 76px) + env(safe-area-inset-bottom));
     text-shadow: none;
   }
-  .hero__motto { display: flex; flex-direction: column; justify-content: flex-start; gap: clamp(6px, 1.4svh, 14px); white-space: normal; }
-  .hero__stat { display: grid; grid-template-columns: auto auto; justify-content: center; align-items: center; column-gap: 14px; }
+  .hero__brand > .hero__title { position: absolute; width: 1px; height: 1px; margin: 0; overflow: hidden; }   /* ה-h1 (לקוראי מסך) לא תופס גובה */
+  .hero__mtitle { display: block; margin: 0; text-align: center; font-family: var(--font-display); font-weight: 400; font-size: clamp(44px, min(14.5vw, 7.4svh), 84px); line-height: .98; color: var(--white); }
+  .hero__mtitle em { display: block; font-style: normal; color: var(--orange); }
+  .hero__motto { display: grid; grid-template-columns: 1fr 1fr; align-items: start; gap: 0; white-space: normal; }
+  .hero__stat { display: flex; flex-direction: column; align-items: center; gap: 6px; text-align: center; padding-inline: 10px; }
+  .hero__stat--few { border-inline-start: 1px solid rgb(245 245 245 / .28); }
+  .hero__stat-t { text-align: center; }
   .hero__stat-n { justify-self: start; }
   .hero__stat-t { font-size: 16px; line-height: 1.3; }
 }
@@ -1214,67 +1223,50 @@ html.has-loader.is-landed .site-header__logo { opacity: 1; }
 /* מסך צר מאוד: במקטעים רק המספרים (השמות נשברו לשתי שורות לא שוות). השם המלא כתוב בכרטיס */
 @media (max-width: 359px) { .gt.is-car .gt__st { display: none; } .gt.is-car .gt__sn { font-size: 18px; } }
 
-/* ---------- 2. שורה תחתונה (גרסה 16): דף חשבון בתוך משולש הלוגו ----------
-   משמאל משולש פיתגורס גדול (3:4:5, זווית ישרה למטה משמאל כמו בלוגו), מגובה הכותרת ועד הבסיס, בארבע רצועות:
-   הקודקוד ליד הכותרת, ואז רצועה לכל שורה. התמונה ממלאת אותו רצועה אחרי רצועה.
-   מימין הכותרת והשורות, כל אחת בגובה הרצועה שלה, עם תווית של השלב ממשולש הזהב. הקווים יוצאים מהצלע (נקודה כתומה).
-   הבסיס ממשיך לקו כתום אחד (השורה התחתונה), ומתחתיו "=" והתוצאה בשורה אחת גדולה.
-   מידות ביחידות פיגמה (u) בתוך גריד של 1488 (שוליים של 216 משני הצדדים) */
+/* ---------- 2. שורה תחתונה (גרסה 17): החשבון נסגר ----------
+   תרגיל חיבור במאונך, ממורכז. בלי משולש ובלי מספרי שלבים (אלה של משולש הזהב שמעליו).
+   השורות כתובות בעדינות ומתמלאות בדיו מימין לשמאל (כמו כתיבה), הקו הכתום נמתח מימין לשמאל,
+   והתוצאה יוצאת מתוך הקו: "עתיד כלכלי רגוע" ב-Cooperative עבה וענק, והזריחה של האתר בתוך האותיות */
 .sum2 { position: relative; background: var(--paper); color: var(--ink); }
-/* רקע חם: נייר שמתחמם לאפרסק למטה, ואור זריחה רך שעולה מהבסיס של המשולש כשהתוצאה מופיעה */
-.sum2__stage::before { content: ""; position: absolute; inset: 0; z-index: 0; pointer-events: none; background: linear-gradient(to bottom, rgb(241 90 59 / 0) 0%, rgb(241 90 59 / .04) 45%, rgb(241 90 59 / .1) 85%, rgb(241 90 59 / 0) 100%), var(--paper); }
-.sum2__stage::after { content: ""; position: absolute; z-index: 0; pointer-events: none; left: calc(50% - 900 * var(--u)); bottom: calc(-300 * var(--u)); width: calc(1300 * var(--u)); aspect-ratio: 1.7; border-radius: 50%; background: radial-gradient(closest-side, rgb(241 90 59 / .18), rgb(255 190 150 / .12) 55%, transparent); opacity: var(--sun, 0); }
+/* רקע חם: נייר שמתחמם לאפרסק למטה, ואור זריחה רך שעולה מאחורי התוצאה כשהיא מופיעה */
+.sum2__stage::before { content: ""; position: absolute; inset: 0; z-index: 0; pointer-events: none; background: linear-gradient(to bottom, rgb(241 90 59 / 0) 0%, rgb(241 90 59 / .03) 45%, rgb(241 90 59 / .08) 85%, rgb(241 90 59 / 0) 100%), var(--paper); }
+.sum2__stage::after { content: ""; position: absolute; z-index: 0; pointer-events: none; left: 50%; top: var(--sun-y, 72%); width: calc(1500 * var(--u)); aspect-ratio: 2.4; translate: -50% -50%; border-radius: 50%; background: radial-gradient(closest-side, rgb(241 90 59 / .14), rgb(255 190 150 / .1) 55%, transparent); opacity: var(--sun, 0); }
 .sum2__stage { position: relative; height: 100svh; min-height: calc(860 * var(--u)); overflow: hidden; display: flex; align-items: center; justify-content: center; padding-top: var(--hh); box-sizing: border-box; }
-.sum2__grid { --W: calc(1488 * var(--u)); --tw: calc(800 * var(--u)); --th: calc(600 * var(--u)); --rh: calc(var(--th) / 4);
-  position: relative; z-index: 1; width: var(--W); height: calc(var(--th) + 240 * var(--u)); direction: ltr; }
-/* המשולש */
-.sum2__tri { position: absolute; left: 0; top: 0; width: var(--tw); height: var(--th); }
-/* ארבע רצועות נפרדות של המשולש (k = 0 הקודקוד עד 3 הבסיס). כל אחת חותכת את אותה תמונה לרצועה שלה.
-   --g הוא חצי הרווח בין רצועות (באחוזים מהגובה; בצלע זה אותו אחוז גם ברוחב, כי היתר עובר מפינה לפינה). בסוף הוא נסגר ל-0 והן מתאחדות */
-.sum2__tri { --g: 0%; }
-.sum2__band { --a: calc(var(--k) * 25%); --b: calc((var(--k) + 1) * 25%); --t: calc(var(--a) + var(--gt) * var(--g)); --e: calc(var(--b) - var(--gb) * var(--g));
-  position: absolute; inset: 0; clip-path: polygon(0 var(--t), var(--t) var(--t), var(--e) var(--e), 0 var(--e)); background: linear-gradient(165deg, rgb(16 14 54 / .08), rgb(241 90 59 / .05)); }
-.sum2__band img { position: absolute; inset: 0; display: block; width: 100%; height: 100%; object-fit: cover; object-position: 30% 70%; }
-/* הכותרת: ברצועה של הקודקוד, גדולה וכולה בכתום */
-.sum2 .sum2__title { position: absolute; top: 0; right: 0; height: var(--rh); display: flex; align-items: center; margin: 0; direction: rtl; font-size: calc(120 * var(--u)); line-height: 1; color: var(--orange); white-space: nowrap; }
-/* קווי הדף: קו לכל שורה, מהצלע של המשולש (בגובה הזה) עד הקצה הימני, ונקודה כתומה במקום שבו הוא יוצא מהצלע */
-.sum2__rules i { position: absolute; top: calc(var(--rh) * var(--k)); left: calc(var(--tw) * var(--k) / 4); right: 0; height: 1px; background: rgb(16 14 54 / .18); transform-origin: left center; }
-.sum2__rules i::before { content: ""; position: absolute; left: 0; top: 50%; width: calc(11 * var(--u)); aspect-ratio: 1; border-radius: 50%; background: var(--orange); translate: -50% -50%; }
-/* השורות */
-.sum2__rows { position: absolute; inset: 0; margin: 0; padding: 0; list-style: none; direction: rtl; }
-/* כל שורה יושבת על הקו שמתחתיה (לא באמצע הרצועה), כך שהקו נקרא כקו התחתון שלה */
-.sum2__row { position: absolute; right: 0; top: calc(var(--rh) * var(--k)); height: var(--rh); display: flex; flex-direction: column; justify-content: flex-end; align-items: flex-start; gap: calc(10 * var(--u)); padding-bottom: calc(24 * var(--u)); box-sizing: border-box; }
-.sum2__tag { display: flex; align-items: baseline; gap: calc(12 * var(--u)); font-family: var(--font-text); font-weight: 400; font-size: calc(21 * var(--u)); line-height: 1; letter-spacing: .02em; color: rgb(16 14 54 / .62); }
-.sum2__tag b { font-family: var(--font-display); font-weight: 400; font-size: calc(30 * var(--u)); color: var(--orange); font-variant-numeric: tabular-nums; }
-/* השורות בפוטוריזם (ספר הכללים: Cooperative לכותרות בלבד, Futurism לכל השאר), במשקל ובגודל שקרובים לכותרות */
-.sum2__w { font-family: var(--font-text); font-weight: 600; font-size: calc(44 * var(--u)); line-height: 1.1; color: var(--ink); white-space: nowrap; }
-/* השורה התחתונה: קו כתום אחד שממשיך את הבסיס של המשולש */
-/* התוצאה: שורה אחת גדולה בכתום, ממורכזת לאמצע, במרחק נדיב מתחת לקו. ה-= וה-א/ע בכחול */
-/* ממורכזת בגובה בין הקו הכתום לתחתית המסך: הרווח מעליה ומתחתיה שווה.
-   הגריד ממורכז במסך שמתחת להדר, אז המרחק מהקו לתחתית הוא (H - hh + גובה הגריד) / 2 - th */
-.sum2__res { --H: max(100svh, calc(860 * var(--u))); --R: calc((var(--H) - var(--hh) + var(--th) + 240 * var(--u)) / 2 - var(--th));
-  position: absolute; left: 0; right: 0; top: calc(var(--th) + var(--R) / 2 - 53 * var(--u)); margin: 0; direction: rtl; text-align: center; font-family: var(--font-display); font-weight: 400; font-size: calc(96 * var(--u)); line-height: 1.1; color: var(--orange); white-space: nowrap; }
-.sum2__eq { display: inline-block; margin-left: calc(18 * var(--u)); color: var(--ink); }
-.sum2__aw { white-space: nowrap; }
+.sum2__in { position: relative; z-index: 1; display: flex; flex-direction: column; align-items: center; text-align: center; }
+.sum2 .sum2__title { margin: 0 0 calc(50 * var(--u)); font-size: var(--fs-h2); color: var(--ink); }
+/* השורות: כל שורה כתובה פעמיים באותו מקום. מתחת בדיו שקוף מאוד, ומעל בדיו מלא שנחשף מימין לשמאל (--p מ-0 עד 1), עם קצה רך */
+.sum2__rows { margin: 0; padding: 0; list-style: none; display: grid; gap: calc(14 * var(--u)); }
+.sum2__row { display: grid; justify-items: center; font-family: var(--font-text); font-weight: 400; font-size: calc(62 * var(--u)); line-height: 1.2; white-space: nowrap; }
+.sum2__ghost, .sum2__ink, .sum2__hot { grid-area: 1 / 1; }
+.sum2__ghost { color: rgb(16 14 54 / .14); }
+.sum2__ink { --p: 1; color: var(--ink);
+  -webkit-mask-image: linear-gradient(to left, #000 calc(var(--p) * 125% - 25%), transparent calc(var(--p) * 125%));
+          mask-image: linear-gradient(to left, #000 calc(var(--p) * 125% - 25%), transparent calc(var(--p) * 125%)); }
+/* הדיו טרי בכתום רק בקצה שנכתב עכשיו, ומתייבש לנייבי */
+.sum2__hot { --p: 1; color: var(--orange);
+  -webkit-mask-image: linear-gradient(to left, transparent calc(var(--p) * 125% - 25%), #000 calc(var(--p) * 125% - 11%), transparent calc(var(--p) * 125%));
+          mask-image: linear-gradient(to left, transparent calc(var(--p) * 125% - 25%), #000 calc(var(--p) * 125% - 11%), transparent calc(var(--p) * 125%)); }
+/* השורה התחתונה: קו כתום שנמתח מימין לשמאל, ברוחב התוצאה */
+.sum2__line { display: block; width: var(--res-w, calc(1300 * var(--u))); height: max(3px, calc(5 * var(--u))); margin: calc(46 * var(--u)) 0 calc(34 * var(--u)); background: var(--orange); transform-origin: right center; }
+/* התוצאה: יוצאת מתוך הקו כלפי מטה. האותיות עבות וענקיות, והזריחה (השמיים, השמש והים) בתוכן, זזה לאט */
+.sum2__res { margin: 0; display: flex; flex-direction: column; align-items: center; }
+.sum2__big { display: block; padding: 0 .04em; font-family: var(--font-display); font-weight: 700; font-size: calc(268 * var(--u)); line-height: .9; filter: saturate(1.12); white-space: nowrap; color: var(--orange);
+  background: url("assets/hero-photo-sea.jpg") 50% 50% / 125% auto no-repeat; -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
+@media (prefers-reduced-motion: no-preference) { .sum2.is-done .sum2__big { animation: sum2Drift 26s ease-in-out infinite alternate; } }
+@keyframes sum2Drift { from { background-position: 50% 50%; } to { background-position: 68% 53%; } }
+.sum2__sub { display: block; margin-top: calc(14 * var(--u)); font-family: var(--font-display); font-weight: 400; font-size: calc(70 * var(--u)); line-height: 1.1; color: var(--orange); white-space: nowrap; }
 .sum2 .aosh > i { color: var(--ink); }
 @media (min-width: 901px) { .sum2 { --u: min(calc(min(100vw, 1920px) / 1920), calc(100svh / 1060)); } }
-/* מובייל: אותו סדר, בזרימה רגילה. הכותרת, המשולש לכל הרוחב, השורות (כל אחת יושבת על הקו שלה, והאחרונה על הקו הכתום:
-   "השורה התחתונה"), ומתחתיה התוצאה, מיושרת לימין כמו השורות, עם ה-= תלוי בצד */
+/* מובייל: אותו תרגיל, בזרימה רגילה. התוצאה בשתי שורות */
 @media (max-width: 900px) {
-  .sum2__stage { height: auto; min-height: 0; padding: calc(var(--hh) + 40px) var(--gutter) var(--pad); display: block; }
-  .sum2__stage::after { display: none; }   /* הזריחה המטושטשת נראתה כמו כתם בפינה */
-  .sum2__grid { width: auto; max-width: 560px; height: auto; margin-inline: auto; direction: rtl; display: flex; flex-direction: column; }
-  .sum2 .sum2__title, .sum2__tri, .sum2__rows, .sum2__row, .sum2__res { position: relative; inset: auto; top: auto; right: auto; left: auto; }
-  .sum2 .sum2__title { order: -1; height: auto; margin-bottom: 24px; font-size: clamp(44px, 13.5vw, 64px); white-space: normal; }
-  .sum2__tri { width: 100%; height: auto; aspect-ratio: 4 / 3; margin: 0; }
-  /* הרצועות חופפות בפיקסל אחד: בלי קו דק של רקע בתפר כשהן מתאחדות */
-  .sum2__band { --e: calc(var(--b) - var(--gb) * var(--g) + var(--gb) * 1px); }
-  .sum2__rules { display: none; }
-  .sum2__row { height: auto; padding: 18px 0 16px; gap: 8px; border-bottom: 1px solid rgb(16 14 54 / .16); }
-  .sum2__tag { gap: 8px; font-size: 15px; } .sum2__tag b { font-size: 19px; }
-  .sum2__w { font-size: clamp(27px, 8vw, 36px); line-height: 1.12; white-space: normal; }
-  .sum2__res { margin-top: 26px; padding-right: 1.05em; text-align: right; font-size: clamp(32px, 9.6vw, 46px); line-height: 1.14; white-space: normal; text-wrap: balance; }
-  .sum2__eq { position: absolute; right: 0; top: 0; margin: 0; }   /* ה-= תלוי בצד, והשורה השנייה מיושרת לטקסט ולא מתחתיו */
+  .sum2__stage { height: auto; min-height: 0; padding: calc(var(--hh) + 48px) var(--gutter) var(--pad); display: block; }
+  .sum2__stage::after { width: 160%; }
+  .sum2 .sum2__title { margin-bottom: 28px; }
+  .sum2__rows { gap: 6px; }
+  .sum2__row { font-size: clamp(24px, 7vw, 34px); }
+  .sum2__line { width: 100%; margin: 26px 0 18px; }
+  .sum2__big { font-size: clamp(64px, 22vw, 120px); line-height: .95; white-space: normal; text-wrap: balance; background-size: auto 140%; }
+  .sum2__sub { margin-top: 12px; font-size: clamp(26px, 7.6vw, 40px); white-space: normal; text-wrap: balance; }
 }
 
 /* ---------- 3. מי אנחנו ---------- */
@@ -1932,19 +1924,6 @@ html[data-hero-text="dark"] .site-header:not(.is-solid):not(.is-light) .site-hea
 }
 
 /* =====================================================================
-   שורה תחתונה במובייל (גרסה 2, לבקשת צביה): בלי התמונה. הכול ממורכז: הכותרת, שלוש השורות (כל אחת על קו דק)
-   והתוצאה, עם ה-= בשורה משלו מעליה
-   ===================================================================== */
-@media (max-width: 900px) {
-  .sum2 .sum2__tri { display: none; }
-  .sum2 .sum2__title { justify-content: center; text-align: center; margin-bottom: 18px; }
-  .sum2__row { align-items: center; text-align: center; padding: 22px 0 20px; }
-  .sum2__tag { justify-content: center; }
-  .sum2 .sum2__res { padding-right: 0; text-align: center; margin-top: 30px; }
-  .sum2 .sum2__eq { position: static; display: block; margin: 0 auto 6px; }
-}
-
-/* =====================================================================
    "כמה מילים עלינו" במובייל (לבקשת צביה): הכול ממורכז, התמונה של רפי אחרי הכותרת ולפני הטקסטים,
    ובלי הטקסט הרץ ברקע. who__text הופך לשקוף לפריסה (contents), כדי שהתמונה תיכנס בין הכותרת לפסקאות
    ===================================================================== */
@@ -1982,3 +1961,50 @@ html[data-hero-text="dark"] .site-header:not(.is-solid):not(.is-light) .site-hea
   html:not(#_) .foot__bar { display: flex; flex-direction: column; align-items: center; text-align: center; }
   html:not(#_) .foot__links { justify-content: center; }
 }
+/* ההירו במסכים צרים ונמוכים: התיאורים של 95/5 קטנים טיפה, כדי שהצילום יקבל יותר מקום */
+@media (max-width: 380px) { .hero__stat-t { font-size: 15px !important; } .hero__motto { margin-inline: -8px; } }
+/* משולש הזהב במובייל: בלי התוויות בכרטיס (הן בחלונית "לפרטים נוספים"), ולכן הפסל גדול יותר */
+@media (max-width: 900px) {
+  .gt.is-car .gt__fig { height: clamp(200px, 33svh, 300px); }
+  .gt.is-car .gt__panel .gt__inc-h { display: block; margin: 26px 0 12px; font-size: 16px; }
+  .gt.is-car .gt__panel .gts__tags { margin-bottom: 0; }
+}
+/* "כמה מילים עלינו" במובייל: המסגרת הכתומה לא יוצאת מהתמונה בצדדים (היא נגעה כמעט בקצה המסך משמאל),
+   אלא נשארת בתוך הרוחב של התמונה, באותו מרחק משני הצדדים, ובולטת רק למעלה */
+@media (max-width: 900px) { html:not(#_) .who__photo::before { inset: -16px 16px 16px 16px; } }
+
+/* מובייל: כותרות גדולות יותר (לבקשת צביה: "לפעמים הכותרות קטנות מדי") */
+@media (max-width: 900px) {
+  html:not(#_) .sec__title:not(.voices__title):not(.gain__turn):not(.sum2__title) { font-size: clamp(38px, 11vw, 50px); line-height: 1.04; }
+  html:not(#_) :is(.voices__title, .peak__title, .gain__turn) { font-size: clamp(32px, 9vw, 42px); line-height: 1.08; }
+  html:not(#_) .sum2 .sum2__title { font-size: clamp(48px, 14vw, 66px); }
+  html:not(#_) .rat__title { font-size: clamp(36px, 10.5vw, 54px); }
+  /* "חשוב לנו להיות כאן בשבילכם": יותר אוויר בין הכותרת, הפסקה, ה-50 והתיבה באנגלית */
+  html:not(#_) .road2__content { padding-top: calc(var(--hh) + 34px); padding-bottom: 44px; }
+  html:not(#_) .road2__title { margin-bottom: 26px; }
+  html:not(#_) .road2__stat { margin-top: 34px; }
+  html:not(#_) .road2__en { margin-top: 36px; }
+}
+/* מובייל: השורה האחרונה בכותרת "עד שהן החליטו..." בטאלנט ובכתום, כדי ששלוש השורות לא ייראו אותו דבר.
+   "עד 50" בפסקה של "לכל אורך הדרך" ממורכז כמו שאר הטקסט */
+@media (max-width: 900px) {
+  html:not(#_) .gain__with { display: block; margin-top: 14px; font-family: "Talent FS", var(--font-text); font-weight: 600; font-size: 22px; line-height: 1.3; color: var(--orange); }
+  html:not(#_) .road2__stat { justify-content: center; }
+}
+
+/* =====================================================================
+   הפוטר במובייל, השורות האחרונות (לבקשת צביה: פחות "שלוש שורות אחת מתחת לשנייה", והקרדיט בולט):
+   1. הקישורים המשפטיים בשורה אחת, עם נקודה דקה ביניהם
+   2. הקרדיט לבד, בולט: "עיצוב האתר" קטן מעל, והשם גדול ולבן עם קו כתום מתחתיו
+   3. זכויות היוצרים הכי קטנות ועדינות, בסוף
+   ===================================================================== */
+@media (max-width: 900px) {
+  html:not(#_) .foot__bar { gap: 0; margin-top: 30px; padding-top: 22px; border-top: 1px solid rgb(245 245 245 / .12); }
+  html:not(#_) .foot__links { order: 1; gap: 0; }
+  html:not(#_) .foot__links a { font-size: 15px; color: rgb(245 245 245 / .62); }
+  html:not(#_) .foot__links a + a::before { content: "·"; margin-inline: 12px; color: var(--orange); }
+  html:not(#_) .foot__credit { order: 2; display: flex; flex-direction: column; align-items: center; gap: 2px; margin: 22px 0 18px; font-size: 13px; letter-spacing: .04em; color: rgb(245 245 245 / .55); }
+  html:not(#_) .foot__credit a { padding: 4px 2px 6px; font-family: "Talent FS", var(--font-text); font-weight: 600; font-size: 22px; letter-spacing: 0; color: #fff; border-bottom: 2px solid var(--orange); }
+  html:not(#_) .foot__legal { order: 3; font-size: 13px; color: rgb(245 245 245 / .4); }
+}
+@media (max-width: 900px) { html:not(#_) .foot__nav a:last-of-type:nth-of-type(odd) { grid-column: 1 / -1; justify-self: center; } }

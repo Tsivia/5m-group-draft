@@ -190,22 +190,6 @@
   };
   dotField($('.cx .dotfield'), { color: '245,245,245', base: .06, hover: .16 });
 
-  /* ---------- "זמינים עכשיו": רק בימים א-ה ובשעות של כל ערוץ, לפי שעון ישראל ---------- */
-  const markLive = () => {
-    let day, hour;
-    try {
-      const parts = new Intl.DateTimeFormat('en-US', { timeZone: 'Asia/Jerusalem', weekday: 'short', hour: 'numeric', minute: 'numeric', hourCycle: 'h23' }).formatToParts(new Date());
-      const get = t => (parts.find(p => p.type === t) || {}).value;
-      day = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].indexOf(get('weekday'));
-      hour = +get('hour') + +get('minute') / 60;
-    } catch (e) { return; }
-    $$('.way[data-open]').forEach(w => {
-      const [from, to] = w.dataset.open.split('-').map(Number), live = $('.live', w);
-      if (live) live.hidden = !(day >= 0 && day <= 4 && hour >= from && hour < to);
-    });
-  };
-  markLive(); setInterval(markLive, 60000);
-
   /* ================= פתיחה: הכותרת אות אחרי אות, הקווים נמתחים, ואז השורות והשדות נכנסים אחד אחרי השני ================= */
   const cx = $('.cx');
   if (cx && !reduce) {
@@ -214,25 +198,17 @@
     $$('.cx__l1, .cx__l2', cx).forEach(s => s.removeAttribute('aria-label'));
     const ruleH = $('.cx__rule--h', cx), ruleV = $('.cx__rule--v', cx);
     const inner = $$('.cx__ft, .fld, .cx__send', cx), ways = $$('.cx__wt, .way', cx);
-    // האייקונים מצטיירים בקו, כל אחד אחרי הקודם
-    const lines = $$('.way__ic path[pathLength]', cx), dots = $$('.way__ic .ic__dot', cx);
-    const bg = $('.cx__bg img', cx);
     gsap.set([...l1, ...l2], LETTER);
     gsap.set(ruleH, { scaleX: 0 });
     gsap.set(ruleV, { scaleY: 0 });
     gsap.set([...inner, ...ways], { autoAlpha: 0, y: 18 });
-    gsap.set(lines, { strokeDasharray: 1, strokeDashoffset: 1 });
-    gsap.set(dots, { autoAlpha: 0 });
     gsap.timeline({ delay: .1 })
-      .fromTo(bg, { scale: 1.12 }, { scale: 1.04, duration: 2.6, ease: 'expo.out' }, 0)
       .add(() => playChars(l1), .1)
       .add(() => playChars(l2), .45)
       .to(ruleH, { scaleX: 1, duration: 1.3, ease: 'expo.inOut', clearProps: 'transform' }, .75)
       .to(ruleV, { scaleY: 1, duration: 1.1, ease: 'expo.inOut', clearProps: 'transform' }, 1.25)
       .to(ways, { autoAlpha: 1, y: 0, duration: .8, stagger: .08, ease: 'power3.out', clearProps: 'transform' }, 1.2)
-      .to(inner, { autoAlpha: 1, y: 0, duration: .8, stagger: .07, ease: 'power3.out', clearProps: 'transform' }, 1.4)
-      .to(lines, { strokeDashoffset: 0, duration: 1, stagger: .09, ease: 'power2.inOut', clearProps: 'strokeDasharray,strokeDashoffset' }, 1.45)
-      .to(dots, { autoAlpha: 1, duration: .3, stagger: .1 }, 2.1);
+      .to(inner, { autoAlpha: 1, y: 0, duration: .8, stagger: .07, ease: 'power3.out', clearProps: 'transform' }, 1.4);
   }
 
   /* ================= פוטר: השמש על הקצה התחתון של לוח הזכוכית, והטורים עולים ================= */

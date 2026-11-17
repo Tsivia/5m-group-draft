@@ -1013,12 +1013,12 @@
   function fitMobile() {
     mobFit = null;
     if (!PHOTO || innerWidth > 900 || !heroEl) return;
-    // שתי השורות (95% ו-5%) למעלה, והכפתור לסימולטור למטה. הצילום נכנס ביניהם, קטן וממורכז (כ-70% מהגובה הפנוי)
-    const b = heroEl.querySelector('.hero__stat--few'), btn = heroEl.querySelector('.hero__intro .btn');
-    if (!b || !btn) return;
-    const t = heroEl.getBoundingClientRect().top, rb = b.getBoundingClientRect(), rt = btn.getBoundingClientRect();
-    if (!rb.height || !rt.height) return;
-    const top = rb.bottom - t + Math.max(24, H * .035), bot = rt.top - t - Math.max(24, H * .035), h = (bot - top) * .72;
+    // הכותרת הגדולה למעלה, ו-95% מול 5% מתחת לצילום. הצילום נכנס ביניהם וממורכז
+    const ttl = heroEl.querySelector('.hero__mtitle'), motto = heroEl.querySelector('.hero__motto');
+    if (!ttl || !motto) return;
+    const t = heroEl.getBoundingClientRect().top, ra = ttl.getBoundingClientRect(), rb = motto.getBoundingClientRect();
+    if (!ra.height || !rb.height) return;
+    const top = ra.bottom - t + Math.max(20, H * .03), bot = rb.top - t - Math.max(22, H * .032), h = (bot - top) * .94;
     mobFit = { top: top + (bot - top - h) / 2, feet: top + (bot - top + h) / 2 };
   }
   if (document.fonts) document.fonts.ready.then(() => { fitMobile(); if (glReady) placeFeet(); });
