@@ -48,7 +48,7 @@
 /* התחתית של התמונה מיושרת לתחתית של הכפתור (כמו בדף הבית), והטקסט הרץ מתחיל בגובה הכפתור (about.js) */
 .ar__photo { order: -1; position: relative; z-index: 1; width: 100%; margin: 0; align-self: end; }
 .ar__giant.is-placed { bottom: auto; }
-.ar__photo::before { content: ""; position: absolute; inset: calc(-34 * var(--u)) calc(34 * var(--u)) calc(34 * var(--u)) calc(-34 * var(--u)); z-index: -1; border: 2.5px solid rgb(241 90 59 / .5); pointer-events: none; }
+.ar__photo::before { content: ""; position: absolute; inset: calc(-34 * var(--u)) calc(34 * var(--u)) calc(34 * var(--u)) calc(-34 * var(--u)); z-index: -1; border: 1px solid rgb(241 90 59 / .8); pointer-events: none; }
 .ar__photo img { display: block; width: 100%; height: auto; aspect-ratio: 1000 / 1090; object-fit: cover; object-position: 50% 52%; }
 .ar__card { position: absolute; right: calc(-64 * var(--u)); top: 44%; z-index: 2; display: flex; flex-direction: column; gap: calc(6 * var(--u)); margin: 0; padding: calc(18 * var(--u)) calc(30 * var(--u)) calc(20 * var(--u)); text-align: right;
   background: var(--glass-light); border: 1px solid var(--glass-light-line); box-shadow: var(--shadow-soft); -webkit-backdrop-filter: var(--glass-blur); backdrop-filter: var(--glass-blur); }
@@ -260,7 +260,7 @@
   /* 2. אם קלטנו נכון (גדלים, מרווחים ורווח שורות: מהטוקנים) */
 
   /* 3. רפי: התמונה, הטקסט והכפתור, והטקסט הרץ ברצועה משלו מתחת לכפתור (לא מאחורי הפסקה) */
-  .ar__photo::before { inset: -14px 14px 14px -14px; border-width: 2px; }
+  .ar__photo::before { inset: -14px 14px 14px -14px; }
   .ar__card { top: auto; bottom: 18%; }
   .ar__big { margin-top: 16px; font-size: 19px; }
   .ar__body { margin: 14px 0 30px; }
@@ -339,7 +339,7 @@
   html:not(#_) .ar__text > .eyebrow, html:not(#_) .ar__text > .sec__title { order: 1; }
   html:not(#_) .ar__text > .sec__title { margin-bottom: 34px; }
   html:not(#_) .ar__photo { order: 2; width: 100%; max-width: 340px; margin: 0 auto 30px; }
-  html:not(#_) .ar__photo::before { inset: -16px 16px 16px 16px; border-width: 2.5px; }
+  html:not(#_) .ar__photo::before { inset: -16px 16px 16px 16px; }
   html:not(#_) .ar__card { right: -10px; top: 44%; bottom: auto; padding: 10px 16px 12px; text-align: right; }
   html:not(#_) .ar__big { margin-top: 0; }
   html:not(#_) .ar__cred { padding: 0; }

@@ -817,8 +817,16 @@
     if (PHOTO) {
       // במסכים צרים מ-16:9 (כמו 1440×900) הטקסטים קרובים יותר זה לזה, אז הצילום מוקטן באותו יחס: החלון תמיד ברווח שביניהם
       const r = Math.min(1, (W / H) / (REF_W / REF_H)), k = ds.photoFit ? Math.pow(r, num(ds.photoFitK, 1.6)) : 1;
-      const w0 = REF_W * PH.w, h0 = w0 / imgAspect, w = w0 * k, h = h0 * k, fx = ds.photoFit ? num(ds.photoFitX, -.19) * REF_W * (1 - r) : 0;
-      return [-w / 2 + PH.x * REF_W * k + fx, -REF_H / 2 + PH.top * REF_H + (h0 - h) / 2, w, h];
+      const w0 = REF_W * PH.w, h0 = w0 / imgAspect, fx = ds.photoFit ? num(ds.photoFitX, -.19) * REF_W * (1 - r) : 0;
+      let w = w0 * k, h = h0 * k, x = -w / 2 + PH.x * REF_W * k + fx, y = -REF_H / 2 + PH.top * REF_H + (h0 - h) / 2;
+      if (deskFit) {
+        // החלון ממורכז בדיוק ברווח שבין 95%/5% משמאל לטקסט מימין (במחשבים ניידים הוא נכנס מתחת לטקסט),
+        // ואם הרווח צר מהחלון, הצילום קטן מעט כדי שיישאר מרווח משני הצדדים (הגובה נשמר סביב אותו מרכז)
+        const z = SCROLL_FX ? 1.045 : 1, gc = (PH.glass[0] + PH.glass[2]) / 2, gw = (PH.glass[2] - PH.glass[0]) * w * unit * z;
+        if (gw > deskFit.room) { const s = deskFit.room / gw; y += h * (1 - s) / 2; w *= s; h *= s; }
+        x = (deskFit.mid - W / 2) / (unit * z) - gc * w;
+      }
+      return [x, y, w, h];
     }
     const G = geo(), w = REF_W * 1.23 * (G ? G.scale : SCENE_SCALE), h = w / imgAspect;
     return [-w / 2 + SCENE_X * REF_W, REF_H / 2 - h - (G ? G.y : SCENE_Y) * REF_H, w, h];
@@ -1028,7 +1036,21 @@
     const top = ra.bottom - t + Math.max(20, H * .03), bot = rb.top - t - Math.max(22, H * .032), h = (bot - top) * .94;
     mobFit = { top: top + (bot - top - h) / 2, feet: top + (bot - top + h) / 2 };
   }
-  if (document.fonts) document.fonts.ready.then(() => { fitMobile(); if (glReady) placeFeet(); });
+  /* דסקטופ: איפה הרווח שבין 95%/5% (משמאל) לטקסט (מימין). החלון ממורכז בו (sceneRect) */
+  let deskFit = null;
+  function fitDesk() {
+    deskFit = null;
+    if (!PHOTO || innerWidth <= 900 || !heroEl) return;
+    const l = heroEl.querySelector('.hero__motto'), r = heroEl.querySelector('.hero__intro');
+    if (!l || !r) return;
+    // המיקום בלי השפעת אנימציות הכניסה (transform): לפי offsetLeft עד לשורש
+    const left = e => { let x = 0; for (let p = e; p; p = p.offsetParent) x += p.offsetLeft; return x; };
+    const aR = left(l) + l.offsetWidth, bL = left(r), hL = left(host);
+    if (!l.offsetWidth || !r.offsetWidth || bL <= aR) return;
+    const M = Math.max(28, W * .022);   // מרווח מינימלי בין החלון לכל טקסט
+    deskFit = { mid: (aR + bL) / 2 - hL, room: bL - aR - 2 * M };
+  }
+  if (document.fonts) document.fonts.ready.then(() => { fitMobile(); fitDesk(); if (glReady) placeFeet(); });
   function resize() {
     requestAnimationFrame(placeSun);
     const r = host.getBoundingClientRect();
@@ -1036,7 +1058,7 @@
     DPR = 1;
     glCanvas.width = Math.round(W * DPR); glCanvas.height = Math.round(H * DPR);
     unit = Math.max(W / REF_W, H / REF_H);
-    fitMobile();
+    fitMobile(); fitDesk();
     if (glReady) { readColors(); placeFeet(); }
     onScroll();
     if (calm) drawGL();

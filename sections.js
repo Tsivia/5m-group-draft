@@ -445,7 +445,7 @@
     } });
     // מודדים את האותיות עצמן (לא את תיבת השורה): כמה רווח יש מעל הראש שלהן, ומה הגובה שלהן מעל קו הבסיס
     const placeGiant = () => {
-      if (mobile()) { giant.classList.remove('is-placed'); giant.style.top = ''; who.style.removeProperty('--over'); photo.style.removeProperty('--ft'); return; }
+      if (mobile()) { giant.classList.remove('is-placed'); giant.style.top = ''; who.style.removeProperty('--over'); return; }
       const cs = getComputedStyle(gtxt), fs = parseFloat(cs.fontSize), lh = parseFloat(cs.lineHeight) || fs;
       const c = document.createElement('canvas').getContext('2d'); c.font = cs.fontWeight + ' ' + fs + 'px ' + cs.fontFamily;
       const m = c.measureText(gtxt.textContent);
@@ -453,11 +453,6 @@
       const capTop = half + m.fontBoundingBoxAscent - c.measureText('מ').actualBoundingBoxAscent;   // לפי גובה גוף האות (מ), לא לפי ה-ל שבולטת מעל
       who.style.setProperty('--over', Math.max(0, Math.round(m.actualBoundingBoxAscent - wbtn.offsetHeight)) + 'px');
       giant.style.top = Math.round(wtext.offsetTop + wbtn.offsetTop - capTop) + 'px'; giant.classList.add('is-placed');
-      // המסגרת הכתומה מאחורי רפי: הקצה העליון שלה בגובה של ראש האותיות בכותרת
-      const h2 = $('.sec__title', wtext), hs = getComputedStyle(h2), hf = parseFloat(hs.fontSize), hl = parseFloat(hs.lineHeight) || hf * 1.05;
-      c.font = hs.fontWeight + ' ' + hf + 'px ' + hs.fontFamily; const hm = c.measureText(h2.getAttribute('aria-label') || h2.textContent);
-      const hTop = wtext.offsetTop + h2.offsetTop + (hl - (hm.fontBoundingBoxAscent + hm.fontBoundingBoxDescent)) / 2 + hm.fontBoundingBoxAscent - hm.actualBoundingBoxAscent;
-      photo.style.setProperty('--ft', Math.round(hTop - photo.offsetTop) + 'px');
     };
     placeGiant(); addEventListener('resize', () => requestAnimationFrame(placeGiant)); document.fonts && document.fonts.ready.then(placeGiant);
     ScrollTrigger.addEventListener('refreshInit', placeGiant);
@@ -581,7 +576,8 @@
       gsap.set([stat, en], { autoAlpha: 0, y: 30 });
       const o = { v: 0 };
       const tl = gsap.timeline({ defaults: { ease: 'none' } })
-        .fromTo(win, { clipPath: () => mobile() ? winM() : 'inset(42% 35% 10% 35%)' }, { clipPath: 'inset(0% 0% 0% 0%)', duration: 1.2, ease: 'power2.inOut' }, 0)
+        // במחשב החלון ממורכז מתחת לכותרת (שעברה לצד הים) ומראה רק מים, מזח ופנסים, בלי אבא חתוך בקצה
+        .fromTo(win, { clipPath: () => mobile() ? winM() : 'inset(42% 49% 10% 21%)' }, { clipPath: 'inset(0% 0% 0% 0%)', duration: 1.2, ease: 'power2.inOut' }, 0)
         .fromTo(media, { scale: 1.1 }, { scale: 1, duration: 2, ease: 'sine.out' }, 0)   // זום עדין ואחיד לאורך כל הפתיחה
         .to({}, { duration: .01, onStart: vPlay, onReverseComplete: vStop }, .05)
         .to(shade, { opacity: 1, duration: .6 }, .7)
