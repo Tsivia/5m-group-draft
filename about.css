@@ -218,7 +218,8 @@
    התמונה של החדר ממלאת את המסך (cover), והחלון ממוקם לפי הקואורדינטות של הזכוכית בתמונה.
    --z (1 ומעלה) = כמה נכנסנו פנימה, --f (0..1) = האור שממלא הכל בסוף */
 .hx1__stage { --z: 1; --f: 0; position: relative; height: 100svh; min-height: calc(760 * var(--u)); overflow: hidden; isolation: isolate; background: var(--navy); color: var(--white); }
-.hx1__room { position: absolute; left: 50%; top: 50%; width: max(100%, calc(100svh * 16 / 9), calc(760 * var(--u) * 16 / 9)); aspect-ratio: 16 / 9; translate: -50% -50%;
+/* החדר גדול ב-6% מהמסך ויורד למטה, כך שרואים פחות רצפה ולא נפתח פס ריק למעלה */
+.hx1__room { position: absolute; left: 50%; top: 53%; width: max(100%, calc(100svh * 16 / 9 * 1.06), calc(760 * var(--u) * 16 / 9 * 1.06)); aspect-ratio: 16 / 9; translate: -50% -50%;
   transform-origin: 50.5% 49.7%; transform: scale(var(--z)); will-change: transform; }
 .hx1__plate { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
 /* הנוף מכסה את כל הזכוכית וגם את הפס הבהיר שבין הזכוכית למסגרת, כך שרואים רק מסגרת כהה אחת */
