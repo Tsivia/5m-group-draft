@@ -365,33 +365,34 @@
     }
   }
 
-  // ================= 2. שורה תחתונה (גרסה 17): החשבון נסגר =================
-  // מגיעים לאזור והחשבון נסגר לבד: השורות מתמלאות בדיו אחת אחרי השנייה, הקו הכתום נמתח, והתוצאה יוצאת מתוכו.
+  // ================= 2. שורה תחתונה (גרסה 18): חשבון של מילים =================
+  // מגיעים לאזור והחשבון נבנה לבד: כל שורה נכנסת עם הפלוס שלה, אחת אחרי השנייה, ואז "=" נמתח,
+  // מילות התוצאה עולות, וחלון התמונה של המשפחה נפתח באמצע המשפט. בסוף "וא(ע)ושר משפחתי".
   // עצירה אחת בלבד (לא שלב לכל שורה כמו במשולש הזהב): גלילה למטה ממשיכה לרפי, גלילה למעלה חוזרת למשולש
   const sum2 = $('.sum2');
   if (sum2) {
-    const inks = $$('.sum2__ink', sum2), hots = $$('.sum2__hot', sum2), line = $('.sum2__line', sum2), big = $('.sum2__big', sum2), sub = $('.sum2__sub', sum2), stage = $('.sum2__stage', sum2);
-    // הקו ברוחב התוצאה
-    const fitLine = () => sum2.style.setProperty('--res-w', mobile() ? '' : Math.round(big.offsetWidth) + 'px');
-    fitLine(); addEventListener('resize', () => requestAnimationFrame(fitLine)); document.fonts && document.fonts.ready.then(fitLine);
-    // השמש שמאחורי התוצאה: בגובה האותיות הגדולות
-    const sunAt = () => { const r = stage.getBoundingClientRect(), b = big.getBoundingClientRect(); if (r.height) stage.style.setProperty('--sun-y', ((b.top + b.height / 2 - r.top) / r.height * 100).toFixed(1) + '%'); };
-    sunAt(); addEventListener('resize', () => requestAnimationFrame(sunAt)); document.fonts && document.fonts.ready.then(sunAt);
-    if (reduce) { sum2.classList.add('is-done'); gsap.set(stage, { '--sun': 1 }); }
+    const rows = $$('.sum2__row', sum2), ops = $$('.sum2__op', sum2), eq = $('.sum2__eq', sum2), words = $$('.sum2__w', sum2),
+      pic = $('.sum2__pic', sum2), picImg = $('.sum2__pic img', sum2), sub = $('.sum2__sub', sum2);
+    if (reduce) sum2.classList.add('is-done');
     else {
-      gsap.set([...inks, ...hots], { '--p': 0 });
-      gsap.set(line, { scaleX: 0 });
-      // השמש עולה בתוך האותיות: התמונה מתחילה נמוכה (השמש מתחת לשורה, שמיים של לפני הזריחה) ועולה למקום
-      gsap.set(big, { clipPath: 'inset(0% 0% 100% 0%)', yPercent: -34, backgroundPosition: '50% 22%' });
-      gsap.set(sub, { autoAlpha: 0, y: 22 * U() });
-      gsap.set(stage, { '--sun': 0 });
+      gsap.set(rows, { autoAlpha: 0, y: 26 * U() });
+      gsap.set(ops, { scale: 0, rotate: -90 });
+      gsap.set(eq, { autoAlpha: 0, scaleX: 0 });
+      gsap.set(words, { autoAlpha: 0, y: 44 * U() });
+      gsap.set(pic, { clipPath: 'inset(0% 50% 0% 50%)' });
+      gsap.set(picImg, { scale: 1.35 });
+      gsap.set(sub, { autoAlpha: 0, y: 26 * U() });
       const tl = gsap.timeline({ paused: true, onComplete: () => sum2.classList.add('is-done') });
-      inks.forEach((el, k) => tl.to([el, hots[k]], { '--p': 1, duration: .95, ease: 'power2.inOut' }, k * .62));
-      tl.to(line, { scaleX: 1, duration: .75, ease: 'power3.inOut' }, 1.75)
-        .to(big, { clipPath: 'inset(0% 0% 0% 0%)', yPercent: 0, duration: 1.05, ease: 'expo.out' }, 2.3)
-        .to(big, { backgroundPosition: '50% 50%', duration: 2.2, ease: 'power2.out' }, 2.4)
-        .to(stage, { '--sun': 1, duration: 1.4, ease: 'power1.inOut' }, 2.3)
-        .to(sub, { autoAlpha: 1, y: 0, duration: .8, ease: 'power3.out' }, 2.75);
+      rows.forEach((r, k) => {
+        const at = .1 + k * .5;
+        tl.to(r, { autoAlpha: 1, y: 0, duration: .7, ease: 'power3.out' }, at)
+          .to(ops[k], { scale: 1, rotate: 0, duration: .6, ease: 'back.out(2.2)' }, at + .05);
+      });
+      tl.to(eq, { autoAlpha: 1, scaleX: 1, duration: .55, ease: 'power3.out' }, 1.7)
+        .to(words, { autoAlpha: 1, y: 0, duration: .8, ease: 'power3.out', stagger: .14 }, 2)
+        .to(pic, { clipPath: 'inset(0% 0% 0% 0%)', duration: 1, ease: 'expo.inOut' }, 2.15)
+        .to(picImg, { scale: 1, duration: 1.6, ease: 'power2.out' }, 2.15)
+        .to(sub, { autoAlpha: 1, y: 0, duration: .8, ease: 'power3.out' }, 2.7);
       // החשבון נסגר כשהאזור כמעט כולו במסך (גם כשמגיעים בגלילה רגילה)
       ScrollTrigger.create({ trigger: sum2, start: mobile() ? 'top 60%' : 'top 30%', once: true, onEnter: () => tl.play() });
       if (!mobile()) {

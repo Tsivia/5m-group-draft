@@ -67,13 +67,18 @@
       $('.ka__cat').textContent = CATS[a.cat] || '';
       $('.ka__cat').href = 'knowledge.html?cat=' + a.cat;
       $('.ka__time').textContent = a.mins + ' דקות קריאה';
-      $('.ka__title').textContent = a.title;
+      // הכותרת: המילים שב-em בכתום
+      const t = esc(a.title), e = a.em ? esc(a.em) : '';
+      $('.ka__title').innerHTML = e && t.includes(e) ? t.replace(e, `<em>${e}</em>`) : t;
       $('.ka__lead').textContent = a.excerpt;
       const im = $('.ka__img img'); im.src = a.img; im.style.objectPosition = a.pos || '50% 50%';
-      $('.kb__in').innerHTML = a.body.map(([t, x, y]) =>
+      // המספר המודגש הראשון יושב על התמונה בתווית זכוכית. אם יש עוד, הם נשארים בגוף המאמר
+      const stats = a.body.filter(b => b[0] === 'stat'), glass = $('.ka__glass');
+      if (stats.length && glass) { $('.ka__num', glass).textContent = stats[0][1]; $('.ka__cap', glass).textContent = stats[0][2]; glass.hidden = false; }
+      $('.kb__in').innerHTML = a.body.map(([t, x, y], i) =>
         t === 'h' ? `<h2>${esc(x)}</h2>`
         : t === 'list' ? `<ul class="kb__list">${x.map(li => `<li>${esc(li)}</li>`).join('')}</ul>`
-        : t === 'stat' ? `<div class="kb__stat"><span class="kb__num">${esc(x)}</span><p class="kb__cap">${esc(y)}</p></div>`
+        : t === 'stat' ? (a.body[i] === stats[0] ? '' : `<div class="kb__stat"><span class="ka__num">${esc(x)}</span><p class="ka__cap">${esc(y)}</p></div>`)
         : `<p>${esc(x)}</p>`).join('')
         + '<p class="kb__note">המידע במאמר הוא כללי ולהמחשה בלבד, ואינו מהווה ייעוץ השקעות, ייעוץ פנסיוני או ייעוץ מס המותאם לנתונים האישיים שלכם.</p>';
       // עוד שלושה מאמרים: קודם מאותו נושא, ואחר כך הבאים בתור
@@ -206,7 +211,8 @@
       .add(() => playChars(ttl), .2)
       .add(() => playLines(lead), .65)
       .to(img, { clipPath: 'inset(0% 0 0 0)', duration: 1.4, ease: 'expo.inOut', clearProps: 'clipPath' }, .8)
-      .to($('img', img), { scale: 1, duration: 1.8, ease: 'expo.out' }, .8);
+      .to($('img', img), { scale: 1, duration: 1.8, ease: 'expo.out' }, .8)
+      .fromTo($('.ka__glass', ka), { autoAlpha: 0, y: 16 }, { autoAlpha: 1, y: 0, duration: .9, ease: 'power3.out', clearProps: 'transform,opacity,visibility' }, 1.7);
     batchUp($$('.kb__in > *'), { y: 30, stagger: .07 });
     batchUp($$('.km .kc'), { y: 50, stagger: .09 });
   }

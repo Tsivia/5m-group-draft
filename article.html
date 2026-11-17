@@ -35,27 +35,33 @@
 
   <main id="top">
 
-    <!-- ===================== מאמר (בהיר) =====================
+    <!-- ===================== מאמר (בהיר): כיוון א, מגזין מפוצל =====================
          התוכן נטען מ-knowledge-data.js לפי הכתובת (article.html?a=compound).
-         פתיחה: חזרה, נושא וזמן קריאה, הכותרת ופסקת הפתיחה, והתמונה הרחבה נפתחת מלמטה -->
+         הטקסט מימין: חזרה, נושא וזמן קריאה, הכותרת, הפתיחה, גוף המאמר וההזמנה לשיחה.
+         משמאל: תמונת דיוקן קטנה שנשארת במקום לאורך כל הקריאה, ועליה המספר המרכזי בתווית זכוכית -->
     <section class="ka" data-theme="light" aria-labelledby="ka-title">
       <div class="light" aria-hidden="true"></div>
-      <div class="ka__in">
-        <a class="ka__back" href="knowledge.html"><span class="arr" aria-hidden="true">&lt;&lt;</span>חזרה למרכז הידע</a>
-        <p class="ka__meta"><a class="tag ka__cat" href="knowledge.html"></a><span class="kc__time ka__time"></span></p>
-        <h1 class="ka__title" id="ka-title"></h1>
-        <p class="ka__lead"></p>
-      </div>
-      <figure class="ka__img" aria-hidden="true"><img src="assets/know-money.jpg" alt="" decoding="async" fetchpriority="high"></figure>
-    </section>
-
-    <!-- גוף המאמר: טור קריאה אחד. בסוף: הערה משפטית והזמנה לשיחה -->
-    <section class="kb" data-theme="light" aria-label="גוף המאמר">
-      <article class="kb__in"></article>
-      <div class="kb__cta">
-        <h2 class="kb__ct" data-title>רוצים לדעת מה זה <em>אומר אצלכם?</em></h2>
-        <p class="kb__cl" data-lines>בשיחת היכרות קצרה נראה יחד איך הידע הזה הופך לתוכנית של המשפחה שלכם.</p>
-        <a class="btn" href="contact.html" data-fade><i class="hz" aria-hidden="true"></i>דברו איתנו<span class="arr">&gt;&gt;</span></a>
+      <div class="ka__grid">
+        <div class="ka__main">
+          <div class="ka__head">
+            <a class="ka__back" href="knowledge.html"><span class="arr" aria-hidden="true">&lt;&lt;</span>חזרה למרכז הידע</a>
+            <p class="ka__meta"><a class="tag ka__cat" href="knowledge.html"></a><span class="kc__time ka__time"></span></p>
+            <h1 class="ka__title" id="ka-title"></h1>
+            <p class="ka__lead"></p>
+          </div>
+          <article class="kb__in"></article>
+          <div class="kb__cta">
+            <h2 class="kb__ct" data-title>רוצים לדעת מה זה <em>אומר אצלכם?</em></h2>
+            <p class="kb__cl" data-lines>בשיחת היכרות קצרה נראה יחד איך הידע הזה הופך לתוכנית של המשפחה שלכם.</p>
+            <a class="btn" href="contact.html" data-fade><i class="hz" aria-hidden="true"></i>דברו איתנו<span class="arr">&gt;&gt;</span></a>
+          </div>
+        </div>
+        <aside class="ka__side">
+          <figure class="ka__img">
+            <img src="assets/know-money.jpg" alt="" decoding="async" fetchpriority="high">
+            <figcaption class="ka__glass" hidden><span class="ka__num"></span><span class="ka__cap"></span></figcaption>
+          </figure>
+        </aside>
       </div>
     </section>
 

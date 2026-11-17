@@ -1227,50 +1227,42 @@ html.has-loader.is-landed .site-header__logo { opacity: 1; }
 /* מסך צר מאוד: במקטעים רק המספרים (השמות נשברו לשתי שורות לא שוות). השם המלא כתוב בכרטיס */
 @media (max-width: 359px) { .gt.is-car .gt__st { display: none; } .gt.is-car .gt__sn { font-size: 18px; } }
 
-/* ---------- 2. שורה תחתונה (גרסה 17): החשבון נסגר ----------
-   תרגיל חיבור במאונך, ממורכז. בלי משולש ובלי מספרי שלבים (אלה של משולש הזהב שמעליו).
-   השורות כתובות בעדינות ומתמלאות בדיו מימין לשמאל (כמו כתיבה), הקו הכתום נמתח מימין לשמאל,
-   והתוצאה יוצאת מתוך הקו: "עתיד כלכלי רגוע" ב-Cooperative עבה וענק, והזריחה של האתר בתוך האותיות */
+/* ---------- 2. שורה תחתונה (גרסה 18): חשבון של מילים ----------
+   הכיוון שצביה בחרה (גרסה א' מלוח הכיוונים): רקע אור החלון, "שורה תחתונה?" ענק בכתום,
+   שלוש השורות בטלנט עדין עם פלוס כתום, "=" ואז התוצאה בגדול עם חלון תמונה של המשפחה בתוך המשפט.
+   "וא(ע)ושר משפחתי" גדול, וה-א/ע בכתום כדי שרואים את ההחלפה */
 .sum2 { position: relative; background: var(--paper); color: var(--ink); }
-/* רקע חם: נייר שמתחמם לאפרסק למטה, ואור זריחה רך שעולה מאחורי התוצאה כשהיא מופיעה */
-.sum2__stage::before { content: ""; position: absolute; inset: 0; z-index: 0; pointer-events: none; background: linear-gradient(to bottom, rgb(241 90 59 / 0) 0%, rgb(241 90 59 / .03) 45%, rgb(241 90 59 / .08) 85%, rgb(241 90 59 / 0) 100%), var(--paper); }
-.sum2__stage::after { content: ""; position: absolute; z-index: 0; pointer-events: none; left: 50%; top: var(--sun-y, 72%); width: calc(1500 * var(--u)); aspect-ratio: 2.4; translate: -50% -50%; border-radius: 50%; background: radial-gradient(closest-side, rgb(241 90 59 / .14), rgb(255 190 150 / .1) 55%, transparent); opacity: var(--sun, 0); }
 .sum2__stage { position: relative; height: 100svh; min-height: calc(860 * var(--u)); overflow: hidden; display: flex; align-items: center; justify-content: center; padding-top: var(--hh); box-sizing: border-box; }
+/* אור חלון על קיר (כמו בעמוד המסלולים), מוחלש קצת לנייר כדי שהטקסט יהיה הכי קריא */
+.sum2__bg { position: absolute; inset: 0; z-index: 0; pointer-events: none; }
+.sum2__bg img { width: 100%; height: 100%; object-fit: cover; }
+.sum2__bg::after { content: ""; position: absolute; inset: 0; background: rgb(251 245 242 / .38); }
 .sum2__in { position: relative; z-index: 1; display: flex; flex-direction: column; align-items: center; text-align: center; }
-.sum2 .sum2__title { margin: 0 0 calc(50 * var(--u)); font-size: var(--fs-h2); color: var(--ink); }
-/* השורות: כל שורה כתובה פעמיים באותו מקום. מתחת בדיו שקוף מאוד, ומעל בדיו מלא שנחשף מימין לשמאל (--p מ-0 עד 1), עם קצה רך */
-.sum2__rows { margin: 0; padding: 0; list-style: none; display: grid; gap: calc(14 * var(--u)); }
-.sum2__row { display: grid; justify-items: center; font-family: var(--font-text); font-weight: 400; font-size: calc(62 * var(--u)); line-height: 1.2; white-space: nowrap; }
-.sum2__ghost, .sum2__ink, .sum2__hot { grid-area: 1 / 1; }
-.sum2__ghost { color: rgb(16 14 54 / .14); }
-.sum2__ink { --p: 1; color: var(--ink);
-  -webkit-mask-image: linear-gradient(to left, #000 calc(var(--p) * 125% - 25%), transparent calc(var(--p) * 125%));
-          mask-image: linear-gradient(to left, #000 calc(var(--p) * 125% - 25%), transparent calc(var(--p) * 125%)); }
-/* הדיו טרי בכתום רק בקצה שנכתב עכשיו, ומתייבש לנייבי */
-.sum2__hot { --p: 1; color: var(--orange);
-  -webkit-mask-image: linear-gradient(to left, transparent calc(var(--p) * 125% - 25%), #000 calc(var(--p) * 125% - 11%), transparent calc(var(--p) * 125%));
-          mask-image: linear-gradient(to left, transparent calc(var(--p) * 125% - 25%), #000 calc(var(--p) * 125% - 11%), transparent calc(var(--p) * 125%)); }
-/* השורה התחתונה: קו כתום שנמתח מימין לשמאל, ברוחב התוצאה */
-.sum2__line { display: block; width: var(--res-w, calc(1300 * var(--u))); height: max(3px, calc(5 * var(--u))); margin: calc(46 * var(--u)) 0 calc(34 * var(--u)); background: var(--orange); transform-origin: right center; }
-/* התוצאה: יוצאת מתוך הקו כלפי מטה. האותיות עבות וענקיות, והזריחה (השמיים, השמש והים) בתוכן, זזה לאט */
+.sum2 .sum2__title { margin: 0; font-size: calc(168 * var(--u)); line-height: .95; color: var(--orange); white-space: nowrap; }
+/* השורות מיושרות לימין בתוך גוש ממורכז, כך שהפלוסים עומדים בטור אחד כמו בתרגיל חיבור */
+.sum2__rows { margin: calc(44 * var(--u)) 0 0; padding: 0; list-style: none; display: grid; justify-items: start; text-align: start; gap: calc(4 * var(--u)); }
+.sum2__row { font-family: "Talent FS", var(--font-text); font-weight: 300; font-size: calc(50 * var(--u)); line-height: 1.34; white-space: nowrap; }
+.sum2__op { display: inline-block; margin-inline-end: .32em; font-family: var(--font-text); font-weight: 300; color: var(--orange); }
+.sum2__eq { display: block; margin: calc(14 * var(--u)) 0 calc(8 * var(--u)); font-family: var(--font-text); font-weight: 300; font-size: calc(84 * var(--u)); line-height: 1; color: var(--orange); }
 .sum2__res { margin: 0; display: flex; flex-direction: column; align-items: center; }
-.sum2__big { display: block; padding: 0 .04em; font-family: var(--font-display); font-weight: 700; font-size: calc(268 * var(--u)); line-height: .9; filter: saturate(1.12); white-space: nowrap; color: var(--orange);
-  background: url("assets/hero-photo-sea.jpg") 50% 50% / 125% auto no-repeat; -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
-@media (prefers-reduced-motion: no-preference) { .sum2.is-done .sum2__big { animation: sum2Drift 26s ease-in-out infinite alternate; } }
-@keyframes sum2Drift { from { background-position: 50% 50%; } to { background-position: 68% 53%; } }
-.sum2__sub { display: block; margin-top: calc(14 * var(--u)); font-family: var(--font-display); font-weight: 400; font-size: calc(70 * var(--u)); line-height: 1.1; color: var(--orange); white-space: nowrap; }
-.sum2 .aosh > i { color: var(--ink); }
+.sum2__big { display: block; font-family: var(--font-display); font-weight: 400; font-size: calc(132 * var(--u)); line-height: 1.02; color: var(--ink); white-space: nowrap; }
+.sum2__w { display: inline-block; }
+/* חלון התמונה בתוך המשפט: בגובה האותיות, יושב על קו הבסיס */
+.sum2__pic { display: inline-block; width: calc(300 * var(--u)); height: .7em; margin: 0 .04em; overflow: hidden; vertical-align: baseline; }
+.sum2__pic img { width: 100%; height: 100%; object-fit: cover; object-position: 40% 40%; }
+.sum2__sub { display: block; margin-top: calc(20 * var(--u)); font-family: var(--font-display); font-weight: 400; font-size: calc(86 * var(--u)); line-height: 1.05; color: var(--ink); white-space: nowrap; }
+.sum2 .aosh > i { color: var(--orange); }
 @media (min-width: 901px) { .sum2 { --u: min(calc(min(100vw, 1920px) / 1920), calc(100svh / 1060)); } }
-/* מובייל: אותו תרגיל, בזרימה רגילה. התוצאה בשתי שורות */
+/* מובייל: אותו סדר בזרימה רגילה. התוצאה נשברת לשתי שורות מאוזנות */
 @media (max-width: 900px) {
-  .sum2__stage { height: auto; min-height: 0; padding: calc(var(--hh) + 48px) var(--gutter) var(--pad); display: block; }
-  .sum2__stage::after { width: 160%; }
-  .sum2 .sum2__title { margin-bottom: 28px; }
-  .sum2__rows { gap: 6px; }
-  .sum2__row { font-size: clamp(24px, 7vw, 34px); }
-  .sum2__line { width: 100%; margin: 26px 0 18px; }
-  .sum2__big { font-size: clamp(64px, 22vw, 120px); line-height: .95; white-space: normal; text-wrap: balance; background-size: auto 140%; }
-  .sum2__sub { margin-top: 12px; font-size: clamp(26px, 7.6vw, 40px); white-space: normal; text-wrap: balance; }
+  .sum2__stage { height: auto; min-height: 0; padding: calc(var(--hh) + 56px) var(--gutter) var(--pad); display: block; }
+  .sum2 .sum2__title { white-space: normal; }
+  .sum2__rows { margin-top: 26px; gap: 2px; }
+  .sum2__row { font-size: clamp(22px, 6.4vw, 30px); }
+  .sum2__eq { margin: 12px 0 6px; font-size: 46px; }
+  .sum2__big { font-size: clamp(50px, 15vw, 76px); white-space: normal; text-wrap: balance; }
+  .sum2__pic { width: 30vw; }
+  .sum2__sub { margin-top: 14px; font-size: clamp(32px, 9vw, 46px); white-space: normal; text-wrap: balance; }
 }
 
 /* ---------- 3. מי אנחנו ---------- */
@@ -1624,7 +1616,7 @@ html.has-loader.is-landed .site-header__logo { opacity: 1; }
 .sec__title { font-size: var(--fs-h2); }
 .gt__head .sec__title, .road2__title, .know__head .sec__title { font-size: var(--fs-h2); }
 .voices__title, .peak__title, .gain__turn { font-size: var(--fs-h2-long); }
-.sum2__title { font-size: calc(84 * var(--u)); }
+.sum2__title { font-size: calc(168 * var(--u)); }
 
 /* ---- טקסט רץ: אותם גדלים, אותו גובה שורה ואותו צבע משני ---- */
 .sec__lead, .road2__lead { font-size: var(--fs-lead); }
@@ -1981,7 +1973,7 @@ html[data-hero-text="dark"] .site-header:not(.is-solid):not(.is-light) .site-hea
 @media (max-width: 900px) {
   html:not(#_) .sec__title:not(.voices__title):not(.gain__turn):not(.sum2__title) { font-size: clamp(38px, 11vw, 50px); line-height: 1.04; }
   html:not(#_) :is(.voices__title, .peak__title, .gain__turn) { font-size: clamp(32px, 9vw, 42px); line-height: 1.08; }
-  html:not(#_) .sum2 .sum2__title { font-size: clamp(48px, 14vw, 66px); }
+  html:not(#_) .sum2 .sum2__title { font-size: clamp(56px, 16vw, 84px); line-height: .98; }
   html:not(#_) .rat__title { font-size: clamp(36px, 10.5vw, 54px); }
   /* "חשוב לנו להיות כאן בשבילכם": יותר אוויר בין הכותרת, הפסקה, ה-50 והתיבה באנגלית */
   html:not(#_) .road2__content { padding-top: calc(var(--hh) + 34px); padding-bottom: 44px; }
