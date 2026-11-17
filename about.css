@@ -345,3 +345,5 @@
   html:not(#_) .ar__text .btn { justify-self: center; margin-top: 8px; }
   html:not(#_) .ar__giant { display: none; }
 }
+/* רפי במובייל: גם כאן בלי שדה הנקודות מאחורי הטקסט, כמו ב"כמה מילים עלינו" בדף הבית */
+@media (max-width: 900px) { html:not(#_) .ar > .dotfield { display: none; } }

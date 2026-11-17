@@ -190,25 +190,24 @@
   };
   dotField($('.cx .dotfield'), { color: '245,245,245', base: .06, hover: .16 });
 
-  /* ================= פתיחה: הכותרת אות אחרי אות, הקווים נמתחים, ואז השורות והשדות נכנסים אחד אחרי השני ================= */
+  /* ================= פתיחה ================= */
   const cx = $('.cx');
   if (cx && !reduce) {
     const l1 = splitChars($('.cx__l1', cx)), l2 = splitChars($('.cx__l2', cx));
     $('.cx__title', cx).setAttribute('aria-label', 'בואו נדבר על העצמאות הכלכלית שלכם!');
     $$('.cx__l1, .cx__l2', cx).forEach(s => s.removeAttribute('aria-label'));
-    const ruleH = $('.cx__rule--h', cx), ruleV = $('.cx__rule--v', cx);
-    const inner = $$('.cx__ft, .fld, .cx__send', cx), ways = $$('.cx__wt, .way', cx);
+    // הכותרת אות אחרי אות, השדות נכנסים אחד אחרי השני, והעיגולים "צצים" בסוף
+    const info = $('.cx__info', cx);
+    const inner = $$('.cx__ft, .fld, .cx__send, .cx__wt', cx), dots = $$('.dots > li', cx);
     gsap.set([...l1, ...l2], LETTER);
-    gsap.set(ruleH, { scaleX: 0 });
-    gsap.set(ruleV, { scaleY: 0 });
-    gsap.set([...inner, ...ways], { autoAlpha: 0, y: 18 });
+    gsap.set([...inner, info], { autoAlpha: 0, y: 18 });
+    gsap.set(dots, { autoAlpha: 0, y: 20, scale: .85 });
     gsap.timeline({ delay: .1 })
       .add(() => playChars(l1), .1)
-      .add(() => playChars(l2), .45)
-      .to(ruleH, { scaleX: 1, duration: 1.3, ease: 'expo.inOut', clearProps: 'transform' }, .75)
-      .to(ruleV, { scaleY: 1, duration: 1.1, ease: 'expo.inOut', clearProps: 'transform' }, 1.25)
-      .to(ways, { autoAlpha: 1, y: 0, duration: .8, stagger: .08, ease: 'power3.out', clearProps: 'transform' }, 1.2)
-      .to(inner, { autoAlpha: 1, y: 0, duration: .8, stagger: .07, ease: 'power3.out', clearProps: 'transform' }, 1.4);
+      .add(() => playChars(l2), .4)
+      .to(inner, { autoAlpha: 1, y: 0, duration: .8, stagger: .07, ease: 'power3.out', clearProps: 'transform' }, .9)
+      .to(dots, { autoAlpha: 1, y: 0, scale: 1, duration: .8, stagger: .08, ease: 'back.out(1.6)', clearProps: 'transform' }, 1.5)
+      .to(info, { autoAlpha: 1, y: 0, duration: .8, ease: 'power3.out', clearProps: 'transform' }, 1.7);
   }
 
   /* ================= פוטר: השמש על הקצה התחתון של לוח הזכוכית, והטורים עולים ================= */

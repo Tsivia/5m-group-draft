@@ -273,7 +273,7 @@
       steps.forEach((s, k) => { const pn = panels[k]; if (!pn) return; pn.appendChild(incH.cloneNode(true)); pn.appendChild(sets[k]); });
       // הכותרת והפסל קבועים למעלה והכרטיסים נערמים מתחתם: מודדים את גובה הכותרת ואת הכרטיס הגבוה, והפסל מקבל את מה שנשאר במסך
       const head = $('.gt__head', gt);
-      const measure = () => { gt.style.removeProperty('--gtc'); gt.style.setProperty('--gth', head.offsetHeight + 'px'); gt.style.setProperty('--gtc', Math.max(...steps.map(s => s.offsetHeight)) + 'px'); };
+      const measure = () => { gt.style.setProperty('--gth', head.offsetHeight + 'px'); gt.style.setProperty('--gtc', Math.max(...steps.map(s => s.offsetHeight)) + 'px'); gt.style.setProperty('--gtl', steps[steps.length - 1].offsetHeight + 'px'); };
       measure(); addEventListener('resize', measure);
       if (document.fonts) document.fonts.ready.then(measure);
     }
