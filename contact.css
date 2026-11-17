@@ -2,7 +2,7 @@
    5M GROUP · עמוד "דברו איתנו" · גרסה 4 "נוף בערב" (17.11)
    נשען על styles.css: הטוקנים, הפונטים, ההדר, הכפתור והפוטר.
    - ברקע: הבית על הצוק בשקיעה (sunrise2, בלי אנשים), מוחשך מאוד. השמיים למעלה נמסים לנייבי של האתר.
-   - רק כותרת העמוד הגדולה ב-Cooperative. כל השאר ב-Talent FS במשקל דק (300).
+   - רק כותרת העמוד הגדולה ב-Cooperative. כל השאר ב-Futurism במשקל דק (Light 300).
    - מימין: הכותרת, ומתחתיה הטלפון, המייל והכתובת, מיושרים לתחתית לוח הטופס.
    - משמאל: הטופס בלוח זכוכית מרובע אחד (באתר אין פינות עגולות).
    - למטה במרכז: ארבעה עיגולים עם אייקון כתום.
@@ -13,7 +13,7 @@
 .contact main { overflow-x: clip; }
 
 /* ---------- האזור: מסך אחד ---------- */
-.cx { --cu: min(var(--u), calc((100svh - var(--hh)) / 920)); --font-thin: "Talent FS", var(--font-text);
+.cx { --cu: min(var(--u), calc((100svh - var(--hh)) / 920)); --font-thin: var(--font-text);
   position: relative; isolation: isolate; overflow: hidden; display: flex; flex-direction: column; align-items: center; height: 100svh; min-height: calc(var(--hh) + 600px);
   padding: calc(var(--hh) + 40 * var(--cu)) calc(216 * var(--u)) calc(44 * var(--cu)); background: var(--navy); color: var(--paper); box-shadow: 0 4px 0 var(--navy); }
 
@@ -31,7 +31,7 @@
 .cx__main { flex: 1; display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); align-items: stretch; align-content: center; }
 .cx__head { display: flex; flex-direction: column; justify-content: space-between; padding-inline-end: calc(90 * var(--cu)); text-shadow: 0 2px 30px rgb(9 7 37 / .5); }
 
-/* הכותרת: שורה קטנה ב-Talent דק, ומתחתיה השורה הגדולה ב-Cooperative בכתום */
+/* הכותרת: שורה קטנה ב-Futurism דק, ומתחתיה השורה הגדולה ב-Cooperative בכתום */
 .cx__title { margin: 0; font-weight: 400; text-align: right; }
 .cx__l1 { display: block; font-family: var(--font-thin); font-weight: 300; font-size: calc(50 * var(--cu)); line-height: 1.1; }
 .cx__l2 { display: block; margin-top: calc(8 * var(--cu)); font-family: var(--font-display); font-size: calc(124 * var(--cu)); line-height: .95; letter-spacing: -.005em; color: var(--orange); }
