@@ -1489,14 +1489,14 @@ html.has-loader.is-landed .site-header__logo { opacity: 1; }
 .trk__text { margin-top: calc(12 * var(--u)); font-family: var(--font-text); font-weight: 300; font-size: var(--fs-card); line-height: var(--lh-body); color: var(--paper-2); }
 .trk__go { margin-top: calc(18 * var(--u)); font-family: var(--font-text); font-size: max(13.6px, calc(20 * var(--u))); color: var(--orange); transition: transform .5s cubic-bezier(.16,1,.3,1); }
 .trk:hover .trk__go { transform: translateX(-6px); }
-/* במחשב: התמונה תופסת את החלק העליון של הכרטיס ונמסה אל הנייבי, והטקסט יושב מתחתיה על רקע נקי,
-   כך שהשם והמשפט לא נכתבים על המשפחה (המובייל מגדיר פריסה משלו) */
+/* במחשב: התמונה תופסת את החלק העליון של הכרטיס ונגמרת בקו ישר (בלי מעבר מטושטש, הכלל של צביה),
+   והטקסט יושב מתחתיה על רקע נקי, כך שהשם והמשפט לא נכתבים על המשפחה (המובייל מגדיר פריסה משלו) */
 @media (min-width: 901px) {
   .trk { background: #0E0C33; }
   .trk__img { inset: 0 0 calc(196 * var(--u)) 0; overflow: hidden; }
   .trk__img img { object-position: 50% 82%; }
   .trk:nth-child(3) .trk__img img { object-position: 50% 44%; }
-  .trk__img::after { background: linear-gradient(to top, #0E0C33 0%, rgb(14 12 51 / .55) 18%, rgb(14 12 51 / 0) 42%); }
+  .trk__img::after { content: none; }
 }
 
 /* ---------- 10. מרכז הידע ---------- */
