@@ -47,14 +47,35 @@
         </div>
         <p class="kh__lead">מאמרים קצרים וברורים מצוות המומחים של <bdi lang="en">5M Group</bdi>, כדי שתוכלו לקבל החלטות כלכליות בראש שקט.</p>
       </header>
-      <div class="kf" role="group" aria-label="סינון המאמרים לפי נושא">
-        <button class="kf__b" type="button" data-cat="all" aria-pressed="true">הכל</button>
-        <button class="kf__b" type="button" data-cat="money" aria-pressed="false">כסף</button>
-        <button class="kf__b" type="button" data-cat="invest" aria-pressed="false">השקעות</button>
-        <button class="kf__b" type="button" data-cat="realestate" aria-pressed="false">נדל"ן</button>
-        <i class="kf__line" aria-hidden="true"></i>
+      <!-- הסינון: הסוג (הכל, מאמרים, סרטונים, מחשבונים) עם הקו הכתום, והנושא בקטן בצד השני של אותו קו -->
+      <div class="kf">
+        <div class="kf__types" role="group" aria-label="סינון לפי סוג">
+          <button class="kf__b" type="button" data-type="all" aria-pressed="true">הכל</button>
+          <button class="kf__b" type="button" data-type="article" aria-pressed="false">מאמרים</button>
+          <button class="kf__b" type="button" data-type="video" aria-pressed="false">סרטונים</button>
+          <button class="kf__b" type="button" data-type="calc" aria-pressed="false">מחשבונים</button>
+          <i class="kf__line" aria-hidden="true"></i>
+        </div>
+        <div class="kf__topics" role="group" aria-label="סינון לפי נושא">
+          <span class="kf__lbl">נושא:</span>
+          <button class="kf__t" type="button" data-cat="all" aria-pressed="true">הכל</button>
+          <button class="kf__t" type="button" data-cat="money" aria-pressed="false">כסף</button>
+          <button class="kf__t" type="button" data-cat="invest" aria-pressed="false">השקעות</button>
+          <button class="kf__t" type="button" data-cat="realestate" aria-pressed="false">נדל"ן</button>
+        </div>
       </div>
+      <!-- המאמרים -->
       <ul class="kgrid" aria-label="מאמרים"></ul>
+      <!-- המחשבונים: אזור נפרד, באותו כרטיס של המאמרים -->
+      <div class="kv kv--calc">
+        <h2 class="kv__t">מחשבונים</h2>
+        <ul class="kgrid kgrid--calc" aria-label="מחשבונים"></ul>
+      </div>
+      <!-- הסרטונים (אנכיים, 9:16) בשורה משלהם, למטה -->
+      <div class="kv kv--video">
+        <h2 class="kv__t">סרטונים</h2>
+        <ul class="kreels" aria-label="סרטונים"></ul>
+      </div>
     </section>
 
     <!-- ===================== פוטר: זהה לשאר העמודים ===================== -->

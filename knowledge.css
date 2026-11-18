@@ -29,7 +29,14 @@
 .kh__lead { flex: none; width: calc(560 * var(--u)); margin: 0 0 calc(8 * var(--u)); font-family: var(--font-text); font-weight: 400; font-size: var(--fs-lead); line-height: var(--lh-body); color: var(--ink-2); text-wrap: pretty; }
 
 /* ---------- הסינון (כיוון א): ארבע מילים על קו דק, וקו כתום אחד שמחליק אל הנושא שנבחר ---------- */
-.kf { position: relative; display: flex; gap: calc(46 * var(--u)); margin-top: var(--gap-head); border-bottom: 1px solid rgb(16 14 54 / .12); }
+.kf { display: flex; align-items: flex-end; justify-content: space-between; gap: calc(40 * var(--u)); margin-top: var(--gap-head); border-bottom: 1px solid rgb(16 14 54 / .12); }
+.kf__types { position: relative; display: flex; gap: calc(46 * var(--u)); }
+/* הנושא: מילים קטנות בצד השני של אותו קו. הנבחר בכתום */
+.kf__topics { display: flex; align-items: center; gap: calc(22 * var(--u)); padding-bottom: calc(18 * var(--u)); font-family: var(--font-text); font-weight: 400; font-size: var(--fs-small); line-height: 1.2; color: var(--ink-2); }
+.kf__t { margin: 0; padding: 0; border: 0; border-radius: 0; background: none; color: var(--ink-3); font: inherit; cursor: pointer; -webkit-appearance: none; appearance: none; transition: color .4s ease; }
+.kf__t:hover { color: var(--ink); }
+.kf__t[aria-pressed="true"] { color: var(--orange); }
+.kf__t:focus-visible { outline-offset: 4px; }
 .kf__b { margin: 0; padding: 0 0 calc(16 * var(--u)); border: 0; border-radius: 0; background: none; color: var(--ink-3); font-family: var(--font-text); font-weight: 400; font-size: var(--fs-lead); line-height: 1.2; cursor: pointer; -webkit-appearance: none; appearance: none; transition: color .4s ease; }
 .kf__b:hover, .kf__b[aria-pressed="true"] { color: var(--ink); }
 .kf__b:focus-visible { outline-offset: 6px; }
@@ -59,6 +66,32 @@
 .kc__go { display: inline-flex; align-items: center; gap: .35em; margin-top: auto; padding-top: calc(18 * var(--u)); font-family: var(--font-text); font-weight: 400; font-size: var(--fs-small); color: var(--orange); }
 .kc__go .arr { display: inline-block; transition: transform .55s cubic-bezier(.16, 1, .3, 1); }
 .kc__a:hover .kc__go .arr, .kc__a:focus-visible .kc__go .arr { transform: translateX(-6px); }
+
+/* ---------- סרטונים: קצרים ואנכיים (9:16), בשורה משלהם מתחת למאמרים ולמחשבונים ----------
+   אותו מעבר עכבר של הכרטיסים: משטח לבן נפתח מאחור, התמונה מתקרבת והקו הכתום נמתח בתחתיתה */
+.kv { margin-top: calc(20 * var(--u)); padding-top: calc(70 * var(--u)); border-top: 1px solid rgb(16 14 54 / .12); }
+.kv.is-solo { margin-top: calc(56 * var(--u)); padding-top: 0; border-top: 0; }
+.kv.is-solo .kv__t { display: none; }
+.kv__t { margin: 0; font-family: var(--font-display); font-weight: 400; font-size: var(--fs-h3); line-height: 1.05; }
+.kreels { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); column-gap: calc(40 * var(--u)); row-gap: calc(60 * var(--u)); margin: calc(44 * var(--u)) 0 0; padding: 0; list-style: none; }
+.kv.is-solo .kreels, .kv.is-solo .kgrid { margin-top: 0; }
+/* המחשבונים: אותה רשת ואותו כרטיס של המאמרים, מתחת לכותרת האזור */
+.kv .kgrid { margin-top: calc(44 * var(--u)); }
+.kr { min-width: 0; }
+.kr__a { --kp: calc(14 * var(--u)); display: block; margin: calc(-1 * var(--kp)); padding: var(--kp) var(--kp) calc(24 * var(--u)); color: inherit; text-decoration: none; background: rgb(255 251 249 / 0); transition: background-color .45s ease, box-shadow .5s ease; }
+.kr__a:hover, .kr__a:focus-visible { background: var(--paper-hi); box-shadow: var(--shadow-soft); }
+.kr__img { position: relative; display: block; aspect-ratio: 9 / 16; overflow: hidden; background: var(--ph); }
+.kr__img img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; transition: transform 1.2s cubic-bezier(.16, 1, .3, 1); }
+.kr__a:hover .kr__img img, .kr__a:focus-visible .kr__img img { transform: scale(1.05); }
+.kr__a:hover .kc__hz, .kr__a:focus-visible .kc__hz { transform: scaleX(1); }
+/* כפתור הפעלה עגול מזכוכית רכה, והמשך בפינה על אותה זכוכית */
+.kr__play { position: absolute; top: 50%; left: 50%; z-index: 2; display: grid; place-items: center; width: calc(84 * var(--u)); height: calc(84 * var(--u)); border-radius: 50%; translate: -50% -50%;
+  background: rgb(255 251 249 / .5); -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); box-shadow: 0 0 0 1px rgb(255 255 255 / .45) inset; transition: scale .6s cubic-bezier(.16, 1, .3, 1), background-color .4s ease; }
+.kr__play svg { width: 34%; height: 34%; margin-left: 6%; color: var(--navy); }
+.kr__a:hover .kr__play, .kr__a:focus-visible .kr__play { scale: 1.08; background: rgb(255 251 249 / .78); }
+.kr__dur { position: absolute; left: calc(12 * var(--u)); bottom: calc(12 * var(--u)); z-index: 2; padding: calc(4 * var(--u)) calc(9 * var(--u)); background: rgb(255 251 249 / .55); -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px); font-family: var(--font-text); font-weight: 400; font-size: var(--fs-label); line-height: 1.2; color: var(--ink); direction: ltr; }
+.kr .kc__meta { margin-top: calc(18 * var(--u)); }
+.kr__t { margin: calc(10 * var(--u)) 0 0; font-family: var(--font-display); font-weight: 400; font-size: calc(30 * var(--u)); line-height: 1.1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
 /* ===================== עמוד מאמר (כיוון א: מגזין מפוצל) =====================
    הטקסט מימין, ותמונת דיוקן קטנה משמאל שנשארת במקום לאורך כל הקריאה (sticky).
@@ -123,8 +156,22 @@
   .kh__head { flex-direction: column; align-items: center; gap: var(--gap-lead); text-align: center; }
   .kh__title { font-size: clamp(30px, calc((100vw - 2 * var(--gutter)) / 7.4), 56px); }
   .kh__lead { width: auto; max-width: 30em; margin: 0; text-wrap: balance; }
-  .kf { gap: 24px; }
+  /* בטלפון: הנושא בשורה קטנה מעל, והסוג על הקו עם הקו הכתום */
+  .kf { flex-direction: column; align-items: stretch; gap: 6px; }
+  .kf__types { gap: 22px; }
+  .kf__topics { order: -1; flex-wrap: wrap; gap: 4px 16px; padding-bottom: 0; }
+  .kf__t { min-height: 40px; }
   .kf__b { min-height: 44px; padding: 10px 0 12px; font-size: 17px; }
+  /* הסרטונים: שורה שגוללים הצידה, בערך שניים וחצי על המסך */
+  .kv { padding-top: 44px; }
+  .kv .kgrid { margin-top: 24px; }
+  .kreels { grid-template-columns: none; grid-auto-flow: column; grid-auto-columns: 42vw; column-gap: 14px; margin: 24px calc(-1 * var(--gutter)) 0; padding: 0 var(--gutter) 6px; overflow-x: auto; scroll-snap-type: x mandatory; scroll-padding-inline: var(--gutter); scrollbar-width: none; }
+  .kreels::-webkit-scrollbar { display: none; }
+  .kr { scroll-snap-align: start; }
+  .kr__a { margin: 0; padding: 0; }
+  .kr__play { width: 52px; height: 52px; }
+  .kr .kc__meta { margin-top: 12px; }
+  .kr__t { margin-top: 8px; font-size: 20px; }
   .kgrid { grid-template-columns: 1fr; margin-top: 32px; }
   .kc { margin-bottom: 28px; }
   /* בטלפון אין מעבר עכבר, אז הכרטיס תמיד במצב של ההובר: משטח לבן עם צל רך, בתוך השוליים של העמוד */

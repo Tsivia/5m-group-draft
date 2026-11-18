@@ -127,3 +127,32 @@ window.KNOW = [
     ]
   }
 ];
+
+/* מחשבונים: מוצגים בעמוד מרכז הידע יחד עם המאמרים, באותו כרטיס בדיוק (כמו מאמר, רק "למחשבון").
+   - href: הקישור למחשבון עצמו (כשייבנה). עד אז נשאר '#'
+   - img / pos: תמונה בשפת "שחר" ונקודת המיקוד שלה · title: עד כ-22 תווים · excerpt: משפט אחד */
+window.KNOW_CALCS = [
+  { slug: 'calc-compound', cat: 'invest', img: 'assets/art-peak.webp', pos: '50% 45%', href: '#',
+    title: 'מחשבון ריבית דריבית', excerpt: 'ראו כמה הפקדה קטנה וקבועה יכולה להפוך לאורך השנים.' },
+  { slug: 'calc-mortgage', cat: 'realestate', img: 'assets/art-home.webp', pos: '50% 50%', href: '#',
+    title: 'סימולטור משכנתא', excerpt: 'בונים תמהיל, משווים מסלולים ורואים את ההחזר האמיתי.' },
+  { slug: 'calc-rate', cat: 'money', img: 'assets/art-scales.webp', pos: '50% 50%', href: '#',
+    title: 'ריבית אפקטיבית ונומינלית', excerpt: 'העלות האמיתית של הלוואה, מעבר למספר שמופיע בהצעה.' },
+  { slug: 'calc-annuity', cat: 'invest', img: 'assets/art-coast.webp', pos: '50% 50%', href: '#',
+    title: 'מחשבון אנונה מוגדלת', excerpt: 'כמה תצברו כשההפקדה החודשית גדלה כל שנה, יחד עם המשכורת.' },
+  { slug: 'calc-dca', cat: 'invest', img: 'assets/art-columns.webp', pos: '50% 50%', href: '#',
+    title: 'מחשבון DCA', excerpt: 'השקעה במנות קבועות מול השקעה חד־פעמית: מה עדיף?' },
+  { slug: 'calc-vat', cat: 'money', img: 'assets/art-ledger.webp', pos: '50% 50%', href: '#',
+    title: 'מחשבון מע״מ', excerpt: 'המרה מהירה בין נטו לברוטו, וחילוץ המע״מ מכל סכום.' }
+];
+
+/* סרטונים: קצרים ואנכיים (9:16), רפי מדבר למצלמה. מוצגים בשורה משלהם מתחת למאמרים ולמחשבונים.
+   - img: תמונת הכריכה. כרגע התמונה של רפי (rafi.webp) כממלא מקום, עד שיגיעו הסרטונים (אז: פריים מהסרטון)
+   - dur: משך בפורמט 01:40 · len: המשך במילים · href: הקישור לסרטון (כשיהיה) */
+window.KNOW_VIDEOS = [
+  { slug: 'v-pension', cat: 'invest', img: 'assets/rafi.webp', pos: '50% 25%', dur: '01:40', len: 'דקה וחצי', href: '#', title: 'איך קוראים דוח פנסיה' },
+  { slug: 'v-mortgage', cat: 'realestate', img: 'assets/rafi.webp', pos: '62% 30%', dur: '02:15', len: '2 דקות', href: '#', title: 'טעויות במשכנתא ראשונה' },
+  { slug: 'v-real', cat: 'money', img: 'assets/rafi.webp', pos: '45% 20%', dur: '00:55', len: 'דקה', href: '#', title: 'מה זו תשואה ריאלית' },
+  { slug: 'v-kids', cat: 'money', img: 'assets/rafi.webp', pos: '56% 35%', dur: '01:10', len: 'דקה', href: '#', title: 'חיסכון לכל ילד' },
+  { slug: 'v-buy', cat: 'realestate', img: 'assets/rafi.webp', pos: '50% 28%', dur: '01:50', len: '2 דקות', href: '#', title: 'לפני שקונים דירה' }
+];

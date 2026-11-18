@@ -14,23 +14,40 @@
   const logoA = header && $('.site-header__logo', header);
   if (logoA && !$('.logo-on-light', logoA)) { const im = document.createElement('img'); im.className = 'logo-on-light'; im.src = 'assets/logo-5m.svg'; im.alt = ''; im.setAttribute('aria-hidden', 'true'); logoA.appendChild(im); }
 
-  /* ---------- כרטיס מאמר ---------- */
-  const card = (a, lvl = 'h2') => `<li class="kc" data-cat="${a.cat}"><a class="kc__a" href="article.html?a=${encodeURIComponent(a.slug)}">
+  /* ---------- כרטיס מאמר, וכרטיס מחשבון (אותו כרטיס בדיוק, רק "מחשבון" ו"למחשבון") ---------- */
+  const card = (a, lvl = 'h2') => {
+    const calc = a.type === 'calc';
+    const href = calc ? (a.href || '#') : 'article.html?a=' + encodeURIComponent(a.slug);
+    return `<li class="kc" data-cat="${a.cat}" data-type="${calc ? 'calc' : 'article'}"><a class="kc__a" href="${esc(href)}">
     <span class="kc__img"><img src="${a.img}" alt="" loading="lazy" decoding="async" style="object-position:${a.pos || '50% 50%'}"><i class="kc__hz" aria-hidden="true"></i></span>
-    <span class="kc__meta"><span class="tag">${esc(CATS[a.cat] || '')}</span><span class="kc__time">${a.mins} דקות קריאה</span></span>
+    <span class="kc__meta"><span class="tag">${esc(CATS[a.cat] || '')}</span><span class="kc__time">${calc ? 'מחשבון' : a.mins + ' דקות קריאה'}</span></span>
     <${lvl} class="kc__t">${esc(a.title)}</${lvl}>
     <span class="kc__bot"><span class="kc__x">${esc(a.excerpt)}</span>
-    <span class="kc__go">לקריאת המאמר<span class="arr" aria-hidden="true">&gt;&gt;</span></span></span></a></li>`;
+    <span class="kc__go">${calc ? 'למחשבון' : 'לקריאת המאמר'}<span class="arr" aria-hidden="true">&gt;&gt;</span></span></span></a></li>`;
+  };
+  /* ---------- סרטון אנכי (9:16): כפתור הפעלה עגול מזכוכית רכה, המשך בפינה, הכותרת מתחת ---------- */
+  const reel = v => `<li class="kr" data-cat="${v.cat}"><a class="kr__a" href="${esc(v.href || '#')}" aria-label="${esc(v.title)}, סרטון, ${esc(v.len || '')}">
+    <span class="kr__img"><img src="${v.img}" alt="" loading="lazy" decoding="async" style="object-position:${v.pos || '50% 50%'}">
+      <span class="kr__play" aria-hidden="true"><svg viewBox="0 0 24 24"><path fill="currentColor" d="M7 4.5v15a1 1 0 0 0 1.5.86l12.4-7.5a1 1 0 0 0 0-1.72L8.5 3.64A1 1 0 0 0 7 4.5Z"/></svg></span>
+      <span class="kr__dur" aria-hidden="true">${esc(v.dur || '')}</span><i class="kc__hz" aria-hidden="true"></i></span>
+    <span class="kc__meta"><span class="tag">${esc(CATS[v.cat] || '')}</span><span class="kc__time">${esc(v.len || '')}</span></span>
+    <h3 class="kr__t">${esc(v.title)}</h3></a></li>`;
 
-  /* ================= עמוד מרכז הידע: כרטיסים + סינון לפי נושא ================= */
+  /* ================= עמוד מרכז הידע: שלושה אזורים נפרדים (מאמרים, מחשבונים, סרטונים), סינון לפי סוג ולפי נושא ================= */
   const grid = $('.kh .kgrid');
-  let filterCards = null;
   if (grid) {
+    const CALCS = (window.KNOW_CALCS || []).map(c => ({ ...c, type: 'calc' })), VIDS = window.KNOW_VIDEOS || [];
     grid.innerHTML = DATA.map(a => card(a)).join('');
-    const btns = $$('.kf__b'), line = $('.kf__line');
-    // הקו הכתום עובר אל המילה הנבחרת
+    const kc = $('.kh .kv--calc'), cgrid = $('.kh .kgrid--calc'), kv = $('.kh .kv--video'), reels = $('.kh .kreels');
+    if (cgrid) cgrid.innerHTML = CALCS.map(a => card(a)).join('');
+    if (reels) reels.innerHTML = VIDS.map(reel).join('');
+
+    const tBtns = $$('.kf__b'), cBtns = $$('.kf__t'), line = $('.kf__line');
+    const TYPES = ['all', 'article', 'video', 'calc'];
+    let type = 'all', cat = 'all';
+    // הקו הכתום עובר אל הסוג הנבחר
     const moveLine = (instant) => {
-      const b = btns.find(x => x.getAttribute('aria-pressed') === 'true'); if (!b || !line) return;
+      const b = tBtns.find(x => x.getAttribute('aria-pressed') === 'true'); if (!b || !line) return;
       if (instant) line.style.transition = 'none';
       line.style.setProperty('--x', b.offsetLeft + 'px');
       line.style.setProperty('--w', b.offsetWidth + 'px');
@@ -38,22 +55,33 @@
     };
     addEventListener('resize', () => moveLine(true));
     document.fonts && document.fonts.ready.then(() => moveLine(true));
-    const apply = (cat, animate) => {
-      btns.forEach(b => b.setAttribute('aria-pressed', String(b.dataset.cat === cat)));
+    const apply = (animate) => {
+      tBtns.forEach(b => b.setAttribute('aria-pressed', String(b.dataset.type === type)));
+      cBtns.forEach(b => b.setAttribute('aria-pressed', String(b.dataset.cat === cat)));
       moveLine(!animate);
-      const items = $$('.kc', grid), show = items.filter(li => cat === 'all' || li.dataset.cat === cat);
-      items.forEach(li => { li.hidden = !show.includes(li); });
-      if (animate && window.gsap && !reduce) gsap.fromTo(show, { autoAlpha: 0, y: 24 }, { autoAlpha: 1, y: 0, duration: .7, stagger: .06, ease: 'power3.out', clearProps: 'transform,opacity,visibility' });
+      const okCat = el => cat === 'all' || el.dataset.cat === cat;
+      // כל אזור מציג את הפריטים שלו לפי הנושא, ונעלם כשבחרו סוג אחר או כשאין בו כלום. כשבחרו רק אותו, הכותרת שלו יורדת
+      const part = (list, sel, t, box) => {
+        const els = list ? $$(sel, list) : [], show = (type === 'all' || type === t) ? els.filter(okCat) : [];
+        els.forEach(li => { li.hidden = !show.includes(li); });
+        if (box) { box.hidden = !show.length; box.classList.toggle('is-solo', type === t); }
+        return show;
+      };
+      const shown = [...part(grid, '.kc', 'article', grid), ...part(cgrid, '.kc', 'calc', kc), ...part(reels, '.kr', 'video', kv)];
+      if (animate && window.gsap && !reduce) gsap.fromTo(shown, { autoAlpha: 0, y: 24 }, { autoAlpha: 1, y: 0, duration: .7, stagger: .05, ease: 'power3.out', clearProps: 'transform,opacity,visibility' });
       if (window.ScrollTrigger) ScrollTrigger.refresh();
+      const u = new URL(location.href);
+      type === 'all' ? u.searchParams.delete('type') : u.searchParams.set('type', type);
+      cat === 'all' ? u.searchParams.delete('cat') : u.searchParams.set('cat', cat);
+      history.replaceState(null, '', u);
     };
-    filterCards = apply;
-    btns.forEach(b => b.addEventListener('click', () => {
-      const cat = b.dataset.cat; apply(cat, true);
-      const u = new URL(location.href); cat === 'all' ? u.searchParams.delete('cat') : u.searchParams.set('cat', cat); history.replaceState(null, '', u);
-    }));
-    // מדף הבית אפשר להגיע ישר לנושא: knowledge.html?cat=invest
-    const pre = new URLSearchParams(location.search).get('cat');
-    apply(pre && CATS[pre] ? pre : 'all', false);
+    tBtns.forEach(b => b.addEventListener('click', () => { type = b.dataset.type; apply(true); }));
+    cBtns.forEach(b => b.addEventListener('click', () => { cat = b.dataset.cat; apply(true); }));
+    // אפשר להגיע ישר לסוג או לנושא: knowledge.html?type=calc&cat=invest
+    const q = new URLSearchParams(location.search), pt = q.get('type'), pc = q.get('cat');
+    if (TYPES.includes(pt)) type = pt;
+    if (pc && CATS[pc]) cat = pc;
+    apply(false);
   }
 
   /* ================= עמוד מאמר ================= */
@@ -185,7 +213,7 @@
     const lines = $$('.kh__l', kh).map(l => splitChars(l));
     $('.kh__title', kh).setAttribute('aria-label', $('.kh__title', kh).textContent.replace(/\s+/g, ' ').trim());
     $$('.kh__l', kh).forEach(s => s.removeAttribute('aria-label'));
-    const lead = splitWords($('.kh__lead', kh)), eye = $('.kh__eye', kh), btns = $$('.kf__b', kh), kline = $('.kf__line', kh);
+    const lead = splitWords($('.kh__lead', kh)), eye = $('.kh__eye', kh), btns = $$('.kf__b, .kf__lbl, .kf__t', kh), kline = $('.kf__line', kh);
     gsap.set(lines.flat(), LETTER);
     gsap.set(lead, { autoAlpha: 0, y: 26 });
     gsap.set([eye, ...btns], { autoAlpha: 0, y: 18 });
@@ -196,6 +224,7 @@
     kline && tl.to(kline, { autoAlpha: 1, duration: .8, ease: 'power2.out' }, 1.2);
     // הכרטיסים עולים: השורה הראשונה מיד בפתיחה, השאר בגלילה
     batchUp($$('.kc', kh), { y: 50, stagger: .09, start: 'top 96%' });
+    batchUp($$('.kv__t, .kr', kh), { y: 50, stagger: .08, start: 'top 94%' });
   }
 
   const ka = $('.ka');

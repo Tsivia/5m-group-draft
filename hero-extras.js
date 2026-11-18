@@ -92,14 +92,17 @@
       const n = 3 + Math.floor(Math.random() * 4);                 // להקה קטנה: 3 עד 6 סנוניות
       const y0 = H * (.1 + Math.random() * .18), dur = 11000 + Math.random() * 4000;
       const spreadX = 160 + n * 45, spreadY = H * (.1 + Math.random() * .08);   // מפוזרות
+      // תמיד מימין לשמאל (ההיפוך לכיוון השני היה משקף גם את המסלול, והציפורים קפצו בקצה השמאלי ויצאו).
+      // מתחילות ונגמרות רחוק מספיק מחוץ לזכוכית, כך שגם כשהשמיים זזים עם העכבר והמסלול מתנדנד אף ציפור לא מציצה בקצה
+      const M = Math.ceil(W * .09 + 36);
       for (let i = 0; i < n; i++) {
         const size = 12 + Math.random() * 6;
         const ox = Math.random() * spreadX, oy = (Math.random() - .5) * spreadY;
         const lag = ox * 9 + Math.random() * 200;
-        const x0 = dir > 0 ? -30 : W + 30, x1 = dir > 0 ? W + 30 : -30;
-        bird(W, H, x0, x1, y0 + oy, lag, dur * (.94 + Math.random() * .12), size);
+        const x0 = W + M, x1 = -M - size;
+        const d = dur * (x0 - x1) / (W + 60);                            // אותה מהירות כמו קודם
+        bird(W, H, x0, x1, y0 + oy, lag, d * (.94 + Math.random() * .12), size);
       }
-      dir = -dir;
     }
     flockT = setTimeout(flock, 12000 + Math.random() * 9000);   // מדי פעם
   }
