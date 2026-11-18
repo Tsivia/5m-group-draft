@@ -129,16 +129,6 @@
 .tv__quote p { font-weight: 400; font-size: calc(32 * var(--u)); line-height: var(--lh-body); text-wrap: balance; }
 .tv__film { --tw: calc(92 * var(--u)); margin-top: calc(40 * var(--u)); }
 
-/* ---------- קצוות רכים בין הבהיר לכחול (במקום קו ישר) ----------
-   מעל אזור כחול שעולה על אזור בהיר נעוץ (ההמלצות על המסלולים, "התחילו בקטן" על הסגירה): רצועה שקופה-לכחול שעולה איתו.
-   בין ההמלצות ל"מזדהים" (שגוללים רגיל, זה אחר זה): רצועה אטומה מהכחול לנייר, שיושבת על התפר, רק בריווח שבין התכנים.
-   המדרגות לא לינאריות (ease-in-out), כדי שלא יהיה קו בקצוות הרצועה */
-.tv { overflow: visible; overflow-x: clip; }
-.tv::before, .ts::before { content: ""; position: absolute; left: 0; right: 0; bottom: 100%; height: calc(200 * var(--u)); pointer-events: none;
-  background: linear-gradient(to bottom, rgb(9 7 37 / 0), rgb(9 7 37 / .03) 10%, rgb(9 7 37 / .1) 20%, rgb(9 7 37 / .21) 30%, rgb(9 7 37 / .35) 40%, rgb(9 7 37 / .5) 50%, rgb(9 7 37 / .65) 60%, rgb(9 7 37 / .79) 70%, rgb(9 7 37 / .9) 80%, rgb(9 7 37 / .97) 90%, var(--navy)); }
-.tv::after { content: ""; position: absolute; left: 0; right: 0; bottom: calc(-110 * var(--u)); height: calc(210 * var(--u)); pointer-events: none;
-  background: linear-gradient(to bottom, rgb(251 245 242 / 0), rgb(251 245 242 / .03) 10%, rgb(251 245 242 / .1) 20%, rgb(251 245 242 / .21) 30%, rgb(251 245 242 / .35) 40%, rgb(251 245 242 / .5) 50%, rgb(251 245 242 / .65) 60%, rgb(251 245 242 / .79) 70%, rgb(251 245 242 / .9) 80%, rgb(251 245 242 / .97) 90%, var(--paper)), var(--navy); }
-
 /* ---------- 4. מזדהים? (הכרטיסים וההודעה מדף הבית) ---------- */
 .light--2 { background-image: url("assets/light-window-2.jpg"); transform-origin: 30% 50%; animation-duration: 46s; }
 .tc { position: relative; z-index: 1; isolation: isolate; overflow: hidden; background: var(--paper); color: var(--ink); padding: var(--pad) var(--gutter); text-align: center; box-shadow: 0 1px 0 var(--paper); }
@@ -174,17 +164,6 @@
 .ts__list li + li { border-right: 1px solid var(--glass-line); }
 .ts__n { font-family: var(--font-display); font-size: calc(26 * var(--u)); line-height: 1; color: var(--orange); }
 .ts__cta { margin-top: var(--gap-cta); }
-/* במחשב, במסך המלא: האמא והילדים בצד ימין של התמונה (מ-61% מהרוחב), ולכן כל הטקסט עובר לטור בצד של הים (משמאל),
-   והרשימה בשני טורים במקום ארבעה כדי שתיכנס בטור. הצל הכהה זז אחרי הטקסט, והמשפחה נשארת בהירה ונקייה */
-@media (min-width: 901px) {
-  .ts__content { padding: var(--hh) 42% 0 calc(120 * var(--u)); }
-  .ts__shade { background: radial-gradient(62% 60% at 30% 55%, rgb(9 7 37 / .72), rgb(9 7 37 / .38) 75%), linear-gradient(to bottom, rgb(9 7 37 / .85), rgb(9 7 37 / .25) 34%, rgb(9 7 37 / .5) 66%, var(--navy) 96%); }
-  .ts__list { grid-template-columns: repeat(2, minmax(0, 1fr)); width: min(100%, calc(900 * var(--u))); }
-  .ts__list li { padding: calc(20 * var(--u)) calc(28 * var(--u)); }
-  .ts__list li + li { border-right: 0; }
-  .ts__list li:nth-child(even) { border-right: 1px solid var(--glass-line); }
-  .ts__list li:nth-child(n + 3) { border-top: 1px solid var(--glass-line); }
-}
 
 
 /* ---------- 5. סגירה: המשפחה על הגבעה של דף הבית, והבלון ברוח ---------- */
@@ -253,12 +232,6 @@
   .tv__quote { margin-top: 26px; }
   .tv__quote p { font-size: 18px; text-wrap: pretty; }
   .tv__film { --tw: min(52px, calc((100vw - 80px) / 5.4)); justify-content: center; overflow: visible; margin-top: 30px; }
-  /* הכותרת בשתי שורות קבועות: "זה מה שהמשפחות" / "שאנחנו מקבלים מספרות לנו" */
-  .tv__l { display: block; }
-  /* בטלפון המסלולים לא נעוצים: הקצה הרך יושב על התפר (חצי בריווח התחתון של המסלולים, חצי בריווח העליון כאן) */
-  .tv::before { bottom: auto; top: -50px; height: 100px;
-    background: linear-gradient(to bottom, rgb(9 7 37 / 0), rgb(9 7 37 / .03) 10%, rgb(9 7 37 / .1) 20%, rgb(9 7 37 / .21) 30%, rgb(9 7 37 / .35) 40%, rgb(9 7 37 / .5) 50%, rgb(9 7 37 / .65) 60%, rgb(9 7 37 / .79) 70%, rgb(9 7 37 / .9) 80%, rgb(9 7 37 / .97) 90%, var(--navy)), var(--paper); }
-  .tv::after { bottom: -56px; height: 112px; }
 
   /* --- 4. מזדהים: כרטיסי תנאי הסף צפופים יותר, אותו עיצוב --- */
   .tc { padding: var(--pad) var(--gutter); }
@@ -274,20 +247,12 @@
   .tc .stat__c { margin-top: 8px; font-size: 15px; }
   .tc .match__note-t { font-size: 15px; }
   .tc__go { margin-top: 14px; }
-  /* בטלפון "דברו איתנו" ו"בואו נדבר" של הסגירה נראו באותו מסך ומובילים לאותו מקום: נשאר רק "בואו נדבר" */
-  .tc__go { display: none; }
 
   /* --- 6. התחילו בקטן: בלי זכוכית מטושטשת ובלי זוהר. רשימה אחת בשורות, וכל התוכן נכנס במסך --- */
   .ts { margin-top: 0; }
   .ts__shade { background: radial-gradient(90% 60% at 50% 55%, rgb(9 7 37 / .74), rgb(9 7 37 / .5) 80%), linear-gradient(to bottom, rgb(9 7 37 / .85), rgb(9 7 37 / .3) 34%, rgb(9 7 37 / .55) 66%, var(--navy) 96%); }
   .ts__content { justify-content: center; padding: calc(var(--hh) + 12px) var(--gutter) 12px; }
   .ts__title, .ts__stat-n, .ts__stat-l, .ts__t, .ts__lead { text-shadow: none; }
-  /* הכותרת בשתי שורות קבועות: השאלה שלמה בלבן, ו"התחילו בקטן!" בכתום בשורה משלה */
-  .ts__q, .ts__title em { display: block; }
-  html:not(#_):not(#_) .ts__title { font-size: min(9.2vw, 46px); }
-  /* במסך המלא בטלפון רואים רק רצועה צרה מהתמונה: מזיזים אותה אל הבית והמזח, כך שהמשפחה (והאבא החתוך בקצה) לא מתחת לטקסט */
-  .ts__win video { object-position: 36% 50%; }
-  .ts::before { height: 104px; }
   .ts__stat { margin-top: 16px; gap: 10px; }
   .ts__stat-n { font-size: 60px; }
   .ts__stat-l { font-size: 18px; }
@@ -299,12 +264,10 @@
   .ts__n { flex: none; font-size: 17px; }
 
   /* --- 5. סגירה --- */
-  /* מתחת למשפחה נשאר נייר (התמונה נמסה אליו), ורק שם הקצה הרך של "התחילו בקטן" עובר לכחול */
-  .tf { min-height: 0; padding: 72px var(--gutter) calc(56vw + 100px); }
-  .tf__title { margin-bottom: 32px; }
+  .tf { min-height: 0; padding: 72px var(--gutter) 56vw; }
   .tf__a { font-size: min(9vw, 36px); }
   .tf__b { font-size: min(13.6vw, 58px); }
-  .tf__land { width: 190vw; bottom: 100px; }
+  .tf__land { width: 190vw; bottom: -2vw; }
 }
 
 /* טלפונים צרים (320-360) */
@@ -320,7 +283,7 @@
 
 /* מסך נמוך (למשל 375×667, 320×568): "התחילו בקטן" נכנס כולו במסך */
 @media (max-width: 900px) and (max-height: 760px) {
-  html:not(#_):not(#_) .ts__title { font-size: min(7.6vw, 30px); }
+  .ts__title { font-size: min(7.6vw, 30px); }
   .ts__stat { margin-top: 10px; }
   .ts__stat-n { font-size: 46px; }
   .ts__stat-l { font-size: 16px; }
@@ -332,7 +295,7 @@
 }
 @media (max-width: 900px) and (max-height: 600px) {
   .ts__content { padding-top: calc(var(--hh) + 6px); }
-  html:not(#_):not(#_) .ts__title { font-size: 26px; }
+  .ts__title { font-size: 26px; }
   .ts__stat-n { font-size: 38px; }
   .ts__t { font-size: 20px; }
   .ts__lead { font-size: 14.5px; }
@@ -344,30 +307,9 @@
   .opts, .tp__list, .tc__stats { width: 100%; max-width: 600px; margin-inline: auto; }
   .tv__stage, .tc__lead { max-width: 600px; margin-inline: auto; }
   .th, .tp, .tv, .tc { padding-inline: 48px; }
-  /* המסלולים בשני טורים (השלישי במרכז), כל הכרטיסים באותו גובה והכפתור בתחתית */
-  .tp__list { grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: 20px; max-width: none; }
-  .plan:last-child:nth-child(odd) { grid-column: 1 / -1; justify-self: center; width: calc(50% - 10px); }
-  .plan__in { height: 100%; }
-  .plan__go { margin-top: auto; }
-  /* במסך המלא של "התחילו בקטן": רצועה רחבה יותר מהתמונה, ולכן מזיזים עוד יותר אל הבית, שהאבא לא ייחתך בקצה */
-  .ts__win video { object-position: 24% 50%; }
-}
-/* טאבלט רחב (721-900): שלושת המשפטים בפתיחה ושלושת תנאי הסף בשורה אחת */
-@media (min-width: 721px) and (max-width: 900px) {
-  .opts { grid-template-columns: repeat(3, minmax(0, 1fr)); max-width: none; }
-  .opt + .opt { border-top: 0; border-right: 1px solid rgb(16 14 54 / .1); }
-  .opt__a { padding: 24px 16px 26px; }
-  .tc__stats { grid-template-columns: repeat(3, minmax(0, 1fr)); max-width: none; }
-  .tc .stat__box { padding: 16px 16px 18px; }
-  .tc .stat__v { gap: 6px; font-size: 40px; }
-  .tc .stat__u { font-size: 14px; }
 }
 
 @media (prefers-reduced-motion: reduce) {
   .opt__face, .opt__face img, .plan, .plan__img img { transition: none; }
   .th__hint::after { animation: none; }
 }
-
-/* המעברים בין אזור בהיר לכחול-כהה: קו ישר ונקי, בלי מעבר מטושטש (הכלל של צביה מ-17.11: "מטושטש ומכוער").
-   מבטל את הקצוות הרכים שנוספו מעל ההמלצות, מעל "התחילו בקטן" ומתחת להמלצות. tracks.js קורא את גובה ה-::before, ובלעדיו הוא 0 */
-.tv::before, .ts::before, .tv::after { content: none; }

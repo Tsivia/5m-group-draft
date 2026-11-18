@@ -576,8 +576,7 @@
       gsap.set([stat, en], { autoAlpha: 0, y: 30 });
       const o = { v: 0 };
       const tl = gsap.timeline({ defaults: { ease: 'none' } })
-        // במחשב החלון ממורכז מתחת לכותרת (שעברה לצד הים) ומראה רק מים, מזח ופנסים, בלי אבא חתוך בקצה
-        .fromTo(win, { clipPath: () => mobile() ? winM() : 'inset(42% 49% 10% 21%)' }, { clipPath: 'inset(0% 0% 0% 0%)', duration: 1.2, ease: 'power2.inOut' }, 0)
+        .fromTo(win, { clipPath: () => mobile() ? winM() : 'inset(42% 35% 10% 35%)' }, { clipPath: 'inset(0% 0% 0% 0%)', duration: 1.2, ease: 'power2.inOut' }, 0)
         .fromTo(media, { scale: 1.1 }, { scale: 1, duration: 2, ease: 'sine.out' }, 0)   // זום עדין ואחיד לאורך כל הפתיחה
         .to({}, { duration: .01, onStart: vPlay, onReverseComplete: vStop }, .05)
         .to(shade, { opacity: 1, duration: .6 }, .7)

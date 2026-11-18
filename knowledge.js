@@ -38,8 +38,6 @@
     };
     addEventListener('resize', () => moveLine(true));
     document.fonts && document.fonts.ready.then(() => moveLine(true));
-    // בטלפון השורה ממורכזת: כל שינוי ברוחב השורה (גם בלי resize של החלון) מזיז את המילים, אז הקו נמדד מחדש
-    if (window.ResizeObserver && line) new ResizeObserver(() => moveLine(true)).observe(line.parentElement);
     const apply = (cat, animate) => {
       btns.forEach(b => b.setAttribute('aria-pressed', String(b.dataset.cat === cat)));
       moveLine(!animate);
@@ -237,14 +235,8 @@
     hh = header ? header.offsetHeight : 64;
     // אזור נעוץ יושב בתוך pin-spacer, ולכן מודדים את העוטף שלו. הפוטר שעולה מעליו מנצח (הוא האחרון ברשימה)
     zones = $$('main > [data-theme], main > .pin-spacer > [data-theme]').map(sec => { const box = sec.parentElement.classList.contains('pin-spacer') ? sec.parentElement : sec; const r = box.getBoundingClientRect(), top = r.top + scrollY; return { top, bottom: top + r.height, light: sec.dataset.theme === 'light', glass: sec.dataset.header === 'glass' }; });
-    // בהרבה מסכים (למשל 1440×900) הפוטר נמוך מגובה המסך, וקו ההדר לא מגיע אליו גם בסוף הגלילה, ולכן ההדר נשאר בהיר מעל הפוטר.
-    // במקרה כזה האזור הכהה האחרון (הפוטר) מתחיל קצת לפני סוף הגלילה, כך שבסוף העמוד ההדר תמיד כהה
-    const end = zones[zones.length - 1], reach = document.documentElement.scrollHeight - innerHeight + hh + 4;
-    if (end && !end.light && end.top > reach - 60) end.top = reach - 60;
   };
   ScrollTrigger.addEventListener('refresh', mapZones);
-  // גובה התוכן משתנה גם בלי refresh (פונטים שנטענים, סינון המאמרים): מודדים את האזורים מחדש
-  if (window.ResizeObserver && $('main')) { let raf = 0; new ResizeObserver(() => { cancelAnimationFrame(raf); raf = requestAnimationFrame(mapZones); }).observe($('main')); }
   const tick = () => {
     if (!header) return;
     const y = window.lenis ? window.lenis.scroll : scrollY, line = y + hh + 4;
