@@ -565,7 +565,7 @@
         float pw = uSun.z * .85 + dd * .22;
         float path = exp(-pow((uv.x - uSun.x) * aspect / pw, 2.0)) * exp(-dd * 12.0);
         float sp = vnoise(vec2(uv.x * 900.0, uv.y * 2600.0 / (1.0 + dd * 18.0) - uTime * 1.3));
-        col += vec3(1.0, .8, .6) * path * (.2 + .95 * smoothstep(.55, .95, sp)) * (.35 + .65 * uRise) * glass * sv;
+        col += vec3(1.0, .8, .6) * path * (.2 + .3 * smoothstep(.62, .95, sp)) * (.35 + .65 * uRise) * glass * sv;   // ניצוצות עדינים: השמש מעל הילד, וניצוצות חזקים נראו ככתמים לבנים סביבו
       }
       float edge = 1.4 / (uSun.z * uRect.w * uUnit * uZoom);   // קצה חד: כפיקסל וחצי
       float disc = (1.0 - smoothstep(1.0 - edge, 1.0, r)) * sky * uDisc;
