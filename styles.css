@@ -2060,3 +2060,6 @@ body.menu-open .wa-float { opacity: 0; visibility: hidden; }
 @media (prefers-reduced-motion: reduce) { .wa-float, .wa-float svg { transition: none; } }
 /* כותרת ההמלצות בשלוש שורות, כמו בקובץ הקופי: חופש כלכלי / ביטחון כלכלי / והשורה הכתומה */
 .voices__title em { display: block; }
+/* דף הבית: הכותרת רק בשתי השורות הראשונות, והשורה הכתומה "אלו אנשים שבאמת עשו את זה" קטנה מתחתן ב-Futurism (לבקשת צביה: שלוש שורות בכותרת נראו כבדות) */
+#voices-title em { margin-top: calc(22 * var(--u)); font-family: var(--font-text); font-weight: 700; font-size: calc(34 * var(--u)); line-height: 1.3; letter-spacing: .01em; }
+@media (max-width: 900px) { html:not(#_) #voices-title em { margin-top: 12px; font-size: 20px; } }
